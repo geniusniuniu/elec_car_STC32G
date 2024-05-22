@@ -1,0 +1,58 @@
+C251 COMPILER V5.60.0,  Buzzer                                                             26/04/24  10:40:39  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE Buzzer
+OBJECT MODULE PLACED IN .\Out_File\Buzzer.obj
+COMPILER INVOKED BY: D:\keil5\keil5_MDK\keil5_MDK_32\C251\BIN\C251.EXE ..\CODE\Buzzer.c XSMALL INTR2 WARNINGLEVEL(3) BRO
+                    -WSE INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\U
+                    -SER\inc;..\USER\src) DEBUG PRINT(.\Out_File\Buzzer.lst) OBJECT(.\Out_File\Buzzer.obj) 
+
+stmt  level    source
+
+    1          #include "zf_tim.h"
+    2          #include <string.h>
+    3          #include <stdio.h>
+    4          #include "common.h"
+    5          #include "ZF_PWM.h"
+    6          #include "zf_gpio.h"
+    7          #include <STC32Gxx.H>
+    8          #include "Buzzer.h"
+    9          
+   10          uint16 x10_ms = 0;
+   11          
+   12          void Buzzer_Init(void)
+   13          {
+   14   1              pwm_init(PWMB_CH4_P77,2000,0);
+   15   1      }
+   16          
+   17          
+   18          
+   19          
+   20          
+   21          
+   22          
+   23          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        17     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =         2     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         6     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

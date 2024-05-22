@@ -1,0 +1,90 @@
+C251 COMPILER V5.60.0,  ADC                                                                26/04/24  10:40:38  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE ADC
+OBJECT MODULE PLACED IN .\Out_File\ADC.obj
+COMPILER INVOKED BY: D:\keil5\keil5_MDK\keil5_MDK_32\C251\BIN\C251.EXE ..\CODE\ADC.c XSMALL INTR2 WARNINGLEVEL(3) BROWSE
+                    - INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\USER
+                    -\inc;..\USER\src) DEBUG PRINT(.\Out_File\ADC.lst) OBJECT(.\Out_File\ADC.obj) 
+
+stmt  level    source
+
+    1          #include "isr.h"
+    2          #include <string.h>
+    3          #include <stdio.h>
+    4          #include "common.h"
+    5          #include "zf_adc.h"
+    6          #include "Motor.h"
+    7          
+    8          float ADC_Array_Original[5][3];
+    9          float ADC_proc[5];
+   10          
+   11          void ADC_InitAll(void)
+   12          {
+   13   1              adc_init(ADC_P10, ADC_SYSclk_DIV_2);
+   14   1              adc_init(ADC_P00, ADC_SYSclk_DIV_2);
+   15   1              
+   16   1              adc_init(ADC_P16, ADC_SYSclk_DIV_2);
+   17   1      
+   18   1              adc_init(ADC_P05, ADC_SYSclk_DIV_2);
+   19   1              adc_init(ADC_P06, ADC_SYSclk_DIV_2);
+   20   1      }
+   21          
+   22          //读取三次ADC各通道值，并取平均值
+   23          void ADC_GetValue(void)
+   24          {
+   25   1              float temp;
+   26   1              char i,j;
+   27   1              for(i=0;i<3;i++)
+   28   1              {
+   29   2                      ADC_Array_Original[0][i] = adc_once(ADC_P10, ADC_8BIT);         //左一路电感
+   30   2                      ADC_Array_Original[1][i] = adc_once(ADC_P00, ADC_8BIT);         //左二路电感    
+   31   2      
+   32   2                      ADC_Array_Original[2][i] = adc_once(ADC_P05, ADC_8BIT);         //右三路电感
+   33   2                      
+   34   2                      ADC_Array_Original[3][i] = adc_once(ADC_P06, ADC_8BIT);         //中间横电感 
+   35   2                      ADC_Array_Original[4][i] = adc_once(ADC_P16, ADC_8BIT);         //右四路电感
+   36   2              }
+   37   1              //取三次电感值平均值
+   38   1              for(i=0;i<5;i++)
+   39   1              {
+   40   2                      temp = 0;
+   41   2                      for(j=0;j<3;j++)
+   42   2                      {
+   43   3                              temp += ADC_Array_Original[i][j];
+   44   3                      }
+   45   2                      ADC_proc[i] = temp/3;
+   46   2                      //对电感值限幅
+   47   2                      if(ADC_proc[i] >= 200)                  ADC_proc[i] = 200;      
+   48   2                      else if(ADC_proc[i] <= 2)               ADC_proc[i] = 2;
+   49   2                      //归一化,将电感值限制在0~100之间
+   50   2                      ADC_proc[i] = 100*(ADC_proc[i]/200);    
+   51   2      
+   52   2              }
+   53   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       374     ------
+C251 COMPILER V5.60.0,  ADC                                                                26/04/24  10:40:38  PAGE 2   
+
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =        80     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

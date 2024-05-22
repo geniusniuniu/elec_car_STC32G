@@ -1,0 +1,175 @@
+C251 COMPILER V5.60.0,  motor                                                              26/04/24  10:40:38  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE motor
+OBJECT MODULE PLACED IN .\Out_File\motor.obj
+COMPILER INVOKED BY: D:\keil5\keil5_MDK\keil5_MDK_32\C251\BIN\C251.EXE ..\CODE\motor.c XSMALL INTR2 WARNINGLEVEL(3) BROW
+                    -SE INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\US
+                    -ER\inc;..\USER\src) DEBUG PRINT(.\Out_File\motor.lst) OBJECT(.\Out_File\motor.obj) 
+
+stmt  level    source
+
+    1          #include "zf_tim.h"
+    2          #include "isr.h"
+    3          #include <string.h>
+    4          #include <stdio.h>
+    5          #include "common.h"
+    6          #include "Motor.h"
+    7          #include "ZF_PWM.h"
+    8          #include "zf_gpio.h"
+    9          #include "PID.h"
+   10          #include <STC32Gxx.H>
+   11          #include <math.h>
+   12          
+   13          
+   14          float Speed_L,Speed_R;
+   15          
+   16          void Limit_Out(float *Output,float Limit_Min,float Limit_Max)
+   17          {
+   18   1          if (*Output <= Limit_Min) *Output = Limit_Min;
+   19   1          else if (*Output >= Limit_Max) *Output = Limit_Max;
+   20   1      }
+   21          
+   22          float Num2Abs(float x)
+   23          {
+   24   1              if(x < 0)
+   25   1                      return -x;
+   26   1              return x;
+   27   1      }
+   28          
+   29          void Motor_Init(void)
+   30          {
+   31   1              pwm_init(PWMA_CH1P_P60, 15000, 0);              //左电机-
+   32   1              pwm_init(PWMA_CH3P_P64, 15000, 0);              //右电机-
+   33   1              pwm_init(PWMA_CH2P_P62, 15000, 0);              //左电机--PWM
+   34   1              pwm_init(PWMA_CH4P_P66, 15000, 0);              //右电机-PWM
+   35   1      }
+   36          
+   37          float Left_SetSpeed(float speed)
+   38          {
+   39   1              static int16 Special_NumL = 0;  //异常情况记数
+   40   1              if(abs(Speed_L) >= SPECIAL_SPEED)               //连续30次都超过最大速度，发生异常
+   41   1                      Special_NumL++;
+   42   1              else 
+   43   1                      Special_NumL = 0;
+   44   1              if(Special_NumL >= 10)                  //出现异常
+   45   1              {
+   46   2                      pwm_duty(PWMA_CH2P_P62, 0);
+   47   2                      pwm_duty(PWMA_CH1P_P60, 0);
+   48   2                      return 0;
+   49   2              }
+   50   1              else                             //没有出现异常
+   51   1              {
+   52   2                      if(speed >= SPEED_MAX)                  speed = SPEED_MAX; 
+   53   2                      else if(speed <= -SPEED_MAX)    speed = -SPEED_MAX;
+   54   2                      if(speed > 0)
+   55   2                      {
+   56   3                              pwm_duty(PWMA_CH2P_P62, (int)speed);
+   57   3                              pwm_duty(PWMA_CH1P_P60, 0);
+C251 COMPILER V5.60.0,  motor                                                              26/04/24  10:40:38  PAGE 2   
+
+   58   3                      } 
+   59   2                      else if(speed < 0)
+   60   2                      {
+   61   3                              pwm_duty(PWMA_CH2P_P62, 0);
+   62   3                              pwm_duty(PWMA_CH1P_P60, -(int)speed);
+   63   3                      } 
+   64   2                      else 
+   65   2                      {
+   66   3                              speed = 0;
+   67   3                              pwm_duty(PWMA_CH2P_P62, 0);
+   68   3                              pwm_duty(PWMA_CH1P_P60, 0);
+   69   3                      }
+   70   2                      return speed;
+   71   2              }
+   72   1      }
+   73          
+   74          float Right_SetSpeed(float speed)       
+   75          {
+   76   1              static int16 Special_NumR = 0;  //异常情况记数
+   77   1              if(abs(Speed_R) >= SPECIAL_SPEED)               //连续30次都超过最大速度，发生异常
+   78   1                      Special_NumR++;
+   79   1              else 
+   80   1                      Special_NumR = 0;
+   81   1              if(Special_NumR >= 10)                  //出现异常
+   82   1              {
+   83   2                      pwm_duty(PWMA_CH3P_P64, 0);
+   84   2                      pwm_duty(PWMA_CH4P_P66, 0);
+   85   2                      return 0;
+   86   2              }
+   87   1          else
+   88   1              {
+   89   2                      if(speed >= SPEED_MAX)                  speed = SPEED_MAX; 
+   90   2                      else if(speed <= -SPEED_MAX)    speed = -SPEED_MAX;
+   91   2                      if(speed > 0)
+   92   2                      {
+   93   3                              pwm_duty(PWMA_CH3P_P64, (int)speed);
+   94   3                              pwm_duty(PWMA_CH4P_P66, 0);
+   95   3                      } 
+   96   2                      else if(speed < 0)
+   97   2                      {
+   98   3                              pwm_duty(PWMA_CH3P_P64, 0);
+   99   3                              pwm_duty(PWMA_CH4P_P66, -(int)speed);
+  100   3                      } 
+  101   2                      else 
+  102   2                      {
+  103   3                              speed = 0;
+  104   3                              pwm_duty(PWMA_CH3P_P64, 0);
+  105   3                              pwm_duty(PWMA_CH4P_P66, 0);
+  106   3                      }
+  107   2                      return speed;
+  108   2              }
+  109   1      }
+  110          
+  111          void Get_Speed(void)    //获取速度
+  112          {
+  113   1              static float Speed_L_Last;
+  114   1              static float Speed_R_Last;
+  115   1              if(P53 == 0)             Speed_L = ctimer_count_read(CTIM3_P04);        ////左轮方向读取数值
+  116   1              else                            {Speed_L = ctimer_count_read(CTIM3_P04); Speed_L = -Speed_L;}
+  117   1              ctimer_count_clean(CTIM3_P04);                                                                  //清除计数值，开始下一轮计数
+  118   1      
+  119   1              
+  120   1              if(P35 == 1)             Speed_R = ctimer_count_read(CTIM0_P34);                //右轮方向读取数值
+  121   1              else                            {Speed_R = ctimer_count_read(CTIM0_P34); Speed_R = -Speed_R;}
+  122   1              ctimer_count_clean(CTIM0_P34);                                                                  //清除计数值，开始下一轮计数
+  123   1              
+C251 COMPILER V5.60.0,  motor                                                              26/04/24  10:40:38  PAGE 3   
+
+  124   1              Speed_L = Speed_L_Last*0.7 + Speed_L*0.3;
+  125   1              Speed_R = Speed_R_Last*0.7 + Speed_R*0.3;
+  126   1              Speed_L_Last = Speed_L;
+  127   1              Speed_R_Last = Speed_R;
+  128   1              
+  129   1      }
+  130          
+  131          
+  132          void Motor_Test(float Speed)
+  133          {
+  134   1              Right_SetSpeed(-Speed);
+  135   1              Left_SetSpeed(Speed);   
+  136   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       734     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =        20          4
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        12     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,258 @@
+C251 COMPILER V5.60.0,  DMA_AD                                                             02/12/23  17:01:44  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE DMA_AD
+OBJECT MODULE PLACED IN .\Out_File\DMA_AD.obj
+COMPILER INVOKED BY: D:\keil5\keil5_MDK\keil5_MDK_32\C251\BIN\C251.EXE ..\CODE\DMA_AD.c XSMALL INTR2 WARNINGLEVEL(3) BRO
+                    -WSE INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\U
+                    -SER\inc;..\USER\src) DEBUG PRINT(.\Out_File\DMA_AD.lst) OBJECT(.\Out_File\DMA_AD.obj) 
+
+stmt  level    source
+
+    1          ///*---------------------------------------------------------------------*/
+    2          ///* --- STC MCU Limited ------------------------------------------------*/
+    3          ///* --- STC 1T Series MCU Demo Programme -------------------------------*/
+    4          ///* --- Mobile: (86)13922805190 ----------------------------------------*/
+    5          ///* --- Fax: 86-0513-55012956,55012947,55012969 ------------------------*/
+    6          ///* --- Tel: 86-0513-55012928,55012929,55012966 ------------------------*/
+    7          ///* --- Web: www.STCMCU.com --------------------------------------------*/
+    8          ///* --- Web: www.STCMCUDATA.com  ---------------------------------------*/
+    9          ///* --- QQ:  800003751 -------------------------------------------------*/
+   10          ///* 如果要在程序中使用此代码,请在程序中注明使用了STC的资料及程序            */
+   11          ///*---------------------------------------------------------------------*/
+   12          //#include "headfile.h"
+   13          //#include "DMA_AD.h"
+   14          
+   15          
+   16          ///*************        功能说明        **************
+   17          
+   18          //本程序演示多路ADC DMA采样.
+   19          
+   20          //初始化时先把要ADC转换的引脚设置为高阻输入.
+   21          
+   22          //设置数据批量传输(DMA)功能，所有通道一次循环采集的数据自动存放到DMA定义的xdata空间.
+   23          
+   24          //******************************************/
+   25          
+   26          
+   27          ////========================================================================
+   28          ////                               本地常量声明 
+   29          ////========================================================================
+   30          
+   31          //#define       ADC_CH          4                       /* 1~16, ADC转换通道数, 需同步修改转换通道 */
+   32          //#define       ADC_DATA        3                       /* 6~n, 每个通道ADC转换数据总数, 2*转换次数+4, 需同步修改转换次数 */
+   33          
+   34          
+   35          ////========================================================================
+   36          ////                               本地变量声明
+   37          ////========================================================================
+   38          
+   39          //uint8 chn = 0;
+   40          //uint8 xdata DmaAdBuffer[ADC_CH][ADC_DATA];
+   41          //float ADC_proc[ADC_CH];  // 定义ADC_proc数组
+   42          
+   43          ////========================================================================
+   44          ////                               本地函数声明
+   45          ////========================================================================
+   46          
+   47          
+   48          //// 函数: uint8        ADC_Inilize(ADC_InitTypeDef *ADCx)
+   49          //// 描述: ADC初始化程序.
+   50          //// 参数: ADCx: 结构参数,请参考adc.h里的定义.
+   51          //// 返回: none.
+   52          //// 版本: V1.0, 2012-10-22
+   53          ////========================================================================
+   54          //uint8 ADC_Init1(ADC_InitTypeDef *ADCx)
+   55          //{
+   56          //      ADCCFG = (ADCCFG & ~ADC_SPEED_2X16T) | ADCx->ADC_Speed; //设置ADC工作时钟频率
+   57          //      ADC_Justify(ADCx->ADC_AdjResult);               //AD转换结果对齐方式
+C251 COMPILER V5.60.0,  DMA_AD                                                             02/12/23  17:01:44  PAGE 2   
+
+   58          
+   59          //      if(ADCx->ADC_SMPduty > 31)      return FAIL;    //错误
+   60          //      if(ADCx->ADC_CsSetup > 1)       return FAIL;    //错误
+   61          //      if(ADCx->ADC_CsHold > 3)        return FAIL;    //错误
+   62          
+   63          //      ADCTIM = (ADCx->ADC_CsSetup << 7) | (ADCx->ADC_CsHold << 5) | ADCx->ADC_SMPduty ;               //设置 ADC 内部时序
+             -，ADC采样时间建议设最大值
+   64          //      return SUCCESS;
+   65          //}
+   66          
+   67          ////========================================================================
+   68          //// 函数: void DMA_ADC_Inilize(DMA_ADC_InitTypeDef *DMA)
+   69          //// 描述: DMA ADC 初始化程序.
+   70          //// 参数: DMA: 结构参数,请参考DMA.h里的定义.
+   71          //// 返回: none.
+   72          //// 版本: V1.0, 2021-05-17
+   73          ////========================================================================
+   74          //void DMA_ADC_Init(DMA_ADC_InitTypeDef *DMA)
+   75          //{
+   76          //      DMA_ADC_STA = 0x00;
+   77          //      DMA_ADC_CHSW1 = (uint8)(DMA->DMA_Channel>>8);
+   78          //      DMA_ADC_CHSW0 = (uint8)(DMA->DMA_Channel);
+   79          //      DMA_ADC_RXAH = (uint8)(DMA->DMA_Buffer>>8);
+   80          //      DMA_ADC_RXAL = (uint8)(DMA->DMA_Buffer);
+   81          //      DMA_ADC_CFG2 = DMA->DMA_Times;
+   82          
+   83          //      if(DMA->DMA_Enable == ENABLE)           DMA_ADC_CR |= 0x80;     //使能ADC DMA
+   84          //      else DMA_ADC_CR &= ~0x80;       //禁止ADC DMA
+   85          //}
+   86          
+   87          ////========================================================================
+   88          //// 函数: void ADC_PowerControl(uint8 pwr)
+   89          //// 描述: ADC电源控制程序.
+   90          //// 参数: pwr: 电源控制,ENABLE或DISABLE.
+   91          //// 返回: none.
+   92          //// 版本: V1.0, 2012-10-22
+   93          ////========================================================================
+   94          //void ADC_PowerControl(uint8 pwr)
+   95          //{
+   96          //      if(pwr == ENABLE)       ADC_POWER = 1;
+   97          //      else                            ADC_POWER = 0;
+   98          //}
+   99          
+  100          ////========================================================================
+  101          //// 函数: NVIC_ADC_Init
+  102          //// 描述: ADC嵌套向量中断控制器初始化.
+  103          //// 参数: State:    中断使能状态, ENABLE/DISABLE.
+  104          //// 参数: Priority: 中断优先级, Priority_0,Priority_1,Priority_2,Priority_3.
+  105          //// 返回: 执行结果 SUCCESS/FAIL.
+  106          //// 版本: V1.0, 2020-09-29
+  107          ////========================================================================
+  108          //uint8 NVIC_ADC_Init(uint8 State, uint8 Priority)
+  109          //{
+  110          //      if(State <= ENABLE) ADC_Interrupt(State); else  return FAIL;
+  111          //      if(Priority <= Priority_3) ADC_Priority(Priority); else  return FAIL;
+  112          //      return SUCCESS;
+  113          //}
+  114          
+  115          ////========================================================================
+  116          //// 函数: NVIC_DMA_ADC_Init
+  117          //// 描述: DMA ADC嵌套向量中断控制器初始化.
+  118          //// 参数: State:    中断使能状态, ENABLE/DISABLE.
+  119          //// 参数: Priority: 中断优先级, Priority_0,Priority_1,Priority_2,Priority_3.
+  120          //// 参数: Bus_Priority: 数据总线访问优先级, Priority_0,Priority_1,Priority_2,Priority_3.
+  121          //// 返回: 执行结果 SUCCESS/FAIL.
+  122          //// 版本: V1.0, 2021-05-21
+C251 COMPILER V5.60.0,  DMA_AD                                                             02/12/23  17:01:44  PAGE 3   
+
+  123          ////========================================================================
+  124          //uint8 NVIC_DMA_ADC_Init(uint8 State, uint8 Priority, uint8 Bus_Priority)
+  125          //{
+  126          //      DMA_ADC_CFG &= ~0x0f;
+  127          //      if(Priority <= Priority_3) DMA_ADC_CFG |= Priority << 2;
+  128          //      if(Bus_Priority <= Priority_3) DMA_ADC_CFG |= Bus_Priority;     //数据总线访问优先级
+  129          //      if(State == ENABLE)
+  130          //              DMA_ADC_CFG |= 0x80;            //bit7 1:Enable Interrupt
+  131          //      else
+  132          //              DMA_ADC_CFG &= ~0x80;           //bit7 0:Disable Interrupt
+  133          //      return SUCCESS;
+  134          //}
+  135          
+  136          //void DMA_M2M_Inilize(DMA_M2M_InitTypeDef *DMA)
+  137          //{
+  138          //      DMA_M2M_STA = 0x00;
+  139          //      DMA_M2M_RXAH = (uint8)(DMA->DMA_Rx_Buffer>>8);
+  140          //      DMA_M2M_RXAL = (uint8)(DMA->DMA_Rx_Buffer);
+  141          //      DMA_M2M_TXAH = (uint8)(DMA->DMA_Tx_Buffer>>8);
+  142          //      DMA_M2M_TXAL = (uint8)(DMA->DMA_Tx_Buffer);
+  143          //      DMA_M2M_AMT = (uint8)DMA->DMA_Length;                           //设置传输总字节数(低8位)：n+1
+  144          //      DMA_M2M_AMTH = (uint8)(DMA->DMA_Length>>8);     //设置传输总字节数(高8位)：n+1
+  145          //      
+  146          //      if(DMA->DMA_SRC_Dir == M2M_ADDR_DEC)            DMA_M2M_CFG |= 0x20;    //数据读完后地址自减
+  147          //      else DMA_M2M_CFG &= ~0x20;      //数据读完后地址自减
+  148          //      if(DMA->DMA_DEST_Dir == M2M_ADDR_DEC)           DMA_M2M_CFG |= 0x10;    //数据写入后地址自减
+  149          //      else DMA_M2M_CFG &= ~0x10;      //数据写入后地址自减
+  150          //      
+  151          //      if(DMA->DMA_Enable == ENABLE)           DMA_M2M_CR |= 0x80;     //使能M2M DMA
+  152          //      else DMA_M2M_CR &= ~0x80;       //禁止M2M DMA
+  153          //}
+  154          
+  155          
+  156          ////使用P0_0，P0_5，P0_6，P1_6四个引脚读取AD值，通过DMA传输到DmaAdBuffer数组中
+  157          //void DMA_AD_init(void)
+  158          //{
+  159          //      ADC_InitTypeDef ADC_InitStructure;
+  160          //      DMA_ADC_InitTypeDef DMA_ADC_InitStructure;
+  161          //      DMA_M2M_InitTypeDef DMA_M2M_InitStructure;
+  162          //      
+  163          //      ADC_InitStructure.ADC_Speed = ADC_SPEED_2X16T;  //设置ADC工作时钟频率
+  164          //      ADC_InitStructure.ADC_AdjResult = ADC_RIGHT_JUSTIFIED;  //AD转换结果对齐方式
+  165          //      ADC_InitStructure.ADC_SMPduty = 31;                             //设置ADC采样时间
+  166          //      ADC_InitStructure.ADC_CsSetup = 0;                              //设置ADC内部时序
+  167          //      ADC_InitStructure.ADC_CsHold = 0;                               //设置ADC内部时序
+  168          //      ADC_Init1(&ADC_InitStructure);                                  //初始化ADC
+  169          //      
+  170          //      DMA_ADC_InitStructure.DMA_Channel = ADC_CH;             //设置DMA通道
+  171          //      DMA_ADC_InitStructure.DMA_Buffer = (uint16)DmaAdBuffer; //设置DMA缓冲区
+  172          //      DMA_ADC_InitStructure.DMA_Times = ADC_DATA;             //设置DMA传输次数
+  173          //      DMA_ADC_InitStructure.DMA_Enable = ENABLE;              //设置DMA使能
+  174          //      DMA_ADC_Init(&DMA_ADC_InitStructure);                   //初始化DMA
+  175          //      
+  176          //      DMA_M2M_InitStructure.DMA_Rx_Buffer = (uint16)DmaAdBuffer;      //设置DMA接收缓冲区
+  177          //      DMA_M2M_InitStructure.DMA_Tx_Buffer = (uint16)DmaAdBuffer;      //设置DMA发送缓冲区
+  178          //      DMA_M2M_InitStructure.DMA_Length = ADC_CH*ADC_DATA;     //设置DMA传输长度
+  179          //      DMA_M2M_InitStructure.DMA_SRC_Dir = M2M_ADDR_INC;       //设置DMA源地址自增
+  180          //      DMA_M2M_InitStructure.DMA_DEST_Dir = M2M_ADDR_INC;      //设置DMA目的地址自增
+  181          //      DMA_M2M_InitStructure.DMA_Enable = ENABLE;      //设置DMA使能
+  182          //      DMA_M2M_Inilize(&DMA_M2M_InitStructure);                //初始化DMA
+  183          //      
+  184          //      NVIC_ADC_Init(ENABLE, Priority_3);      //初始化ADC中断
+  185          //      NVIC_DMA_ADC_Init(ENABLE, Priority_3, Priority_3);      //初始化DMA ADC中断
+  186          //      ADC_PowerControl(ENABLE);       //使能ADC
+  187          //      DMA_ADC_TRIG();         //启动转换
+  188          
+C251 COMPILER V5.60.0,  DMA_AD                                                             02/12/23  17:01:44  PAGE 4   
+
+  189          //}
+  190          
+  191          // 
+  192          //void ADC_GetValue(void)
+  193          // {
+  194          //     float temp;
+  195          //     char j, k;
+  196          
+  197          //     for (k = 0; k < ADC_CH; k++) 
+  198          //      {
+  199          //         temp = 0;
+  200          //         for (j = 0; j < ADC_DATA; j++) 
+  201          //              {
+  202          //             temp += DmaAdBuffer[k][j];
+  203          //         }
+  204          //         temp /= ADC_DATA * 1.0;
+  205          //         if (temp >= 200)            temp = 200;    // 对电感值进行限幅处理
+  206          //         else if (temp <= 2)         temp = 2;    // 对电感值进行限幅处理
+  207          
+  208          //         ADC_proc[k] = 100 * (temp / 200);        // 归一化,将电感值限制在0~100之间
+  209          //     }
+  210          //       while(DMA_ADC_STA & 0x01);     //等待DMA传输完成
+  211          //       DMA_ADC_STA = 0x01;    //清除DMA传输完成标志
+  212          //       DMA_ADC_TRIG();                //启动转换
+  213          // }
+  214          
+  215          
+*** WARNING C38 IN LINE 215 OF ..\CODE\DMA_AD.c: empty translation unit
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =    ------     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

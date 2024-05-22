@@ -1,0 +1,1150 @@
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE TOF
+OBJECT MODULE PLACED IN .\Out_File\TOF.obj
+COMPILER INVOKED BY: D:\keil5\keil5_MDK\keil5_MDK_32\C251\BIN\C251.EXE ..\CODE\TOF.c XSMALL INTR2 WARNINGLEVEL(3) BROWSE
+                    - INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\USER
+                    -\inc;..\USER\src) DEBUG PRINT(.\Out_File\TOF.lst) OBJECT(.\Out_File\TOF.obj) 
+
+stmt  level    source
+
+    1          /********************************************************************************************************
+             -*************
+    2          * MM32F527X-E9P Opensourec Library ¼´£¨MM32F527X-E9P ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
+    3          * Copyright (c) 2022 SEEKFREE Öð·É¿Æ¼¼
+    4          * 
+    5          * ±¾ÎÄ¼þÊÇ MM32F527X-E9P ¿ªÔ´¿âµÄÒ»²¿·Ö
+    6          * 
+    7          * MM32F527X-E9P ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
+    8          * Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
+    9          * ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+   10          * 
+   11          * ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
+   12          * ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
+   13          * ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+   14          * 
+   15          * ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
+   16          * Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+   17          * 
+   18          * ¶îÍâ×¢Ã÷£º
+   19          * ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
+   20          * Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
+   21          * Ðí¿ÉÖ¤¸±±¾ÔÚ libraries ÎÄ¼þ¼ÐÏÂ ¼´¸ÃÎÄ¼þ¼ÐÏÂµÄ LICENSE ÎÄ¼þ
+   22          * »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+   23          * 
+   24          * ÎÄ¼þÃû³Æ          zf_device_vl53l0x
+   25          * ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
+   26          * °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
+   27          * ¿ª·¢»·¾³          MDK 5.37
+   28          * ÊÊÓÃÆ½Ì¨          MM32F527X_E9P
+   29          * µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+   30          * 
+   31          * ÐÞ¸Ä¼ÇÂ¼
+   32          * ÈÕÆÚ              ×÷Õß                ±¸×¢
+   33          * 2022-08-10        Teternal            first version
+   34          *********************************************************************************************************
+             -***********/
+   35          /********************************************************************************************************
+             -*************
+   36          * ½ÓÏß¶¨Òå£º
+   37          *                   ------------------------------------
+   38          *                   Ä£¿é¹Ü½Å            µ¥Æ¬»ú¹Ü½Å
+   39          *                   SCL                 ²é¿´ zf_device_vl53l0x.h ÖÐ VL53L0X_SCL_PIN  ºê¶¨Òå
+   40          *                   SDA                 ²é¿´ zf_device_vl53l0x.h ÖÐ VL53L0X_SDA_PIN  ºê¶¨Òå
+   41          *                   VCC4                 5V µçÔ´
+   42          *                   GND                 µçÔ´µØ
+   43          *                   ------------------------------------
+   44          *********************************************************************************************************
+             -***********/
+   45          
+   46          
+   47          #include "zf_delay.h"
+   48          #include "TOF.h"
+   49          #include "stdio.h"
+   50          #include "string.h"
+   51          #include "math.h"
+   52          
+   53          #pragma warning disable = 183
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 2   
+
+   54          
+   55          
+   56          uint8 vl53l0x_finsh_flag;
+   57          uint16 vl53l0x_distance_mm = 850;
+   58          
+   59          
+   60          
+   61          #define GET_VL53L0X_SDA                         VL53L0X_SDA_PIN
+   62          #define VL53L0X_SDA_LOW()               VL53L0X_SDA_PIN = 0             //IO¿ÚÊä³öµÍµçÆ½
+   63          #define VL53L0X_SDA_HIGH()              VL53L0X_SDA_PIN = 1             //IO¿ÚÊä³ö¸ßµçÆ½
+   64          
+   65          #define VL53L0X_SCL_LOW()               VL53L0X_SCL_PIN = 0             //IO¿ÚÊä³öµÍµçÆ½
+   66          #define VL53L0X_SCL_HIGH()              VL53L0X_SCL_PIN = 1             //IO¿ÚÊä³ö¸ßµçÆ½
+   67          
+   68          #define ack 1      //Ö÷Ó¦´ð
+   69          #define no_ack 0   //´ÓÓ¦´ð     
+   70          
+   71          //-------------------------------------------------------------------------------------------------------
+             -------------
+   72          //  @brief      Ä£ÄâIICÑÓÊ±
+   73          //  @return     void                                            
+   74          //  @since      v1.0
+   75          //  Sample usage:                               Èç¹ûIICÍ¨Ñ¶Ê§°Ü¿ÉÒÔ³¢ÊÔÔö¼ÓjµÄÖµ
+   76          //-------------------------------------------------------------------------------------------------------
+             -------------
+   77          static void vl53l0x_simiic_delay(void)
+   78          {
+   79   1          uint16 j=VL53L0X_SOFT_IIC_DELAY;   
+   80   1              while(j--);
+   81   1      }
+   82          
+   83          //ÄÚ²¿Ê¹ÓÃ£¬ÓÃ»§ÎÞÐèµ÷ÓÃ
+   84          static void vl53l0x_simiic_start(void)
+   85          {
+   86   1              VL53L0X_SDA_HIGH();
+   87   1              VL53L0X_SCL_HIGH();
+   88   1              vl53l0x_simiic_delay();
+   89   1              VL53L0X_SDA_LOW();
+   90   1              vl53l0x_simiic_delay();
+   91   1              VL53L0X_SCL_LOW();
+   92   1      }
+   93          
+   94          //ÄÚ²¿Ê¹ÓÃ£¬ÓÃ»§ÎÞÐèµ÷ÓÃ
+   95          static void vl53l0x_simiic_stop(void)
+   96          {
+   97   1              VL53L0X_SDA_LOW();
+   98   1              VL53L0X_SCL_LOW();
+   99   1              vl53l0x_simiic_delay();
+  100   1              VL53L0X_SCL_HIGH();
+  101   1              vl53l0x_simiic_delay();
+  102   1              VL53L0X_SDA_HIGH();
+  103   1              vl53l0x_simiic_delay();
+  104   1      }
+  105          
+  106          //Ö÷Ó¦´ð(°üº¬ack:SDA=0ºÍno_ack:SDA=0)
+  107          //ÄÚ²¿Ê¹ÓÃ£¬ÓÃ»§ÎÞÐèµ÷ÓÃ
+  108          static void vl53l0x_simiic_sendack(unsigned char ack_dat)
+  109          {
+  110   1          VL53L0X_SCL_LOW();
+  111   1              vl53l0x_simiic_delay();
+  112   1              if(ack_dat) VL53L0X_SDA_LOW();
+  113   1          else        VL53L0X_SDA_HIGH();
+  114   1      
+  115   1          VL53L0X_SCL_HIGH();
+  116   1          vl53l0x_simiic_delay();
+  117   1          VL53L0X_SCL_LOW();
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 3   
+
+  118   1          vl53l0x_simiic_delay();
+  119   1      }
+  120          
+  121          
+  122          static int vl53l0x_sccb_waitack(void)
+  123          {
+  124   1          VL53L0X_SCL_LOW();
+  125   1      
+  126   1              vl53l0x_simiic_delay();
+  127   1              
+  128   1              VL53L0X_SCL_HIGH();
+  129   1          vl53l0x_simiic_delay();
+  130   1              
+  131   1          if(GET_VL53L0X_SDA)           //Ó¦´ðÎª¸ßµçÆ½£¬Òì³££¬Í¨ÐÅÊ§°Ü
+  132   1          {
+  133   2      
+  134   2              VL53L0X_SCL_LOW();
+  135   2              return 0;
+  136   2          }
+  137   1      
+  138   1          VL53L0X_SCL_LOW();
+  139   1              vl53l0x_simiic_delay();
+  140   1          return 1;
+  141   1      }
+  142          
+  143          //×Ö½Ú·¢ËÍ³ÌÐò
+  144          //·¢ËÍc(¿ÉÒÔÊÇÊý¾ÝÒ²¿ÉÊÇµØÖ·)£¬ËÍÍêºó½ÓÊÕ´ÓÓ¦´ð
+  145          //²»¿¼ÂÇ´ÓÓ¦´ðÎ»
+  146          //ÄÚ²¿Ê¹ÓÃ£¬ÓÃ»§ÎÞÐèµ÷ÓÃ
+  147          static void vl53l0x_send_ch(uint8 c)
+  148          {
+  149   1              uint8 i = 8;
+  150   1          while(i--)
+  151   1          {
+  152   2              if(c & 0x80)    VL53L0X_SDA_HIGH();//SDA Êä³öÊý¾Ý
+  153   2              else                    VL53L0X_SDA_LOW();
+  154   2              c <<= 1;
+  155   2              vl53l0x_simiic_delay();
+  156   2              VL53L0X_SCL_HIGH();                //SCL À­¸ß£¬²É¼¯ÐÅºÅ
+  157   2              vl53l0x_simiic_delay();
+  158   2              VL53L0X_SCL_LOW();                //SCL Ê±ÖÓÏßÀ­µÍ
+  159   2          }
+  160   1              vl53l0x_sccb_waitack();
+  161   1      }
+  162          
+  163          
+  164          //×Ö½Ú½ÓÊÕ³ÌÐò
+  165          //½ÓÊÕÆ÷¼þ´«À´µÄÊý¾Ý£¬´Ë³ÌÐòÓ¦ÅäºÏ|Ö÷Ó¦´ðº¯Êý|Ê¹ÓÃ
+  166          //ÄÚ²¿Ê¹ÓÃ£¬ÓÃ»§ÎÞÐèµ÷ÓÃ
+  167          static uint8 vl53l0x_read_ch(uint8 ack_x)
+  168          {
+  169   1          uint8 i;
+  170   1          uint8 c;
+  171   1          c=0;
+  172   1          VL53L0X_SCL_LOW();
+  173   1          vl53l0x_simiic_delay();
+  174   1          VL53L0X_SDA_HIGH();             
+  175   1      
+  176   1          for(i=0;i<8;i++)
+  177   1          {
+  178   2              vl53l0x_simiic_delay();
+  179   2              VL53L0X_SCL_LOW();         //ÖÃÊ±ÖÓÏßÎªµÍ£¬×¼±¸½ÓÊÕÊý¾ÝÎ»
+  180   2              vl53l0x_simiic_delay();
+  181   2              VL53L0X_SCL_HIGH();         //ÖÃÊ±ÖÓÏßÎª¸ß£¬Ê¹Êý¾ÝÏßÉÏÊý¾ÝÓÐÐ§
+  182   2              vl53l0x_simiic_delay();
+  183   2              c<<=1;
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 4   
+
+  184   2              if(GET_VL53L0X_SDA) 
+  185   2              {
+  186   3                  c+=1;   //¶ÁÊý¾ÝÎ»£¬½«½ÓÊÕµÄÊý¾Ý´æc
+  187   3              }
+  188   2          }
+  189   1      
+  190   1              VL53L0X_SCL_LOW();
+  191   1              vl53l0x_simiic_delay();
+  192   1              vl53l0x_simiic_sendack(ack_x);
+  193   1              
+  194   1          return c;
+  195   1      }
+  196          
+  197          
+  198          //-------------------------------------------------------------------------------------------------------
+             -------------
+  199          //  @brief      Ä£ÄâIICÐ´Êý¾Ýµ½Éè±¸¼Ä´æÆ÷º¯Êý
+  200          //  @param      dev_add                 Éè±¸µØÖ·(µÍÆßÎ»µØÖ·)
+  201          //  @param      reg                             ¼Ä´æÆ÷µØÖ·
+  202          //  @param      dat                             Ð´ÈëµÄÊý¾Ý
+  203          //  @return     void                                            
+  204          //  @since      v1.0
+  205          //  Sample usage:                               
+  206          //-------------------------------------------------------------------------------------------------------
+             -------------
+  207          static void vl53l0x_simiic_write_dats(uint8 dev_add, uint8 *dat, uint32 len)
+  208          {
+  209   1              vl53l0x_simiic_start();
+  210   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);   //·¢ËÍÆ÷¼þµØÖ·¼ÓÐ´Î»
+  211   1              while(len--)
+  212   1              {
+  213   2                      vl53l0x_send_ch( *dat++ );                               //·¢ËÍÐèÒªÐ´ÈëµÄÊý¾Ý
+  214   2              }
+  215   1      
+  216   1              
+  217   1              vl53l0x_simiic_stop();
+  218   1      }
+  219          
+  220          
+  221          //-------------------------------------------------------------------------------------------------------
+             -------------
+  222          //  @brief      Ä£ÄâIICÐ´Êý¾Ýµ½Éè±¸¼Ä´æÆ÷º¯Êý
+  223          //  @param      dev_add                 Éè±¸µØÖ·(µÍÆßÎ»µØÖ·)
+  224          //  @param      reg                             ¼Ä´æÆ÷µØÖ·
+  225          //  @param      dat                             Ð´ÈëµÄÊý¾Ý
+  226          //  @return     void                                            
+  227          //  @since      v1.0
+  228          //  Sample usage:                               
+  229          //-------------------------------------------------------------------------------------------------------
+             -------------
+  230          static void vl53l0x_simiic_write_reg(uint8 dev_add, uint8 reg, uint8 dat)
+  231          {
+  232   1              vl53l0x_simiic_start();
+  233   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);   //·¢ËÍÆ÷¼þµØÖ·¼ÓÐ´Î»
+  234   1              vl53l0x_send_ch( reg );                                  //·¢ËÍ´Ó»ú¼Ä´æÆ÷µØÖ·
+  235   1              vl53l0x_send_ch( dat );                                  //·¢ËÍÐèÒªÐ´ÈëµÄÊý¾Ý
+  236   1              vl53l0x_simiic_stop();
+  237   1      }
+  238          
+  239          //-------------------------------------------------------------------------------------------------------
+             -------------
+  240          //  @brief      Ä£ÄâIIC´ÓÉè±¸¼Ä´æÆ÷¶ÁÈ¡Êý¾Ý
+  241          //  @param      dev_add                 Éè±¸µØÖ·(µÍÆßÎ»µØÖ·)
+  242          //  @param      reg                             ¼Ä´æÆ÷µØÖ·
+  243          //  @param      type                    Ñ¡ÔñÍ¨ÐÅ·½Ê½ÊÇIIC  »¹ÊÇ SCCB
+  244          //  @return     uint8                   ·µ»Ø¼Ä´æÆ÷µÄÊý¾Ý                        
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 5   
+
+  245          //  @since      v1.0
+  246          //  Sample usage:                               
+  247          //-------------------------------------------------------------------------------------------------------
+             -------------
+  248          static uint8 vl53l0x_simiic_read_reg(uint8 dev_add, uint8 reg)
+  249          {
+  250   1              uint8 dat;
+  251   1              vl53l0x_simiic_start();
+  252   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);  //·¢ËÍÆ÷¼þµØÖ·¼ÓÐ´Î»
+  253   1              vl53l0x_send_ch( reg );                                 //·¢ËÍ´Ó»ú¼Ä´æÆ÷µØÖ·
+  254   1      
+  255   1              
+  256   1              vl53l0x_simiic_start();
+  257   1              vl53l0x_send_ch( (dev_add<<1) | 0x01);  //·¢ËÍÆ÷¼þµØÖ·¼Ó¶ÁÎ»
+  258   1              dat = vl53l0x_read_ch(no_ack);                                  //¶ÁÈ¡Êý¾Ý
+  259   1              vl53l0x_simiic_stop();
+  260   1              
+  261   1              return dat;
+  262   1      }
+  263          
+  264          //-------------------------------------------------------------------------------------------------------
+             -------------
+  265          //  @brief      Ä£ÄâIIC¶ÁÈ¡¶à×Ö½ÚÊý¾Ý
+  266          //  @param      dev_add                 Éè±¸µØÖ·(µÍÆßÎ»µØÖ·)
+  267          //  @param      reg                             ¼Ä´æÆ÷µØÖ·
+  268          //  @param      dat_add                 Êý¾Ý±£´æµÄµØÖ·Ö¸Õë
+  269          //  @param      num                             ¶ÁÈ¡×Ö½ÚÊýÁ¿
+  270          //  @param      type                    Ñ¡ÔñÍ¨ÐÅ·½Ê½ÊÇIIC  »¹ÊÇ SCCB
+  271          //  @return     uint8                   ·µ»Ø¼Ä´æÆ÷µÄÊý¾Ý                        
+  272          //  @since      v1.0
+  273          //  Sample usage:                               
+  274          //-------------------------------------------------------------------------------------------------------
+             -------------
+  275          static void vl53l0x_simiic_read_regs(uint8 dev_add, uint8 reg, uint8 *dat_add, uint32 num)
+  276          {
+  277   1              vl53l0x_simiic_start();
+  278   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);  //·¢ËÍÆ÷¼þµØÖ·¼ÓÐ´Î»
+  279   1              vl53l0x_send_ch( reg );                                 //·¢ËÍ´Ó»ú¼Ä´æÆ÷µØÖ·
+  280   1      
+  281   1              
+  282   1              vl53l0x_simiic_start();
+  283   1              vl53l0x_send_ch( (dev_add<<1) | 0x01);  //·¢ËÍÆ÷¼þµØÖ·¼Ó¶ÁÎ»
+  284   1          while(--num)
+  285   1          {
+  286   2              *dat_add = vl53l0x_read_ch(ack); //¶ÁÈ¡Êý¾Ý
+  287   2              dat_add++;
+  288   2          }
+  289   1          *dat_add = vl53l0x_read_ch(no_ack); //¶ÁÈ¡Êý¾Ý
+  290   1              vl53l0x_simiic_stop();
+  291   1      }
+  292          
+  293          //-------------------------------------------------------------------------------------------------------
+             -------------
+  294          //  @brief      Ä£ÄâIIC¶ÁÈ¡¶à×Ö½ÚÊý¾Ý
+  295          //  @param      dev_add                 Éè±¸µØÖ·(µÍÆßÎ»µØÖ·)
+  296          //  @param      reg                             ¼Ä´æÆ÷µØÖ·
+  297          //  @param      dat_add                 Êý¾Ý±£´æµÄµØÖ·Ö¸Õë
+  298          //  @param      num                             ¶ÁÈ¡×Ö½ÚÊýÁ¿
+  299          //  @param      type                    Ñ¡ÔñÍ¨ÐÅ·½Ê½ÊÇIIC  »¹ÊÇ SCCB
+  300          //  @return     uint8                   ·µ»Ø¼Ä´æÆ÷µÄÊý¾Ý                        
+  301          //  @since      v1.0
+  302          //  Sample usage:                               
+  303          //-------------------------------------------------------------------------------------------------------
+             -------------
+  304          static void vl53l0x_simiic_read_regs_1(uint8 dev_add, uint8 reg, uint8 *dat_add, uint32 num)
+  305          {
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 6   
+
+  306   1              vl53l0x_simiic_start();
+  307   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);  //·¢ËÍÆ÷¼þµØÖ·¼ÓÐ´Î»
+  308   1              vl53l0x_send_ch( reg );                                 //·¢ËÍ´Ó»ú¼Ä´æÆ÷µØÖ·
+  309   1      
+  310   1              
+  311   1              vl53l0x_simiic_start();
+  312   1              vl53l0x_send_ch( (dev_add<<1) | 0x01);  //·¢ËÍÆ÷¼þµØÖ·¼Ó¶ÁÎ»
+  313   1          while(--num)
+  314   1          {
+  315   2              *dat_add = vl53l0x_read_ch(ack); //¶ÁÈ¡Êý¾Ý
+  316   2              dat_add++;
+  317   2          }
+  318   1          *dat_add = vl53l0x_read_ch(no_ack); //¶ÁÈ¡Êý¾Ý
+  319   1              vl53l0x_simiic_stop();
+  320   1      }
+  321          
+  322          
+  323          #define vl53l0x_write_array(dat, len)          (vl53l0x_simiic_write_dats(VL53L0X_DEV_ADDR, (dat), (len))
+             -)
+  324          #define vl53l0x_write_register(reg, dat)       (vl53l0x_simiic_write_reg(VL53L0X_DEV_ADDR, (reg), (dat)))
+  325          #define vl53l0x_read_register(reg)             (vl53l0x_simiic_read_reg (VL53L0X_DEV_ADDR, (reg)))
+  326          #define vl53l0x_read_registers(reg, dat, len)  (vl53l0x_simiic_read_regs(VL53L0X_DEV_ADDR, (reg), (dat), 
+             -(len)))
+  327          #define vl53l0x_read_registers_1(reg, dat, len)  (vl53l0x_simiic_read_regs_1(VL53L0X_DEV_ADDR, (reg), (da
+             -t), (len)))
+  328          
+  329          // Õâ¸öËÙÂÊ±íÊ¾´ÓÄ¿±ê·´Éä²¢±»Éè±¸¼ì²âµ½µÄÐÅºÅµÄÕñ·ù
+  330          // ÉèÖÃ´ËÏÞÖÆ¿ÉÒÔÈ·¶¨´«¸ÐÆ÷±¨¸æÓÐÐ§¶ÁÊýËùÐèµÄ×îÐ¡²âÁ¿Öµ
+  331          // ÉèÖÃÒ»¸ö½ÏµÍµÄÏÞÖÆ¿ÉÒÔÔö¼Ó´«¸ÐÆ÷µÄ²âÁ¿·¶Î§
+  332          // µ«ËÆºõÒ²Ôö¼ÓÁË <ÓÉÓÚÀ´×ÔÄ¿±êÒÔÍâµÄÎïÌåµÄ²»ÐèÒªµÄ·´Éäµ¼ÖÂ> µÃµ½²»×¼È·¶ÁÊýµÄ¿ÉÄÜÐÔ
+  333          // Ä¬ÈÏÎª 0.25 MCPS ¿ÉÔ¤Éè·¶Î§Îª 0 - 511.99
+  334          #define VL53L0X_DEFAULT_RATE_LIMIT  (0.25)
+  335          
+  336          // ´Ó¼Ä´æÆ÷Êý¾Ý½âÂë PCLKs ÖÐ VCSEL (vertical cavity surface emitting laser) µÄÂö¿íÖÜÆÚ
+  337          #define decode_vcsel_period(reg_val)            (((reg_val) + 1) << 1)
+  338          
+  339          // ´Ó PCLK ÖÐµÄ VCSEL ÖÜÆÚ¼ÆËãºêÖÜÆÚ (ÒÔ *ÄÉÃëÎªµ¥Î»)
+  340          // PLL_period_ps = 1655
+  341          // macro_period_vclks = 2304
+  342          #define calc_macro_period(vcsel_period_pclks)   ((((uint32)2304 * (vcsel_period_pclks) * 1655) + 500) / 1
+             -000)
+  343          
+  344          //-------------------------------------------------------------------------------------------------------
+             -------------
+  345          // º¯Êý¼ò½é     »ñÈ¡Éè±¸ SPAD ÐÅÏ¢
+  346          // ²ÎÊýËµÃ÷     index           Ë÷Òý
+  347          // ²ÎÊýËµÃ÷     type            ÀàÐÍÖµ
+  348          // ·µ»Ø²ÎÊý     uint8           ÊÇ·ñ³É¹¦ 0-³É¹¦ 1-Ê§°Ü
+  349          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_spad_info(index, type_is_aperture);
+  350          // ±¸×¢ÐÅÏ¢     
+  351          //-------------------------------------------------------------------------------------------------------
+             -------------
+  352          static uint8 vl53l0x_get_spad_info (uint8 *index, uint8 *type_is_aperture)
+  353          {
+  354   1          uint8 tmp = 0;
+  355   1          uint8 return_state = 0;
+  356   1          volatile uint16 loop_count = 0;
+  357   1      
+  358   1          do
+  359   1          {
+  360   2              vl53l0x_write_register(0x80, 0x01);
+  361   2              vl53l0x_write_register(0xFF, 0x01);
+  362   2              vl53l0x_write_register(0x00, 0x00);
+  363   2      
+  364   2              vl53l0x_write_register(0xFF, 0x06);
+  365   2              vl53l0x_read_registers(0x83, &tmp, 1);
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 7   
+
+  366   2              vl53l0x_write_register(0x83, tmp | 0x04);
+  367   2              vl53l0x_write_register(0xFF, 0x07);
+  368   2              vl53l0x_write_register(0x81, 0x01);
+  369   2      
+  370   2              vl53l0x_write_register(0x80, 0x01);
+  371   2      
+  372   2              vl53l0x_write_register(0x94, 0x6b);
+  373   2              vl53l0x_write_register(0x83, 0x00);
+  374   2      
+  375   2              tmp = 0x00;
+  376   2              while(tmp != 0x10)
+  377   2              {
+  378   3                  vl53l0x_read_registers(0x83, &tmp, 1);
+  379   3                  loop_count++;
+  380   3                  if(loop_count == VL53L0X_TIMEOUT_COUNT)
+  381   3                  {
+  382   4                      return_state = 1;
+  383   4                      break;
+  384   4                  }
+  385   3              }
+  386   2                      
+  387   2              if(return_state)
+  388   2              {
+  389   3                  break;
+  390   3              }
+  391   2              vl53l0x_write_register(0x83, 0x01);
+  392   2              vl53l0x_read_registers(0x92, &tmp, 1);
+  393   2      
+  394   2              *index = tmp & 0x7f;
+  395   2              *type_is_aperture = (tmp >> 7) & 0x01;
+  396   2      
+  397   2              vl53l0x_write_register(0x81, 0x00);
+  398   2              vl53l0x_write_register(0xFF, 0x06);
+  399   2              vl53l0x_read_registers(0x83, &tmp, 1);
+  400   2              vl53l0x_write_register(0x83, tmp);
+  401   2              vl53l0x_write_register(0xFF, 0x01);
+  402   2              vl53l0x_write_register(0x00, 0x01);
+  403   2      
+  404   2              vl53l0x_write_register(0xFF, 0x00);
+  405   2              vl53l0x_write_register(0x80, 0x00);
+  406   2          }while(0);
+  407   1      
+  408   1          return return_state;
+  409   1      }
+  410          
+  411          //-------------------------------------------------------------------------------------------------------
+             -------------
+  412          // º¯Êý¼ò½é     ½«³¬Ê±ÊýÖµ´Ó MCLKs ×ª»»µ½¶ÔÓ¦µÄ ms
+  413          // ²ÎÊýËµÃ÷     timeout_period_mclks    ³¬Ê±ÖÜÆÚ MCLKs
+  414          // ²ÎÊýËµÃ÷     vcsel_period_pclks      PCLK Öµ
+  415          // ·µ»Ø²ÎÊý     uint32                  ·µ»Ø³¬Ê±ÊýÖµ
+  416          // Ê¹ÓÃÊ¾Àý     vl53l0x_timeout_mclks_to_microseconds(timeout_period_mclks, vcsel_period_pclks);
+  417          // ±¸×¢ÐÅÏ¢     ½«ÐòÁÐ²½Öè³¬Ê±´Ó¾ßÓÐ¸ø¶¨ VCSEL ÖÜÆÚµÄ MCLK (ÒÔ PCLK Îªµ¥Î»)×ª»»ÎªÎ¢Ãë
+  418          //-------------------------------------------------------------------------------------------------------
+             -------------
+  419          static uint32 vl53l0x_timeout_mclks_to_microseconds (uint16 timeout_period_mclks, uint8 vcsel_period_pclk
+             -s)
+  420          {
+  421   1          uint32 macro_period_ns = calc_macro_period(vcsel_period_pclks);
+  422   1      
+  423   1          return ((timeout_period_mclks * macro_period_ns) + (macro_period_ns / 2)) / 1000;
+  424   1      }
+  425          
+  426          //-------------------------------------------------------------------------------------------------------
+             -------------
+  427          // º¯Êý¼ò½é     ½«³¬Ê±ÊýÖµ´Ó ms ×ª»»µ½¶ÔÓ¦µÄ MCLKs
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 8   
+
+  428          // ²ÎÊýËµÃ÷     timeout_period_us   ³¬Ê±ÖÜÆÚ Î¢Ãëµ¥Î»
+  429          // ²ÎÊýËµÃ÷     vcsel_period_pclks  PCLK Öµ
+  430          // ·µ»Ø²ÎÊý     uint32              ·µ»Ø³¬Ê±ÊýÖµ
+  431          // Ê¹ÓÃÊ¾Àý     vl53l0x_timeout_microseconds_to_mclks(timeout_period_us, vcsel_period_pclks);
+  432          // ±¸×¢ÐÅÏ¢     ½«ÐòÁÐ²½Öè³¬Ê±´ÓÎ¢Ãë×ª»»Îª¾ßÓÐ¸ø¶¨ VCSEL ÖÜÆÚµÄ MCLK (ÒÔ PCLK Îªµ¥Î»)
+  433          //-------------------------------------------------------------------------------------------------------
+             -------------
+  434          static uint32 vl53l0x_timeout_microseconds_to_mclks (uint32 timeout_period_us, uint8 vcsel_period_pclks)
+  435          {
+  436   1          uint32 macro_period_ns = calc_macro_period(vcsel_period_pclks);
+  437   1      
+  438   1          return (((timeout_period_us * 1000) + (macro_period_ns / 2)) / macro_period_ns);
+  439   1      }
+  440          
+  441          //-------------------------------------------------------------------------------------------------------
+             -------------
+  442          // º¯Êý¼ò½é     ¶Ô³¬Ê±ÊýÖµ½øÐÐ½âÂë
+  443          // ²ÎÊýËµÃ÷     reg_val         ³¬Ê±Ê±³¤ ¼Ä´æÆ÷Öµ
+  444          // ·µ»Ø²ÎÊý     uint16          ·µ»Ø³¬Ê±ÊýÖµ
+  445          // Ê¹ÓÃÊ¾Àý     vl53l0x_decode_timeout(reg_val);
+  446          // ±¸×¢ÐÅÏ¢     ´Ó¼Ä´æÆ÷Öµ½âÂë MCLK ÖÐµÄÐòÁÐ²½Öè³¬Ê±   
+  447          //-------------------------------------------------------------------------------------------------------
+             -------------
+  448          static uint16 vl53l0x_decode_timeout (uint16 reg_val)
+  449          {
+  450   1        // ¸ñÊ½: (LSByte * 2 ^ MSByte) + 1
+  451   1          return  (uint16)((reg_val & 0x00FF) <<
+  452   1                  (uint16)((reg_val & 0xFF00) >> 8)) + 1;
+  453   1      }
+  454          
+  455          //-------------------------------------------------------------------------------------------------------
+             -------------
+  456          // º¯Êý¼ò½é     ¶Ô³¬Ê±ÊýÖµ½øÐÐ±àÂë
+  457          // ²ÎÊýËµÃ÷     timeout_mclks   ³¬Ê±Ê±³¤ -MCLKs Öµ
+  458          // ·µ»Ø²ÎÊý     uint16          ·µ»Ø±àÂëÖµ
+  459          // Ê¹ÓÃÊ¾Àý     vl53l0x_encode_timeout(timeout_mclks);
+  460          // ±¸×¢ÐÅÏ¢     ÔÚ MCLK ÖÐ¶Ô³¬Ê±µÄÐòÁÐ²½Öè³¬Ê±¼Ä´æÆ÷Öµ½øÐÐ±àÂë
+  461          //-------------------------------------------------------------------------------------------------------
+             -------------
+  462          static uint16 vl53l0x_encode_timeout (uint16 timeout_mclks)
+  463          {
+  464   1          uint32 ls_byte = 0;
+  465   1          uint16 ms_byte = 0;
+  466   1          uint16 return_data = 0;
+  467   1      
+  468   1          if (timeout_mclks > 0)
+  469   1          {
+  470   2              // ¸ñÊ½: (LSByte * 2 ^ MSByte) + 1
+  471   2              ls_byte = timeout_mclks - 1;
+  472   2              while ((ls_byte & 0xFFFFFF00) > 0)
+  473   2              {
+  474   3                  ls_byte >>= 1;
+  475   3                  ms_byte++;
+  476   3              }
+  477   2              return_data = (ms_byte << 8) | (ls_byte & 0xFF);
+  478   2          }
+  479   1          return return_data;
+  480   1      }
+  481          
+  482          //-------------------------------------------------------------------------------------------------------
+             -------------
+  483          // º¯Êý¼ò½é     »ñÈ¡ÐòÁÐ²½ÖèÊ¹ÄÜÉèÖÃ
+  484          // ²ÎÊýËµÃ÷     enables         ÐòÁÐÊ¹ÄÜ²½Öè½á¹¹Ìå
+  485          // ·µ»Ø²ÎÊý     void
+  486          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_sequence_step_enables(enables);
+  487          // ±¸×¢ÐÅÏ¢     
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 9   
+
+  488          //-------------------------------------------------------------------------------------------------------
+             -------------
+  489          static void vl53l0x_get_sequence_step_enables(vl53l0x_sequence_enables_step_struct *enables)
+  490          {
+  491   1          uint8 sequence_config = 0;
+  492   1          vl53l0x_read_registers(VL53L0X_SYSTEM_SEQUENCE_CONFIG, &sequence_config, 1);
+  493   1      
+  494   1          enables->tcc          = (sequence_config >> 4) & 0x1;
+  495   1          enables->dss          = (sequence_config >> 3) & 0x1;
+  496   1          enables->msrc         = (sequence_config >> 2) & 0x1;
+  497   1          enables->pre_range    = (sequence_config >> 6) & 0x1;
+  498   1          enables->final_range  = (sequence_config >> 7) & 0x1;
+  499   1      }
+  500          
+  501          //-------------------------------------------------------------------------------------------------------
+             -------------
+  502          // º¯Êý¼ò½é     »ñÈ¡Âö³åÖÜÆÚ
+  503          // ²ÎÊýËµÃ÷     type            Ô¤Á¿³ÌÀàÐÍ
+  504          // ·µ»Ø²ÎÊý     uint8           ·µ»ØµÄÖÜÆÚÖµ
+  505          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_vcsel_pulse_period(VL53L0X_VCSEL_PERIOD_PER_RANGE);
+  506          // ±¸×¢ÐÅÏ¢     ÔÚ PCLKs ÖÐ»ñÈ¡¸ø¶¨ÖÜÆÚÀàÐÍµÄ VCSEL Âö³åÖÜÆÚ
+  507          //-------------------------------------------------------------------------------------------------------
+             -------------
+  508          static uint8 vl53l0x_get_vcsel_pulse_period (vl53l0x_vcsel_period_type_enum type)
+  509          {
+  510   1          uint8 data_buffer = 0;
+  511   1          if (type == VL53L0X_VCSEL_PERIOD_PER_RANGE)
+  512   1          {
+  513   2              vl53l0x_read_registers(VL53L0X_PRE_RANGE_CONFIG_VCSEL_PERIOD, &data_buffer, 1);
+  514   2              data_buffer = decode_vcsel_period(data_buffer);
+  515   2          }
+  516   1          else if (type == VL53L0X_VCSEL_PERIOD_FINAL_RANGE)
+  517   1          {
+  518   2              vl53l0x_read_registers(VL53L0X_FINAL_RANGE_CONFIG_VCSEL_PERIOD, &data_buffer, 1);
+  519   2              data_buffer = decode_vcsel_period(data_buffer);
+  520   2          }
+  521   1          else
+  522   1          {
+  523   2              data_buffer = 255;
+  524   2          }
+  525   1          return data_buffer;
+  526   1      }
+  527          
+  528          //-------------------------------------------------------------------------------------------------------
+             -------------
+  529          // º¯Êý¼ò½é     »ñÈ¡ÐòÁÐ²½Öè³¬Ê±ÉèÖÃ
+  530          // ²ÎÊýËµÃ÷     enables         ÐòÁÐÊ¹ÄÜ²½Öè½á¹¹Ìå
+  531          // ²ÎÊýËµÃ÷     timeouts        ÐòÁÐ³¬Ê±²½Öè½á¹¹Ìå
+  532          // ·µ»Ø²ÎÊý     void
+  533          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_sequence_step_timeouts(enables, timeouts);
+  534          // ±¸×¢ÐÅÏ¢     »ñÈ¡ËùÓÐ³¬Ê±¶ø²»½ö½öÊÇÇëÇóµÄ³¬Ê± ²¢ÇÒ»¹´æ´¢ÖÐ¼äÖµ
+  535          //-------------------------------------------------------------------------------------------------------
+             -------------
+  536          static void vl53l0x_get_sequence_step_timeouts (vl53l0x_sequence_enables_step_struct const *enables, vl53
+             -l0x_sequence_timeout_step_struct *timeouts)
+  537          {
+  538   1          uint8 reg_buffer[2];
+  539   1          uint16 reg16_buffer = 0;
+  540   1      
+  541   1          timeouts->pre_range_vcsel_period_pclks = vl53l0x_get_vcsel_pulse_period(VL53L0X_VCSEL_PERIOD_PER_RANG
+             -E);
+  542   1      
+  543   1          vl53l0x_read_registers(VL53L0X_MSRC_CONFIG_TIMEOUT_MACROP, reg_buffer, 1);
+  544   1          timeouts->msrc_dss_tcc_mclks = reg_buffer[0] + 1;
+  545   1          timeouts->msrc_dss_tcc_us = vl53l0x_timeout_mclks_to_microseconds(timeouts->msrc_dss_tcc_mclks, (uint
+             -8)timeouts->pre_range_vcsel_period_pclks);
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 10  
+
+  546   1      
+  547   1          vl53l0x_read_registers(VL53L0X_PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI, reg_buffer, 2);
+  548   1          reg16_buffer = ((uint16) reg_buffer[0] << 8) | reg_buffer[1];
+  549   1          timeouts->pre_range_mclks = vl53l0x_decode_timeout(reg16_buffer);
+  550   1          timeouts->pre_range_us = vl53l0x_timeout_mclks_to_microseconds(timeouts->pre_range_mclks, (uint8)time
+             -outs->pre_range_vcsel_period_pclks);
+  551   1      
+  552   1          timeouts->final_range_vcsel_period_pclks = vl53l0x_get_vcsel_pulse_period(VL53L0X_VCSEL_PERIOD_FINAL_
+             -RANGE);
+  553   1      
+  554   1          vl53l0x_read_registers(VL53L0X_FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI, reg_buffer, 2);
+  555   1          reg16_buffer = ((uint16) reg_buffer[0] << 8) | reg_buffer[1];
+  556   1          timeouts->final_range_mclks = vl53l0x_decode_timeout(reg16_buffer);
+  557   1      
+  558   1          if (enables->pre_range)
+  559   1          {
+  560   2              timeouts->final_range_mclks -= timeouts->pre_range_mclks;
+  561   2          }
+  562   1      
+  563   1          timeouts->final_range_us = vl53l0x_timeout_mclks_to_microseconds(timeouts->final_range_mclks, (uint8)
+             -timeouts->final_range_vcsel_period_pclks);
+  564   1      }
+  565          
+  566          //-------------------------------------------------------------------------------------------------------
+             -------------
+  567          // º¯Êý¼ò½é     Ö´ÐÐµ¥´Î²Î¿¼Ð£×¼
+  568          // ²ÎÊýËµÃ÷     vhv_init_byte   Ô¤ÉèÐ£×¼Öµ
+  569          // ·µ»Ø²ÎÊý     uint8           ²Ù×÷ÊÇ·ñ³É¹¦ 0-³É¹¦ 1-Ê§°Ü
+  570          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_vcsel_pulse_period(VL53L0X_VCSEL_PERIOD_PER_RANGE);
+  571          // ±¸×¢ÐÅÏ¢     ÔÚ PCLKs ÖÐ»ñÈ¡¸ø¶¨ÖÜÆÚÀàÐÍµÄ VCSEL Âö³åÖÜÆÚ
+  572          //-------------------------------------------------------------------------------------------------------
+             -------------
+  573          static uint8 vl53l0x_perform_single_ref_calibration (uint8 vhv_init_byte)
+  574          {
+  575   1          uint8 return_state = 0;
+  576   1          uint8 data_buffer = 0;
+  577   1          volatile uint16 loop_count = 0;
+  578   1          do
+  579   1          {
+  580   2              vl53l0x_write_register(VL53L0X_SYSRANGE_START, 0x01 | vhv_init_byte);
+  581   2              vl53l0x_read_registers(VL53L0X_MSRC_CONFIG_TIMEOUT_MACROP, &data_buffer, 1);
+  582   2              while ((data_buffer & 0x07) == 0)
+  583   2              {
+  584   3                  if (loop_count > 0x8fe0)
+  585   3                  {
+  586   4                      return_state = 1;
+  587   4                      break;
+  588   4                  }
+  589   3                  if (loop_count++ % 0x10 == 0)
+  590   3                  {
+  591   4                      vl53l0x_read_registers(VL53L0X_MSRC_CONFIG_TIMEOUT_MACROP, &data_buffer, 1);
+  592   4                  }
+  593   3              }
+  594   2              if(return_state)
+  595   2              {
+  596   3                  break;
+  597   3              }
+  598   2              vl53l0x_write_register(VL53L0X_SYSTEM_INTERRUPT_CLEAR, 0x01);
+  599   2              vl53l0x_write_register(VL53L0X_SYSRANGE_START, 0x00);
+  600   2          }while(0);
+  601   1      
+  602   1          return return_state;
+  603   1      }
+  604          
+  605          //-------------------------------------------------------------------------------------------------------
+             -------------
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 11  
+
+  606          // º¯Êý¼ò½é     ÉèÖÃ²âÁ¿¶¨Ê±Ô¤Ëã (ÒÔÎ¢ÃëÎªµ¥Î»)
+  607          // ²ÎÊýËµÃ÷     budget_us       Éè¶¨µÄ²âÁ¿ÔÊÐíµÄÊ±¼ä
+  608          // ·µ»Ø²ÎÊý     uint8           ²Ù×÷½á¹û 0-³É¹¦ 1-Ê§°Ü
+  609          // Ê¹ÓÃÊ¾Àý     vl53l0x_set_measurement_timing_budget(measurement_timing_budget_us);
+  610          // ±¸×¢ÐÅÏ¢     ÕâÊÇÒ»´Î²âÁ¿ÔÊÐíµÄÊ±¼ä
+  611          //              ¼´ÔÚ²â¾àÐòÁÐµÄ×Ó²½ÖèÖ®¼ä·ÖÅäÊ±¼äÔ¤Ëã
+  612          //              ¸ü³¤µÄÊ±¼äÔ¤ËãÔÊÐí¸ü¾«È·µÄ²âÁ¿
+  613          //              Ôö¼ÓÒ»¸öN±¶µÄÔ¤Ëã¿ÉÒÔ¼õÉÙÒ»¸ösqrt(N)±¶µÄ·¶Î§²âÁ¿±ê×¼Æ«²î
+  614          //              Ä¬ÈÏÎª33ºÁÃë ×îÐ¡ÖµÎª20 ms
+  615          //-------------------------------------------------------------------------------------------------------
+             -------------
+  616          static uint8 vl53l0x_set_measurement_timing_budget (uint32 budget_us)
+  617          {
+  618   1          uint8 return_state = 0;
+  619   1          uint8 data_buffer[3];
+  620   1          uint16 dat = 0;
+  621   1              uint32 used_budget_us;
+  622   1              uint32 final_range_timeout_us;
+  623   1              uint16 final_range_timeout_mclks;
+  624   1              
+  625   1          vl53l0x_sequence_enables_step_struct enables;
+  626   1          vl53l0x_sequence_timeout_step_struct timeouts;
+  627   1      
+  628   1          do
+  629   1          {
+  630   2              if (budget_us < VL53L0X_MIN_TIMING_BUDGET)
+  631   2              {
+  632   3                  return_state = 1;
+  633   3                  break;
+  634   3              }
+  635   2      
+  636   2              used_budget_us = VL53L0X_SET_START_OVERHEAD + VL53L0X_END_OVERHEAD;
+  637   2              vl53l0x_get_sequence_step_enables(&enables);
+  638   2              vl53l0x_get_sequence_step_timeouts(&enables, &timeouts);
+  639   2      
+  640   2              if (enables.tcc)
+  641   2              {
+  642   3                  used_budget_us += (timeouts.msrc_dss_tcc_us + VL53L0X_TCC_OVERHEAD);
+  643   3              }
+  644   2      
+  645   2              if (enables.dss)
+  646   2              {
+  647   3                  used_budget_us += 2 * (timeouts.msrc_dss_tcc_us + VL53L0X_DSS_OVERHEAD);
+  648   3              }
+  649   2              else if (enables.msrc)
+  650   2              {
+  651   3                  used_budget_us += (timeouts.msrc_dss_tcc_us + VL53L0X_MSRC_OVERHEAD);
+  652   3              }
+  653   2      
+  654   2              if (enables.pre_range)
+  655   2              {
+  656   3                  used_budget_us += (timeouts.pre_range_us + VL53L0X_PRERANGE_OVERHEAD);
+  657   3              }
+  658   2      
+  659   2              if (enables.final_range)
+  660   2              {
+  661   3                  // Çë×¢Òâ ×îÖÕ·¶Î§³¬Ê±ÓÉ¼ÆÊ±Ô¤ËãºÍÐòÁÐÖÐËùÓÐÆäËû³¬Ê±µÄ×ÜºÍ¾ö¶¨
+  662   3                  // Èç¹ûÃ»ÓÐ¿Õ¼äÓÃÓÚ×îÖÕ·¶Î§³¬Ê± Ôò½«ÉèÖÃ´íÎó
+  663   3                  // ·ñÔò Ê£ÓàÊ±¼ä½«Ó¦ÓÃÓÚ×îÖÕ·¶Î§
+  664   3                  used_budget_us += VL53L0X_FINALlRANGE_OVERHEAD;
+  665   3                  if (used_budget_us > budget_us)
+  666   3                  {
+  667   4                      // ÇëÇóµÄ³¬Ê±Ì«´ó
+  668   4                      return_state = 1;
+  669   4                      break;
+  670   4                  }
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 12  
+
+  671   3      
+  672   3                  // ¶ÔÓÚ×îÖÕ³¬Ê±·¶Î§ ±ØÐëÌí¼ÓÔ¤Á¿³Ì·¶Î§³¬Ê±
+  673   3                  // Îª´Ë ×îÖÕ³¬Ê±ºÍÔ¤Á¿³Ì³¬Ê±±ØÐëÒÔºêÖÜÆÚ MClks ±íÊ¾
+  674   3                  // ÒòÎªËüÃÇ¾ßÓÐ²»Í¬µÄ VCSEL ÖÜÆÚ
+  675   3                  final_range_timeout_us = budget_us - used_budget_us;
+  676   3                  final_range_timeout_mclks =
+  677   3                  vl53l0x_timeout_microseconds_to_mclks(final_range_timeout_us,
+  678   3                           (uint8)timeouts.final_range_vcsel_period_pclks);
+  679   3      
+  680   3                  if (enables.pre_range)
+  681   3                  {
+  682   4                      final_range_timeout_mclks += timeouts.pre_range_mclks;
+  683   4                  }
+  684   3      
+  685   3                  dat = vl53l0x_encode_timeout(final_range_timeout_mclks);
+  686   3                  data_buffer[0] = VL53L0X_FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI;
+  687   3                  data_buffer[1] = ((dat >> 8) & 0xFF);
+  688   3                  data_buffer[2] = (dat & 0xFF);
+  689   3                  vl53l0x_write_array(data_buffer, 3);
+  690   3              }
+  691   2          }while(0);
+  692   1          return return_state;
+  693   1      }
+  694          
+  695          //-------------------------------------------------------------------------------------------------------
+             -------------
+  696          // º¯Êý¼ò½é     »ñÈ¡²âÁ¿¶¨Ê±Ô¤Ëã (ÒÔÎ¢ÃëÎªµ¥Î»)
+  697          // ²ÎÊýËµÃ÷     void
+  698          // ·µ»Ø²ÎÊý     uint32          ÒÑÉè¶¨µÄ²âÁ¿ÔÊÐíµÄÊ±¼ä
+  699          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_measurement_timing_budget();
+  700          // ±¸×¢ÐÅÏ¢     
+  701          //-------------------------------------------------------------------------------------------------------
+             -------------
+  702          static uint32 vl53l0x_get_measurement_timing_budget (void)
+  703          {
+  704   1          vl53l0x_sequence_enables_step_struct enables;
+  705   1          vl53l0x_sequence_timeout_step_struct timeouts;
+  706   1      
+  707   1          // ¿ªÊ¼ºÍ½áÊø¿ªÏúÊ±¼äÊ¼ÖÕ´æÔÚ
+  708   1          uint32 budget_us = VL53L0X_GET_START_OVERHEAD + VL53L0X_END_OVERHEAD;
+  709   1      
+  710   1          vl53l0x_get_sequence_step_enables(&enables);
+  711   1          vl53l0x_get_sequence_step_timeouts(&enables, &timeouts);
+  712   1      
+  713   1          if (enables.tcc)
+  714   1          {
+  715   2              budget_us += (timeouts.msrc_dss_tcc_us + VL53L0X_TCC_OVERHEAD);
+  716   2          }
+  717   1      
+  718   1          if (enables.dss)
+  719   1          {
+  720   2              budget_us += 2 * (timeouts.msrc_dss_tcc_us + VL53L0X_DSS_OVERHEAD);
+  721   2          }
+  722   1          else if (enables.msrc)
+  723   1          {
+  724   2              budget_us += (timeouts.msrc_dss_tcc_us + VL53L0X_MSRC_OVERHEAD);
+  725   2          }
+  726   1      
+  727   1          if (enables.pre_range)
+  728   1          {
+  729   2              budget_us += (timeouts.pre_range_us + VL53L0X_PRERANGE_OVERHEAD);
+  730   2          }
+  731   1      
+  732   1          if (enables.final_range)
+  733   1          {
+  734   2              budget_us += (timeouts.final_range_us + VL53L0X_FINALlRANGE_OVERHEAD);
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 13  
+
+  735   2          }
+  736   1      
+  737   1          return budget_us;
+  738   1      }
+  739          
+  740          //-------------------------------------------------------------------------------------------------------
+             -------------
+  741          // º¯Êý¼ò½é     ÉèÖÃ·µ»ØÐÅºÅËÙÂÊÏÞÖÆ ¸ÃÖµµ¥Î»Îª MCPS (°ÙÍò´ÎÃ¿Ãë)
+  742          // ²ÎÊýËµÃ÷     limit_mcps      ÉèÖÃµÄ×îÐ¡ËÙÂÊ
+  743          // ·µ»Ø²ÎÊý     void
+  744          // Ê¹ÓÃÊ¾Àý     vl53l0x_set_signal_rate_limit(0.25);
+  745          // ±¸×¢ÐÅÏ¢     Õâ¸öËÙÂÊ±íÊ¾´ÓÄ¿±ê·´Éä²¢±»Éè±¸¼ì²âµ½µÄÐÅºÅµÄÕñ·ù
+  746          //              ÉèÖÃ´ËÏÞÖÆ¿ÉÒÔÈ·¶¨´«¸ÐÆ÷±¨¸æÓÐÐ§¶ÁÊýËùÐèµÄ×îÐ¡²âÁ¿Öµ
+  747          //              ÉèÖÃÒ»¸ö½ÏµÍµÄÏÞÖÆ¿ÉÒÔÔö¼Ó´«¸ÐÆ÷µÄ²âÁ¿·¶Î§
+  748          //              µ«ËÆºõÒ²Ôö¼ÓÁË <ÓÉÓÚÀ´×ÔÄ¿±êÒÔÍâµÄÎïÌåµÄ²»ÐèÒªµÄ·´Éäµ¼ÖÂ> µÃµ½²»×¼È·¶ÁÊýµÄ¿ÉÄÜÐÔ
+  749          //              Ä¬ÈÏÎª 0.25 MCPS ¿ÉÔ¤Éè·¶Î§Îª 0 - 511.99
+  750          //-------------------------------------------------------------------------------------------------------
+             -------------
+  751          static void vl53l0x_set_signal_rate_limit (float limit_mcps)
+  752          {
+  753   1              uint8 data_buffer[3];
+  754   1          uint16 limit_mcps_16bit = (limit_mcps * (1 << 7));
+  755   1          //zf_assert(limit_mcps >= 0 || limit_mcps <= 511.99);
+  756   1      
+  757   1      
+  758   1          data_buffer[0] = VL53L0X_FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT;
+  759   1          data_buffer[1] = ((limit_mcps_16bit >> 8) & 0xFF);
+  760   1          data_buffer[2] = (limit_mcps_16bit & 0xFF);
+  761   1      
+  762   1          vl53l0x_write_array(data_buffer, 3);
+  763   1      }
+  764          
+  765          //-------------------------------------------------------------------------------------------------------
+             -------------
+  766          // º¯Êý¼ò½é     ·µ»ØÒÔºÁÃ×Îªµ¥Î»µÄ·¶Î§¶ÁÊý
+  767          // ²ÎÊýËµÃ÷     void
+  768          // ·µ»Ø²ÎÊý     uint8           0-Êý¾ÝÎÞÐ§ 1-Êý¾ÝÓÐÐ§
+  769          // Ê¹ÓÃÊ¾Àý     vl53l0x_get_distance();
+  770          // ±¸×¢ÐÅÏ¢     ÔÚ¿ªÊ¼µ¥´ÎÉä³Ì²âÁ¿ºóÒ²µ÷ÓÃ´Ëº¯Êý
+  771          //-------------------------------------------------------------------------------------------------------
+             -------------
+  772          #define FILTER_THRESHOLD 800 // ÉèÖÃÏÞ·ùãÐÖµ£¬¸ù¾ÝÐèÒªµ÷Õû
+  773          
+  774          void vl53l0x_get_distance(void)
+  775          {
+  776   1          uint8 reg_databuffer[3];
+  777   1          uint16 distance;
+  778   1          vl53l0x_read_registers_1(VL53L0X_RESULT_INTERRUPT_STATUS, reg_databuffer, 1);
+  779   1          if ((reg_databuffer[0] & 0x07) == 0)
+  780   1          {
+  781   2              vl53l0x_finsh_flag = 0;
+  782   2          }
+  783   1          else
+  784   1          {
+  785   2              // ¼ÙÉèÏßÐÔ¶ÈÐ£ÕýÔöÒæÎªÄ¬ÈÏÖµ 1000 ÇÒÎ´ÆôÓÃ·ÖÊý·¶Î§
+  786   2              vl53l0x_read_registers_1(VL53L0X_RESULT_RANGE_STATUS + 10, reg_databuffer, 2);
+  787   2              distance = ((uint16)reg_databuffer[0] << 8) | reg_databuffer[1];
+  788   2              vl53l0x_finsh_flag = 1;
+  789   2              // ÏÞÖÆ¾àÀëÖµ²»³¬¹ý1100
+  790   2              if (distance > 1100)
+  791   2                  distance = 1100;
+  792   2              // Ìí¼ÓÂË²¨
+  793   2             if(abs(distance - vl53l0x_distance_mm) < FILTER_THRESHOLD)   //Êý¾ÝÓÐÐ§
+  794   2                 vl53l0x_distance_mm = distance;
+  795   2             
+  796   2          }
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 14  
+
+  797   1      }
+  798          
+  799          
+  800          
+  801          //-------------------------------------------------------------------------------------------------------
+             -------------
+  802          // º¯Êý¼ò½é     ³õÊ¼»¯ VL53L0X
+  803          // ²ÎÊýËµÃ÷     void
+  804          // ·µ»Ø²ÎÊý     uint8           1-³õÊ¼»¯Ê§°Ü 0-³õÊ¼»¯³É¹¦
+  805          // Ê¹ÓÃÊ¾Àý     vl53l0x_init();
+  806          // ±¸×¢ÐÅÏ¢     
+  807          //-------------------------------------------------------------------------------------------------------
+             -------------
+  808          uint8 vl53l0x_init (void)
+  809          {
+  810   1          uint32 measurement_timing_budget_us = 0;
+  811   1          uint8 stop_variable = 0;
+  812   1          uint8 return_state = 0;
+  813   1          uint8 reg_data_buffer = 0;
+  814   1          uint8 ref_spad_map[6];
+  815   1          uint8 data_buffer[7];
+  816   1              uint8 i = 0;
+  817   1              
+  818   1          memset(ref_spad_map, 0, 6);
+  819   1          memset(data_buffer, 0, 7);
+  820   1      
+  821   1      
+  822   1      
+  823   1          do
+  824   1          {
+  825   2      //        delay_ms(100);
+  826   2      //        VL53L0X_XSHUT_PIN = 0;
+  827   2      //        delay_ms(50);
+  828   2      //        VL53L0X_XSHUT_PIN = 1;
+  829   2      //        delay_ms(100);
+  830   2      
+  831   2              // -------------------------------- VL53L0X Æô¶¯³õÊ¼»¯ --------------------------------
+  832   2              reg_data_buffer = vl53l0x_read_register(VL53L0X_IO_VOLTAGE_CONFIG);         // ´«¸ÐÆ÷Ä¬ÈÏ IO Îª 1
+             -.8V Ä£Ê½
+  833   2              vl53l0x_write_register(VL53L0X_IO_VOLTAGE_CONFIG, reg_data_buffer | 0x01);  // ÅäÖÃ IO Îª 2.8V Ä£
+             -Ê½
+  834   2      
+  835   2              vl53l0x_write_register(0x88, 0x00);                                         // ÉèÖÃÎª±ê×¼ IIC Ä£Ê
+             -½
+  836   2      
+  837   2              vl53l0x_write_register(0x80, 0x01);
+  838   2              vl53l0x_write_register(0xFF, 0x01);
+  839   2              vl53l0x_write_register(0x00, 0x00);
+  840   2      
+  841   2              vl53l0x_read_registers(0x91, &stop_variable , 1);
+  842   2      
+  843   2              vl53l0x_write_register(0x00, 0x01);
+  844   2              vl53l0x_write_register(0xFF, 0x00);
+  845   2              vl53l0x_write_register(0x80, 0x00);
+  846   2      
+  847   2              // ½ûÓÃ SIGNAL_RATE_MSRC(bit1) ºÍ SIGNAL_RATE_PRE_RANGE(bit4) ÏÞÖÆ¼ì²é
+  848   2              reg_data_buffer = vl53l0x_read_register(VL53L0X_MSRC_CONFIG);
+  849   2              vl53l0x_write_register(VL53L0X_MSRC_CONFIG, reg_data_buffer | 0x12);
+  850   2      
+  851   2              vl53l0x_set_signal_rate_limit(VL53L0X_DEFAULT_RATE_LIMIT);                  // ÉèÖÃÐÅºÅËÙÂÊÏÞÖÆ
+  852   2              vl53l0x_write_register(VL53L0X_SYSTEM_SEQUENCE_CONFIG, 0xFF);
+  853   2              // -------------------------------- VL53L0X Æô¶¯³õÊ¼»¯ --------------------------------
+  854   2      
+  855   2              // -------------------------------- VL53L0X ÅäÖÃ³õÊ¼»¯ --------------------------------
+  856   2              if (vl53l0x_get_spad_info(&data_buffer[0], &data_buffer[1]))
+  857   2              {
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 15  
+
+  858   3                              return_state = 1;
+  859   3                  // Èç¹û³ÌÐòÔÚÊä³öÁË¶ÏÑÔÐÅÏ¢ ²¢ÇÒÌáÊ¾³ö´íÎ»ÖÃÔÚÕâÀï
+  860   3                  // ÄÇÃ´¾ÍÊÇ vl53l0x ×Ô¼ì³ö´í²¢³¬Ê±ÍË³öÁË
+  861   3                  // ¼ì²éÒ»ÏÂ½ÓÏßÓÐÃ»ÓÐÎÊÌâ Èç¹ûÃ»ÎÊÌâ¿ÉÄÜ¾ÍÊÇ»µÁË
+  862   3      
+  863   3                              printf("vl53l0x init error.\r\n");
+  864   3                              break;
+  865   3              }
+  866   2      
+  867   2              // ´Ó GLOBAL_CONFIG_SPAD_ENABLES_REF_[0-6] »ñÈ¡ SPAD map (RefGoodSpadMap) Êý¾Ý
+  868   2              vl53l0x_read_registers(VL53L0X_GLOBAL_CONFIG_SPAD_ENABLES_REF_0, ref_spad_map, 6);
+  869   2      
+  870   2              vl53l0x_write_register(0xFF, 0x01);
+  871   2              vl53l0x_write_register(VL53L0X_DYNAMIC_SPAD_REF_EN_START_OFFSET, 0x00);
+  872   2              vl53l0x_write_register(VL53L0X_DYNAMIC_SPAD_NUM_REQUESTED_REF_SPAD, 0x2C);
+  873   2              vl53l0x_write_register(0xFF, 0x00);
+  874   2              vl53l0x_write_register(VL53L0X_GLOBAL_CONFIG_REF_EN_START_SELECT, 0xB4);
+  875   2      
+  876   2              data_buffer[2] = data_buffer[1] ? 12 : 0; // 12 is the first aperture spad
+  877   2              for (i = 0; i < 48; i++)
+  878   2              {
+  879   3                  if (i < data_buffer[2] || data_buffer[3] == data_buffer[0])
+  880   3                  {
+  881   4                      // ´ËÎ»µÍÓÚÓ¦ÆôÓÃµÄµÚÒ»¸öÎ»
+  882   4                      // »òÕß (eference_spad_count) Î»ÒÑÆôÓÃ
+  883   4                      // Òò´Ë´ËÎ»ÎªÁã
+  884   4                      ref_spad_map[i / 8] &= ~(1 << (i % 8));
+  885   4                  }
+  886   3                  else if ((ref_spad_map[i / 8] >> (i % 8)) & 0x1)
+  887   3                  {
+  888   4                      data_buffer[3]++;
+  889   4                  }
+  890   3              }
+  891   2      
+  892   2              data_buffer[0] = VL53L0X_GLOBAL_CONFIG_SPAD_ENABLES_REF_0;
+  893   2              for(i = 1; i < 7; i++)
+  894   2              {
+  895   3                  data_buffer[1] = ref_spad_map[i-1];
+  896   3              }
+  897   2              vl53l0x_write_array(data_buffer, 7);
+  898   2      
+  899   2              // Ä¬ÈÏ×ª»»ÉèÖÃ version 02/11/2015_v36
+  900   2              vl53l0x_write_register(0xFF, 0x01);
+  901   2              vl53l0x_write_register(0x00, 0x00);
+  902   2              vl53l0x_write_register(0xFF, 0x00);
+  903   2              vl53l0x_write_register(0x09, 0x00);
+  904   2              vl53l0x_write_register(0x10, 0x00);
+  905   2              vl53l0x_write_register(0x11, 0x00);
+  906   2              vl53l0x_write_register(0x24, 0x01);
+  907   2              vl53l0x_write_register(0x25, 0xFF);
+  908   2              vl53l0x_write_register(0x75, 0x00);
+  909   2              vl53l0x_write_register(0xFF, 0x01);
+  910   2              vl53l0x_write_register(0x4E, 0x2C);
+  911   2              vl53l0x_write_register(0x48, 0x00);
+  912   2              vl53l0x_write_register(0x30, 0x20);
+  913   2              vl53l0x_write_register(0xFF, 0x00);
+  914   2              vl53l0x_write_register(0x30, 0x09);
+  915   2              vl53l0x_write_register(0x54, 0x00);
+  916   2              vl53l0x_write_register(0x31, 0x04);
+  917   2              vl53l0x_write_register(0x32, 0x03);
+  918   2              vl53l0x_write_register(0x40, 0x83);
+  919   2              vl53l0x_write_register(0x46, 0x25);
+  920   2              vl53l0x_write_register(0x60, 0x00);
+  921   2              vl53l0x_write_register(0x27, 0x00);
+  922   2              vl53l0x_write_register(0x50, 0x06);
+  923   2              vl53l0x_write_register(0x51, 0x00);
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 16  
+
+  924   2              vl53l0x_write_register(0x52, 0x96);
+  925   2              vl53l0x_write_register(0x56, 0x08);
+  926   2              vl53l0x_write_register(0x57, 0x30);
+  927   2              vl53l0x_write_register(0x61, 0x00);
+  928   2              vl53l0x_write_register(0x62, 0x00);
+  929   2              vl53l0x_write_register(0x64, 0x00);
+  930   2              vl53l0x_write_register(0x65, 0x00);
+  931   2              vl53l0x_write_register(0x66, 0xA0);
+  932   2              vl53l0x_write_register(0xFF, 0x01);
+  933   2              vl53l0x_write_register(0x22, 0x32);
+  934   2              vl53l0x_write_register(0x47, 0x14);
+  935   2              vl53l0x_write_register(0x49, 0xFF);
+  936   2              vl53l0x_write_register(0x4A, 0x00);
+  937   2              vl53l0x_write_register(0xFF, 0x00);
+  938   2              vl53l0x_write_register(0x7A, 0x0A);
+  939   2              vl53l0x_write_register(0x7B, 0x00);
+  940   2              vl53l0x_write_register(0x78, 0x21);
+  941   2              vl53l0x_write_register(0xFF, 0x01);
+  942   2              vl53l0x_write_register(0x23, 0x34);
+  943   2              vl53l0x_write_register(0x42, 0x00);
+  944   2              vl53l0x_write_register(0x44, 0xFF);
+  945   2              vl53l0x_write_register(0x45, 0x26);
+  946   2              vl53l0x_write_register(0x46, 0x05);
+  947   2              vl53l0x_write_register(0x40, 0x40);
+  948   2              vl53l0x_write_register(0x0E, 0x06);
+  949   2              vl53l0x_write_register(0x20, 0x1A);
+  950   2              vl53l0x_write_register(0x43, 0x40);
+  951   2              vl53l0x_write_register(0xFF, 0x00);
+  952   2              vl53l0x_write_register(0x34, 0x03);
+  953   2              vl53l0x_write_register(0x35, 0x44);
+  954   2              vl53l0x_write_register(0xFF, 0x01);
+  955   2              vl53l0x_write_register(0x31, 0x04);
+  956   2              vl53l0x_write_register(0x4B, 0x09);
+  957   2              vl53l0x_write_register(0x4C, 0x05);
+  958   2              vl53l0x_write_register(0x4D, 0x04);
+  959   2              vl53l0x_write_register(0xFF, 0x00);
+  960   2              vl53l0x_write_register(0x44, 0x00);
+  961   2              vl53l0x_write_register(0x45, 0x20);
+  962   2              vl53l0x_write_register(0x47, 0x08);
+  963   2              vl53l0x_write_register(0x48, 0x28);
+  964   2              vl53l0x_write_register(0x67, 0x00);
+  965   2              vl53l0x_write_register(0x70, 0x04);
+  966   2              vl53l0x_write_register(0x71, 0x01);
+  967   2              vl53l0x_write_register(0x72, 0xFE);
+  968   2              vl53l0x_write_register(0x76, 0x00);
+  969   2              vl53l0x_write_register(0x77, 0x00);
+  970   2              vl53l0x_write_register(0xFF, 0x01);
+  971   2              vl53l0x_write_register(0x0D, 0x01);
+  972   2              vl53l0x_write_register(0xFF, 0x00);
+  973   2              vl53l0x_write_register(0x80, 0x01);
+  974   2              vl53l0x_write_register(0x01, 0xF8);
+  975   2              vl53l0x_write_register(0xFF, 0x01);
+  976   2              vl53l0x_write_register(0x8E, 0x01);
+  977   2              vl53l0x_write_register(0x00, 0x01);
+  978   2              vl53l0x_write_register(0xFF, 0x00);
+  979   2              vl53l0x_write_register(0x80, 0x00);
+  980   2      
+  981   2              // ½«ÖÐ¶ÏÅäÖÃÉèÖÃÎªÐÂÑùÆ·¾ÍÐ÷
+  982   2              vl53l0x_write_register(VL53L0X_SYSTEM_INTERRUPT_GPIO_CONFIG, 0x04);
+  983   2              reg_data_buffer = vl53l0x_read_register(VL53L0X_GPIO_HV_MUX_ACTIVE_HIGH);
+  984   2              vl53l0x_write_register(VL53L0X_GPIO_HV_MUX_ACTIVE_HIGH, reg_data_buffer & ~0x10);
+  985   2              vl53l0x_write_register(VL53L0X_SYSTEM_INTERRUPT_CLEAR, 0x01);
+  986   2      
+  987   2              measurement_timing_budget_us  = vl53l0x_get_measurement_timing_budget();
+  988   2      
+  989   2              // Ä¬ÈÏÇé¿öÏÂ½ûÓÃ MSRC ºÍ TCC
+C251 COMPILER V5.60.0,  TOF                                                                26/04/24  10:40:39  PAGE 17  
+
+  990   2              // MSRC = Minimum Signal Rate Check
+  991   2              // TCC = Target CentreCheck
+  992   2              vl53l0x_write_register(VL53L0X_SYSTEM_SEQUENCE_CONFIG, 0xE8);
+  993   2              vl53l0x_set_measurement_timing_budget(measurement_timing_budget_us);    // ÖØÐÂ¼ÆËãÊ±ÐòÔ¤Ëã
+  994   2              // -------------------------------- VL53L0X ÅäÖÃ³õÊ¼»¯ --------------------------------
+  995   2      
+  996   2              vl53l0x_write_register(VL53L0X_SYSTEM_SEQUENCE_CONFIG, 0x01);
+  997   2              if (vl53l0x_perform_single_ref_calibration(0x40))
+  998   2              {
+  999   3                  return_state = 1;
+ 1000   3                  break;
+ 1001   3              }
+ 1002   2              vl53l0x_write_register(VL53L0X_SYSTEM_SEQUENCE_CONFIG, 0x02);
+ 1003   2              if (vl53l0x_perform_single_ref_calibration(0x00))
+ 1004   2              {
+ 1005   3                  return_state = 1;
+ 1006   3                  break;
+ 1007   3              }
+ 1008   2              vl53l0x_write_register(VL53L0X_SYSTEM_SEQUENCE_CONFIG, 0xE8);           // »Ö¸´ÒÔÇ°µÄÐòÁÐÅäÖÃ
+ 1009   2      
+ 1010   2              delay_ms(100);
+ 1011   2      
+ 1012   2              vl53l0x_write_register(0x80, 0x01);
+ 1013   2              vl53l0x_write_register(0xFF, 0x01);
+ 1014   2              vl53l0x_write_register(0x00, 0x00);
+ 1015   2              vl53l0x_write_register(0x91, stop_variable);
+ 1016   2              vl53l0x_write_register(0x00, 0x01);
+ 1017   2              vl53l0x_write_register(0xFF, 0x00);
+ 1018   2              vl53l0x_write_register(0x80, 0x00);
+ 1019   2      
+ 1020   2              vl53l0x_write_register(VL53L0X_SYSRANGE_START, 0x02);
+ 1021   2          }while(0);
+ 1022   1      
+ 1023   1          return return_state;
+ 1024   1      }
+ 1025          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      3608     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =         3        122
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        28     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
