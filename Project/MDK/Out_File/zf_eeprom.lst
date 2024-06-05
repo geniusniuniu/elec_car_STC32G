@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  zf_eeprom                                                          26/04/24  10:40:34  PAGE 1   
+C251 COMPILER V5.60.0,  zf_eeprom                                                          05/06/24  20:08:23  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_eeprom
@@ -66,7 +66,7 @@ stmt  level    source
    49          //  @return     void
    50          //  Sample usage:           
    51          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  zf_eeprom                                                          26/04/24  10:40:34  PAGE 2   
+C251 COMPILER V5.60.0,  zf_eeprom                                                          05/06/24  20:08:23  PAGE 2   
 
              -------------
    52          void iap_init(void)
@@ -134,7 +134,7 @@ stmt  level    source
              -------------
   107          void iap_read_bytes(uint16 addr, uint8 *buf, uint16 len)
   108          {
-C251 COMPILER V5.60.0,  zf_eeprom                                                          26/04/24  10:40:34  PAGE 3   
+C251 COMPILER V5.60.0,  zf_eeprom                                                          05/06/24  20:08:23  PAGE 3   
 
   109   1              IAP_CMD = 1;                            //设置 IAP 读命令       
   110   1      
@@ -202,7 +202,7 @@ stmt  level    source
   168          
   169          //-------------------------------------------------------------------------------------------------------
              -------------
-C251 COMPILER V5.60.0,  zf_eeprom                                                          26/04/24  10:40:34  PAGE 4   
+C251 COMPILER V5.60.0,  zf_eeprom                                                          05/06/24  20:08:23  PAGE 4   
 
   170          //  @brief      扩展EEPROM写多个字节(无需擦除)
   171          //  @param      addr                    需要写的eeprom地址

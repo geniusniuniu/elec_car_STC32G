@@ -19,11 +19,12 @@
 									
 extern char Barrier_Executed;
 extern char Barrier_Flag1;
-extern float Circle_Flag1;
-extern float Circle_Flag4;
-extern float Circle_Flag2;
-extern float Circle_Delay1;	
-extern float Circle_Delay2;
+
+extern char Circle_Flag1;
+extern char Circle_Flag2;
+extern int Circle_Delay1;	
+extern int Circle_Delay2;
+
 extern char Special_Elem;
 
 void Elem_Barrier_Timer(void);  //2秒钟

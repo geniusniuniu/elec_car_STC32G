@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               26/04/24  10:40:38  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               05/06/24  20:34:05  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -34,131 +34,167 @@ stmt  level    source
    23          extern float Flag_Out_R;
    24          
    25          volatile uint16 Dis_Process = 0;
-   26          
-   27          float Adjust_Val = 0;
-   28          char KeyValue = 0;      
-   29          
-   30          void Init_all(void);
-   31          
-   32          #define FILTER_N 12
-   33          
-   34          uint16 filter_buf[FILTER_N + 1];
-   35          
-   36          uint16 Filter_Window(uint16 Dis) 
-   37          {
-   38   1        int i;
-   39   1        uint16 filter_sum = 0;
-   40   1        filter_buf[FILTER_N] = Dis;
-   41   1        for(i = 0; i < FILTER_N; i++) 
-   42   1        {
-   43   2          filter_buf[i] = filter_buf[i + 1]; // 所有数据左移，低位仍掉
-   44   2          filter_sum += filter_buf[i];
-   45   2        }
-   46   1        return (uint16)(filter_sum / FILTER_N);
-   47   1      }
-   48          
+   26          char Distance_Num = 0;
+   27          
+   28          float Adjust_Val = 0;
+   29          char KeyValue = 0;      
+   30          
+   31          void Init_all(void);
+   32          
+   33          #define FILTER_N 12
+   34          
+   35          uint16 filter_buf[FILTER_N + 1];
+   36          
+   37          uint16 Filter_Window(uint16 Dis) 
+   38          {
+   39   1        int i;
+   40   1        uint16 filter_sum = 0;
+   41   1        filter_buf[FILTER_N] = Dis;
+   42   1        for(i = 0; i < FILTER_N; i++) 
+   43   1        {
+   44   2          filter_buf[i] = filter_buf[i + 1]; // 所有数据左移，低位仍掉
+   45   2          filter_sum += filter_buf[i];
+   46   2        }
+   47   1        return (uint16)(filter_sum / FILTER_N);
+   48   1      }
    49          
-   50          void main(void)   
-   51          {
-   52   1              Init_all();
-   53   1              EnableGlobalIRQ();      
-   54   1              Adjust_Val = 0;
-   55   1              while(1)
-   56   1              {               
-   57   2                      printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",ADC_proc[0] ,ADC_proc[1],ADC_proc[2],ADC_proc[3],Ratio,
-C251 COMPILER V5.60.0,  main                                                               26/04/24  10:40:38  PAGE 2   
+   50          
+   51          void main(void)   
+   52          {
+   53   1              Init_all();
+   54   1              EnableGlobalIRQ();      
+   55   1              Adjust_Val = 0;
+   56   1              while(1)
+   57   1              {               
+C251 COMPILER V5.60.0,  main                                                               05/06/24  20:34:05  PAGE 2   
 
+   58   2                      printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",ADC_proc[0] ,ADC_proc[1],ADC_proc[2],ADC_proc[3],Ratio,
              -ADC_proc[4],Right_Wheel.out);
-   58   2      /******************************************** 按键读值***********************************************
+   59   2      /******************************************** 按键读值***********************************************
              -***********************/       
-   59   2                      ui_show();
-   60   2                      KeyValue = GetKey_Value(0);
-   61   2                      if              (KeyValue == KEY2_PRES)         {page++; if(page >= 3)  page = 3;oled_all_static_state();}              
-   62   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
-   63   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
-   64   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
-   65   2              
-   66   2      /******************************************** 类似中断服务处理 **********************************
+   60   2                      ui_show();
+   61   2                      KeyValue = GetKey_Value(0);
+   62   2                      if              (KeyValue == KEY2_PRES)         {page++; if(page >= 3)  page = 3;oled_all_static_state();}              
+   63   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
+   64   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
+   65   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
+   66   2              
+   67   2      /******************************************** 类似中断服务处理 **********************************
              -****************************/ 
-   67   2                      if(Isr_Flag_10 == 1)
-   68   2                      {
-   69   3                              MPU6050_Refresh_DMP();                          //读取角度值
-   70   3                              MPU_Get_Gyroscope(&gx, &gy, &gz);       //读取角速度
-   71   3                  vl53l0x_get_distance();             //距离测量
-   72   3                  if (vl53l0x_finsh_flag == 1)        //一次测距有效
-   73   3                      Dis_Process = Filter_Window(vl53l0x_distance_mm);
-   74   3                  Elem_Up_Down(Pitch);        
-   75   3                              Isr_Flag_10 = 0;
-   76   3                      }
-   77   2                
-   78   2              }
-   79   1      }
-   80          
-   81          
-   82          void Init_all(void)
-   83          {
-   84   1              WTST = 0;                                                
-   85   1              DisableGlobalIRQ();                             
-   86   1              sys_clk = 35000000;                             
-   87   1      
-   88   1              board_init();                                   
-   89   1      
-   90   1      ////编码器方向引脚初始化
-   91   1              gpio_mode(P5_3, GPIO);          
-   92   1              gpio_mode(P3_5, GPIO);  
-   93   1              
-   94   1      ////按键引脚初始化
-   95   1              Key_Init();
-   96   1              
-   97   1      ////测距模块初始化
-   98   1              //gpio_mode(P3_2, GPIO);
-   99   1          vl53l0x_init();
-  100   1      //    dl1a_init();
-  101   1      ////OLED初始化
-  102   1              ui_init();                                      
-  103   1              
-  104   1      ////MPU6050初始化
-  105   1              MPU6050_DMP_Init();     
-  106   1      //      
-  107   1      ////定时器初始化
-  108   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
-  109   1      //      
-  110   1      ////编码器初始化
-  111   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
-  112   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
-  113   1              
-  114   1      ////电机初始化
-  115   1              Motor_Init();
-  116   1              
-  117   1      ////蜂鸣器初始化
-  118   1               Buzzer_Init();
-  119   1              
-  120   1      ////初始化所有AD引脚
-C251 COMPILER V5.60.0,  main                                                               26/04/24  10:40:38  PAGE 3   
+   68   2                      if(Isr_Flag_10 == 1)
+   69   2                      {
+   70   3                              MPU6050_Refresh_DMP();                          //读取角度值
+   71   3                              MPU_Get_Gyroscope(&gx, &gy, &gz);       //读取角速度
+   72   3                  vl53l0x_get_distance();             //距离测量
+   73   3                  if (vl53l0x_finsh_flag == 1)        //一次测距有效
+   74   3                      Dis_Process = Filter_Window(vl53l0x_distance_mm);
+   75   3                  Elem_Up_Down(Pitch);        
+   76   3                  
+   77   3                  //丢线
+   78   3                  if(Flag_Out_R != 0 || Flag_Out_L != 0)
+   79   3                  {
+   80   4                      Exp_Speed = 100;
+   81   4                      x10_ms = 15;
+   82   4                  }
+   83   3                  //下坡
+   84   3      //            if(Down_Flag>0)
+   85   3      //            {
+   86   3      //                Down_Flag--;
+   87   3      //                Exp_Speed = 60;
+   88   3      //            }
+   89   3      //            else
+   90   3      //                Down_Flag=0;
+   91   3                  
+   92   3      /************************************************ 避开路障 ******************************************
+             -*****/            
+   93   3              //经过障碍前的某个元素（环岛，坡道），再开启避障
+   94   3      //        if(Special_Elem >= 5)   //第一个特殊元素就是避障
+   95   3      //           Barrier_Executed = 0;
+   96   3                      if(Barrier_Executed == 0)
+   97   3                      {       
+   98   4                              if (Dis_Process < 880)          //      检测到路障
+   99   4                                      Distance_Num++;
+  100   4                  else
+  101   4                      Distance_Num = 0;
+  102   4                  if(Distance_Num > 2)       //连续判别两次以上
+  103   4                  {
+  104   5                      Barrier_Flag1 = 1;
+  105   5                      x10_ms = 13;
+  106   5                      Distance_Num = 0;
+  107   5                  }
+  108   4                  Elem_Barrier_Timer();
+  109   4                      }            
+  110   3                              Isr_Flag_10 = 0;
+  111   3                      }
+  112   2                
+  113   2              }
+  114   1      }
+  115          
+  116          
+  117          void Init_all(void)
+  118          {
+  119   1              WTST = 0;                                                
+C251 COMPILER V5.60.0,  main                                                               05/06/24  20:34:05  PAGE 3   
 
-  121   1              ADC_InitAll(); 
-  122   1              
-  123   1      ////pid初始化  PID_Init(结构体, KP, KI, KD, 输出限幅，积分限幅)
-  124   1      //      PID_Init(&Left_Wheel_PID , 20, 0.5, 0, 9000, 2000);
-  125   1      //      PID_Init(&Right_Wheel_PID, 20, 0.5, 0, 9000, 2000);
-  126   1              PID_Init(&Turn_PID , -2, 0, 0 ,10000, 0);
-  127   1              
-  128   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
-  129   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
-  130   1              
-  131   1      } 
+  120   1              DisableGlobalIRQ();                             
+  121   1              sys_clk = 35000000;                             
+  122   1      
+  123   1              board_init();                                   
+  124   1      
+  125   1      ////编码器方向引脚初始化
+  126   1              gpio_mode(P5_3, GPIO);          
+  127   1              gpio_mode(P3_5, GPIO);  
+  128   1              
+  129   1      ////按键引脚初始化
+  130   1              Key_Init();
+  131   1              
+  132   1      ////测距模块初始化
+  133   1              //gpio_mode(P3_2, GPIO);
+  134   1          vl53l0x_init();
+  135   1      //    dl1a_init();
+  136   1      ////OLED初始化
+  137   1              ui_init();                                      
+  138   1              
+  139   1      ////MPU6050初始化
+  140   1              MPU6050_DMP_Init();     
+  141   1      //      
+  142   1      ////定时器初始化
+  143   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
+  144   1      //      
+  145   1      ////编码器初始化
+  146   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
+  147   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
+  148   1              
+  149   1      ////电机初始化
+  150   1              Motor_Init();
+  151   1              
+  152   1      ////蜂鸣器初始化
+  153   1               Buzzer_Init();
+  154   1              
+  155   1      ////初始化所有AD引脚
+  156   1              ADC_InitAll(); 
+  157   1              
+  158   1          ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
+  159   1      //      PID_Init(&Left_Wheel_PID , 20, 0.5, 0, 9000, 2000);
+  160   1      //      PID_Init(&Right_Wheel_PID, 20, 0.5, 0, 9000, 2000);
+  161   1              PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
+  162   1              
+  163   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+  164   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+  165   1              
+  166   1      } 
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       563     ------
+  code size            =       662     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-  edata size           =        33     ------
+  edata size           =        34     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
@@ -166,7 +202,9 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        56     ------
+  hconst size          =        61     ------
+C251 COMPILER V5.60.0,  main                                                               05/06/24  20:34:05  PAGE 4   
+
 End of Module Information.
 
 

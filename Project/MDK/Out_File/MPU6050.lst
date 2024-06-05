@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 1   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE MPU6050
@@ -66,7 +66,7 @@ stmt  level    source
    55          * 函 数 名       : i2c_start
    56          * 函数功能               : 产生I2C起始信号
    57          * 输    入       : 无
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 2   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 2   
 
    58          * 输    出       : 无
    59          *******************************************************************************/
@@ -134,7 +134,7 @@ stmt  level    source
   121          
   122          /*******************************************************************************
   123          * 函 数 名         : i2c_wait_ack
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 3   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 3   
 
   124          * 函数功能                 : 等待应答信号到来
   125          * 输    入         : 无
@@ -202,7 +202,7 @@ stmt  level    source
   187   2              I2C_SCL_L();
   188   2              i2c_delay();
   189   2              I2C_SCL_H();
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 4   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 4   
 
   190   2              receive <<= 1;
   191   2              if(I2C_SDA_Read())
@@ -270,7 +270,7 @@ stmt  level    source
   253   1      }
   254          
   255          /**写入8位寄存器的一个位。
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 5   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 5   
 
   256          * @参数 DevAddress      I2C从器件地址
   257          * @参数 addr            I2C从器件内部地址
@@ -338,7 +338,7 @@ stmt  level    source
   319   2              }
   320   1              else
   321   1              {
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 6   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 6   
 
   322   2                      return 1;
   323   2              }
@@ -406,7 +406,7 @@ stmt  level    source
   385          //buf:读取到的数据存储区
   386          //返回值:0,正常
   387          //    其他,错误代码
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 7   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 7   
 
   388          uint8 MPU_Read_Len(uint8 reg, uint8 len, uint8 *buf)
   389          {
@@ -474,7 +474,7 @@ stmt  level    source
   451          //返回值:0,成功
   452          //    其他,错误代码
   453          uint8 MPU_Init(void)
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 8   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 8   
 
   454          {
   455   1              uint8 res;
@@ -542,7 +542,7 @@ stmt  level    source
   517          {
   518   1              static uint8 Data;
   519   1              if (rate>1000)rate = 1000;
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 9   
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 9   
 
   520   1              if (rate<4)rate = 4;
   521   1              Data = 1000 / rate - 1;
@@ -610,7 +610,7 @@ stmt  level    source
   583          //以下的 firmware 及 config update 数据来自于 Jeff Jrowberg 公开的程序
   584          /* ================================================================================================ *
   585          | Default MotionApps v2.0 42-byte FIFO packet structure:                                           |
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 10  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 10  
 
   586          |                                                                                                  |
   587          | [QUAT W][      ][QUAT X][      ][QUAT Y][      ][QUAT Z][      ][GYRO X][      ][GYRO Y][      ] |
@@ -678,7 +678,7 @@ stmt  level    source
   649                  0xF1, 0xC1, 0xF2, 0xC3, 0xF3, 0xCC, 0xA2, 0xB2, 0x80, 0xF1, 0xC6, 0xD8, 0x80, 0xBA, 0xA7, 0xDF,
   650                  0xDF, 0xDF, 0xF2, 0xA7, 0xC3, 0xCB, 0xC5, 0xB6, 0xF0, 0x87, 0xA2, 0x94, 0x24, 0x48, 0x70, 0x3C,
   651                  0x95, 0x40, 0x68, 0x34, 0x58, 0x9B, 0x78, 0xA2, 0xF1, 0x83, 0x92, 0x2D, 0x55, 0x7D, 0xD8, 0xB1,
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 11  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 11  
 
   652                  0xB4, 0xB8, 0xA1, 0xD0, 0x91, 0x80, 0xF2, 0x70, 0xF3, 0x70, 0xF2, 0x7C, 0x80, 0xA8, 0xF1, 0x01,
   653                  0xB0, 0x98, 0x87, 0xD9, 0x43, 0xD8, 0x86, 0xC9, 0x88, 0xBA, 0xA1, 0xF2, 0x0E, 0xB8, 0x97, 0x80,
@@ -746,7 +746,7 @@ stmt  level    source
   715                  0xD9, 0xD8, 0xD8, 0xF1, 0x9E, 0x88, 0xA3, 0x31, 0xDA, 0xD8, 0xD8, 0x91, 0x2D, 0xD9, 0x28, 0xD8,
   716                  0x4D, 0xD9, 0x48, 0xD8, 0x6D, 0xD9, 0x68, 0xD8, 0xB1, 0x83, 0x93, 0x35, 0x3D, 0x80, 0x25, 0xDA,
   717                  0xD8, 0xD8, 0x85, 0x69, 0xDA, 0xD8, 0xD8, 0xB4, 0x93, 0x81, 0xA3, 0x28, 0x34, 0x3C, 0xF3, 0xAB,
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 12  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 12  
 
   718                  0x8B, 0xF8, 0xA3, 0x91, 0xB6, 0x09, 0xB4, 0xD9, 0xAB, 0xDE, 0xFA, 0xB0, 0x87, 0x9C, 0xB9, 0xA3,
   719                  0xDD, 0xF1, 0xA3, 0xA3, 0xA3, 0xA3, 0x95, 0xF1, 0xA3, 0xA3, 0xA3, 0x9D, 0xF1, 0xA3, 0xA3, 0xA3,
@@ -814,7 +814,7 @@ stmt  level    source
   781                  0x01,   0x62,   0x02,   0x00, 0x00,
   782                  0x00,   0x60,   0x04,   0x00, 0x40, 0x00, 0x00
   783          
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 13  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 13  
 
   784          };
   785          
@@ -882,7 +882,7 @@ stmt  level    source
   847   4                                      MPU_Write_Byte(MPU_INT_EN_REG, 0x32);
   848   4                              }
   849   3                              else
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 14  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 14  
 
   850   3                                      return 0;
   851   3                      }
@@ -950,7 +950,7 @@ stmt  level    source
   913   1              if ((loadfirmware()) == 0) 
   914   1                      return 0;       //加载 
   915   1              if ((loadcfgupd()) == 0) 
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 15  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 15  
 
   916   1                      return 0;       //配置DMP
   917   1              MPU_Write_Bits(MPU_PWR_MGMT1_REG, 2, 3, 0x03);  //设置时钟脉冲源Z陀螺
@@ -1018,7 +1018,7 @@ stmt  level    source
   979          
   980          /*验证MPU6050连接*/
   981          uint8 getDeviceID(void)
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 16  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 16  
 
   982          {
   983   1              uint8 b = 0;    //临时变量
@@ -1086,7 +1086,7 @@ stmt  level    source
  1043          
  1044          void zero_all()
  1045          {
-C251 COMPILER V5.60.0,  MPU6050                                                            26/04/24  10:40:39  PAGE 17  
+C251 COMPILER V5.60.0,  MPU6050                                                            05/06/24  20:08:26  PAGE 17  
 
  1046   1              x1=0,y1=0,z1=0;mpu_state=0;
  1047   1              MPU6050_Refresh_DMP();

@@ -1,1 +1,0 @@
-"..\CODE\MPU6050.c" XSMALL INTR2 WARNINGLEVEL (3) BROWSE INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\USER\inc;..\USER\src) DEBUG PRINT(.\Out_File\MPU6050.lst) OBJECT(.\Out_File\MPU6050.obj)

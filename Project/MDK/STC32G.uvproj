@@ -759,6 +759,16 @@
               <FileType>5</FileType>
               <FilePath>..\CODE\UI.h</FilePath>
             </File>
+            <File>
+              <FileName>HCSR04.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\HCSR04.c</FilePath>
+            </File>
+            <File>
+              <FileName>HCSR04.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\HCSR04.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

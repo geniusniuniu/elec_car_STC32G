@@ -23,6 +23,7 @@ extern float Flag_Out_L;
 extern float Flag_Out_R;
 
 volatile uint16 Dis_Process = 0;
+char Distance_Num = 0;
 
 float Adjust_Val = 0;
 char KeyValue = 0;	
@@ -72,6 +73,40 @@ void main(void)
             if (vl53l0x_finsh_flag == 1)        //一次测距有效
                 Dis_Process = Filter_Window(vl53l0x_distance_mm);
             Elem_Up_Down(Pitch);	
+            
+            //丢线
+            if(Flag_Out_R != 0 || Flag_Out_L != 0)
+            {
+                Exp_Speed = 100;
+                x10_ms = 15;
+            }
+            //下坡
+//            if(Down_Flag>0)
+//            {
+//                Down_Flag--;
+//                Exp_Speed = 60;
+//            }
+//            else
+//                Down_Flag=0;
+            
+/************************************************ 避开路障 ***********************************************/            
+        //经过障碍前的某个元素（环岛，坡道），再开启避障
+//        if(Special_Elem >= 5)   //第一个特殊元素就是避障
+//           Barrier_Executed = 0;
+		if(Barrier_Executed == 0)
+		{	
+			if (Dis_Process < 880)		//	检测到路障
+				Distance_Num++;
+            else
+                Distance_Num = 0;
+            if(Distance_Num > 2)       //连续判别两次以上
+            {
+                Barrier_Flag1 = 1;
+                x10_ms = 13;
+                Distance_Num = 0;
+            }
+            Elem_Barrier_Timer();
+		}            
 			Isr_Flag_10 = 0;
 		}
           
@@ -120,10 +155,10 @@ void Init_all(void)
 ////初始化所有AD引脚
 	ADC_InitAll(); 
 	
-////pid初始化  PID_Init(结构体, KP, KI, KD, 输出限幅，积分限幅)
+    ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
 //	PID_Init(&Left_Wheel_PID , 20, 0.5, 0, 9000, 2000);
 //	PID_Init(&Right_Wheel_PID, 20, 0.5, 0, 9000, 2000);
-	PID_Init(&Turn_PID , -2, 0, 0 ,10000, 0);
+	PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
 	
     PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
     PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48

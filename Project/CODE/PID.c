@@ -11,15 +11,14 @@
 
 //***********************************************************位置式PID************************************************************//
 
-PID_InitTypeDef Left_Wheel_PID;
-PID_InitTypeDef Right_Wheel_PID;
+//PID_InitTypeDef Left_Wheel_PID;
+//PID_InitTypeDef Right_Wheel_PID;
 PID_InitTypeDef Turn_PID;
 
-
-
-void PID_Init(PID_InitTypeDef *PID_Struct, float Kp, float Ki, float Kd,float Out_Limit, float Integral_Limit)		//PID初始化
+void PID_Init(PID_InitTypeDef *PID_Struct, float Kpa,float Kpb, float Ki, float Kd,float Out_Limit, float Integral_Limit)		//PID初始化
 {
-	PID_Struct->Kp = Kp;
+	PID_Struct->Kpa = Kpa;  
+    PID_Struct->Kpb = Kpb;
 	PID_Struct->Ki = Ki;
 	PID_Struct->Kd = Kd;
 	
@@ -34,34 +33,19 @@ void PID_Init(PID_InitTypeDef *PID_Struct, float Kp, float Ki, float Kd,float Ou
 
 void PID_Calculate(PID_InitTypeDef *PID_Struct, float Exp_Val, float Act_Val)		//PID计算
 { 
-	PID_Struct->Err = Exp_Val-Act_Val;		//err值为期望偏差与当前偏差的差值	
-	PID_Struct->Integral += PID_Struct->Err;		//误差值累加	
-	
-	if(PID_Struct->Integral_Limit != 0)
-	{
-		//对积分低通滤波
-		PID_Struct->Integral = PID_Struct->Integral_Last*LOWPASS_FILTER + PID_Struct->Integral*(1-LOWPASS_FILTER);
-		
-		PID_Struct->Integral_Last = PID_Struct->Integral;	//更新上一次积分
-	}
-	
-	//积分限幅
-	if(PID_Struct->Integral > PID_Struct->Integral_Limit)
-		PID_Struct->Integral = PID_Struct->Integral_Limit;
-	else if(PID_Struct->Integral < -PID_Struct->Integral_Limit)
-		PID_Struct->Integral = -PID_Struct->Integral_Limit;
-	
-	PID_Struct->PID_Out = PID_Struct->Err * PID_Struct->Kp + 
-								PID_Struct->Integral * PID_Struct->Ki +						//计算总输出量
+	PID_Struct->Err = Exp_Val-Act_Val;		//err值为期望偏差与当前偏差的差值		
+    //计算最终输出
+	PID_Struct->PID_Out = (PID_Struct->Err*PID_Struct->Err*PID_Struct->Err)*PID_Struct->Kpa +
+                              PID_Struct->Err *  PID_Struct->Kpb +
 									(PID_Struct->Err - PID_Struct->Err_last)*(PID_Struct->Kd);
 	
+    PID_Struct->Err_last = PID_Struct->Err;	//更新上一次err
+    
 	//输出限幅
 	if(PID_Struct->PID_Out > PID_Struct->Out_Limit)
 		PID_Struct->PID_Out = PID_Struct->Out_Limit; 
 	else if(PID_Struct->PID_Out < -PID_Struct->Out_Limit)
 		PID_Struct->PID_Out = -PID_Struct->Out_Limit;
-	
-	PID_Struct->Err_last = PID_Struct->Err;				//更新上一次err
 }
 
 

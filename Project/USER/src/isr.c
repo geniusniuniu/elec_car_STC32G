@@ -30,7 +30,7 @@ char  Flag_Stop = 0;
 float Act_PwmL;	
 float Act_PwmR;
 float Angle_Edge = 0;
-char Distance_Num = 0;
+
 char Edge_Delay = 0;
 char count = 0;
 void Get_Ratio(void);
@@ -43,18 +43,23 @@ void TM4_Isr() interrupt 20
 	Get_Speed();  //获取车速
 	ADC_GetValue();						//获取电感值
 	Get_Ratio();						//计算偏差值
-/************************************************ 直道弯道判别 ********************************************/ 
+    
+/*********************** 直道弯道变速 **********************************/ 
 	
+    Turn_PID.Kpa = -0.001;//理论来讲kpa和kpb同号
+    Turn_PID.Kpb = -120;//-170;  
+    Turn_PID.Kd = 1.5;
+    
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
-        Turn_PID.Kp = -120;//-170;  
-		Turn_PID.Kd = 1.5;//-1.5; 
+//        Turn_PID.Kpb = -120;//-170;  
+//		Turn_PID.Kd = 1.5;// 
         Exp_Speed = 260;   
     }
     else
     {
-        Turn_PID.Kp = -120;//-250; 
-		Turn_PID.Kd = 14.5;//-5.5; 
+//        Turn_PID.Kpb = -120;//-250; 
+//		Turn_PID.Kd = 14.5;// 
         Exp_Speed = 240;        
     } 
 
@@ -65,11 +70,13 @@ void TM4_Isr() interrupt 20
         Circle_Flag1 = 1; 
         x10_ms = 30;  									//识别到圆环标志位
 	}
-    if(Dis_Process <= 50)
+    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
         Dis_Process = 810;
-	if(Dis_Process < 800)	        //测距值小于40cm，区分坡道，且只执行一次
-		Circle_Delay1 = 500;        //延时3秒
-    if(Circle_Flag2 != 0)           //一旦距离积分足够，Circle_Delay1取消延时，Circle_Flag1不再归零
+    
+	if(Dis_Process < 400)	        //测距值小于50cm，区分坡道，且只执行一次
+		Circle_Delay1 = 500;        //延时5秒
+    
+    if(Circle_Flag2 != 0)           //一旦距离积分足够，Circle_Delay1取消延时
         Circle_Delay1 = 0;
 	if(Circle_Delay1 > 0)			//检测到坡道
 	{
@@ -90,25 +97,7 @@ void TM4_Isr() interrupt 20
 	else
 		Edge_Delay = 0;
     
-/************************************************ 避开路障 ***********************************************/ 
-            
-        //经过障碍前的某个元素（环岛，坡道），再开启避障
-//        if(Special_Elem >= 5)   //第一个特殊元素就是避障
-//           Barrier_Executed = 0;
-		if(Barrier_Executed == 0)
-		{	
-			if (Dis_Process < 880)		//	检测到路障
-				Distance_Num++;
-            else
-                Distance_Num = 0;
-            if(Distance_Num >= 2)       //连续判别两次
-            {
-                Barrier_Flag1 = 1;
-                x10_ms = 13;
-                Distance_Num = 0;
-            }
-                Elem_Barrier_Timer();
-		}	
+	
 /************************************************ 转向环计算 **********************************************/    
     
 	Limit_Out(&Ratio,-0.9,0.9);   //限幅
@@ -117,19 +106,7 @@ void TM4_Isr() interrupt 20
 	
 //    if(Barrier_Executed == 0)
 //        Exp_Speed = 220;
-    if(Flag_Out_R != 0 || Flag_Out_L != 0)
-    {
-        Exp_Speed = 100;
-        x10_ms = 30;
-    }
-    if(Down_Flag>0)
-    {
-        Down_Flag--;
-        Exp_Speed = 60;
-    }
-    else
-        Down_Flag=0;
-   // Elem_Up_Down(Pitch);
+
 	if(Ratio >= 0)	
 	{
 		Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;
@@ -151,13 +128,7 @@ void TM4_Isr() interrupt 20
 		Flag_Stop = 1;
     
 /********************************************* 设置左右PWM ************************************************/ 	  
-//    if(ADC_proc[2]<40 && (ADC_proc[1]-ADC_proc[3]>25|| ADC_proc[3]-ADC_proc[1]>25)&&(ADC_proc[1]/ADC_proc[3]>2.6||ADC_proc[3]/ADC_proc[1]>2.6))
-//    {
-//        x10_ms = 13;
-//        Act_PwmL = Left_SetSpeed(-500);
-//        Act_PwmR = Right_SetSpeed(-500);
-//    }
-//	else 
+
     if(Dis_Process < 150 || Flag_Stop == 1) 
 	{
 		Act_PwmL = Left_SetSpeed(0);		
@@ -212,10 +183,10 @@ void Get_Ratio(void)
 	}																			
 	else 																		
 	{
-//        if(ADC_proc[0] + ADC_proc[4] < 3) 
-//            Flag_Stop = 1;
+        if(ADC_proc[0] + ADC_proc[4] < 5) 
+            Flag_Stop = 1;
         //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
-		if(Barrier_Executed == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
+		if(Barrier_Flag1 == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
 		{
            Edge_Delay = 2;	//50ms	
            if(sum_01 >= sum_34 && Flag_Out_R == 0) 
@@ -406,5 +377,5 @@ void TM3_Isr() interrupt 19
 //void  CMP_Isr()   interrupt 21;
 //void  I2C_Isr()   interrupt 24;
 //void  USB_Isr()   interrupt 25;
-//void  PWM1_Isr()  interrupt 26
+//void  PWM1_Isr()  interrupt 26;
 //void  PWM2_Isr()  interrupt 27;

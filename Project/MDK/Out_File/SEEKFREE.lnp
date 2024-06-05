@@ -37,7 +37,8 @@
 ".\Out_File\Element.obj",
 ".\Out_File\Buzzer.obj",
 ".\Out_File\Key.obj",
-".\Out_File\UI.obj" 
+".\Out_File\UI.obj",
+".\Out_File\HCSR04.obj" 
 TO ".\Out_File\SEEKFREE" 
 PRINT(".\Out_File\SEEKFREE.map") CASE DISABLEWARNING (16,57) 
 REMOVEUNUSED 
