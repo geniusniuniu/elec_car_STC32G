@@ -1,16 +1,16 @@
 /*********************************************************************************************************************
  * COPYRIGHT NOTICE
- * Copyright (c) 2020,Öğ·É¿Æ¼¼
+ * Copyright (c) 2020,é€é£ç§‘æŠ€
  * All rights reserved.
- * ¼¼ÊõÌÖÂÛQQÈº£ºÒ»Èº£º179029047(ÒÑÂú)  ¶şÈº£º244861897(ÒÑÂú)  ÈıÈº£º824575535
+ * æŠ€æœ¯è®¨è®ºQQç¾¤ï¼šä¸€ç¾¤ï¼š179029047(å·²æ»¡)  äºŒç¾¤ï¼š244861897(å·²æ»¡)  ä¸‰ç¾¤ï¼š824575535
  *
- * ÒÔÏÂËùÓĞÄÚÈİ°æÈ¨¾ùÊôÖğ·É¿Æ¼¼ËùÓĞ£¬Î´¾­ÔÊĞí²»µÃÓÃÓÚÉÌÒµÓÃÍ¾£¬
- * »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌĞò£¬ĞŞ¸ÄÄÚÈİÊ±±ØĞë±£ÁôÖğ·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷¡£
+ * ä»¥ä¸‹æ‰€æœ‰å†…å®¹ç‰ˆæƒå‡å±é€é£ç§‘æŠ€æ‰€æœ‰ï¼Œæœªç»å…è®¸ä¸å¾—ç”¨äºå•†ä¸šç”¨é€”ï¼Œ
+ * æ¬¢è¿å„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åºï¼Œä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£ç§‘æŠ€çš„ç‰ˆæƒå£°æ˜ã€‚
  *
  * @file       		common
- * @company	   		³É¶¼Öğ·É¿Æ¼¼ÓĞÏŞ¹«Ë¾
- * @author     		Öğ·É¿Æ¼¼(QQ790875685)
- * @version    		²é¿´docÄÚversionÎÄ¼ş °æ±¾ËµÃ÷
+ * @company	   		æˆéƒ½é€é£ç§‘æŠ€æœ‰é™å…¬å¸
+ * @author     		é€é£ç§‘æŠ€(QQ790875685)
+ * @version    		æŸ¥çœ‹docå†…versionæ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜
  * @Software 		MDK FOR C251 V5.60
  * @Target core		STC32G12K128
  * @Taobao   		https://seekfree.taobao.com/
@@ -24,7 +24,7 @@
 #define ENABLE		1
 #define DISABLE		0
 
-//Êı¾İÀàĞÍÉùÃ÷
+//æ•°æ®ç±»å‹å£°æ˜
 typedef unsigned char   uint8  ;	//  8 bits 
 typedef unsigned int  	uint16 ;	// 16 bits 
 typedef unsigned long  	uint32 ;	// 32 bits 
@@ -46,12 +46,12 @@ typedef volatile uint32 vuint32;	// 32 bits
 
 
 
-typedef enum //ÎŞÏßÄ£¿é
+typedef enum //æ— çº¿æ¨¡å—
 {
-    NO_WIRELESS_MODE = 0,   //Ã»ÓĞÎŞÏßÄ£¿é
-    WIRELESS_SI24R1 = 1,    //ÎŞÏß×ª´®¿Ú
-    WIRELESS_CH9141 = 2,    //À¶ÑÀ×ª´®¿Ú
-    WIRELESS_CH573 = 3      //CH573Ä£¿é
+    NO_WIRELESS_MODE = 0,   //æ²¡æœ‰æ— çº¿æ¨¡å—
+    WIRELESS_SI24R1 = 1,    //æ— çº¿è½¬ä¸²å£
+    WIRELESS_CH9141 = 2,    //è“ç‰™è½¬ä¸²å£
+    WIRELESS_CH573 = 3      //CH573æ¨¡å—
 }WIRELESS_TYPE_enum;
 
 extern WIRELESS_TYPE_enum wireless_type;

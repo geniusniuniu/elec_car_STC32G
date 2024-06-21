@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  Element                                                            05/06/24  20:49:02  PAGE 1   
+C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE Element
@@ -18,33 +18,33 @@ stmt  level    source
     7          #include "PID.h"
     8          #include "Buzzer.h"
     9          #include "MPU6050.h"
-   10          
-   11          extern float Exp_Speed;
+   10          #include "isr.h"
+   11          
    12          extern float Ratio;
    13          extern float ADC_proc[5];
    14          
-   15          //œ¬∆¬±Í÷æŒª
+   15          //‰∏ãÂù°Ê†áÂøó‰Ωç
    16          char Down_Flag = 0;
    17          
-   18          //ª∑µ∫±Í÷æŒª
-   19          char Circle_Flag1 = 0;  // ◊Û”“ª∑µ∫±Í÷æŒª
-   20          char Circle_Flag2 = 0;
+   18          //ÁéØÂ≤õÊ†áÂøó‰Ωç
+   19          float Circle_Flag1 = 0;  // Â∑¶Âè≥ÁéØÂ≤õÊ†áÂøó‰Ωç
+   20          float Circle_Flag2 = 0;
    21          
    22          
-   23          //≥ˆª∑—” ±
+   23          //Âá∫ÁéØÂª∂Êó∂
    24          int circle_Delay1 = 0;
    25          int Circle_Delay2 = 0;
    26          
-   27          //º«¬º‘™Àÿ∏ˆ ˝
+   27          //ËÆ∞ÂΩïÂÖÉÁ¥†‰∏™Êï∞
    28          char Special_Elem = 0;
    29          
    30          
    31          void Elem_Up_Down(float Angle)  
    32          {
    33   1          static char Elem_Over;
-   34   1              if(Angle > -2)          //…œ∆¬
+   34   1              if(Angle > -2)          //‰∏äÂù°
    35   1                      Exp_Speed = 320;
-   36   1              else if(Angle < -16)  //œ¬∆¬
+   36   1              else if(Angle < -16)  //‰∏ãÂù°
    37   1          {
    38   2              Down_Flag = 5;
    39   2              if(Elem_Over == 0)
@@ -57,17 +57,18 @@ stmt  level    source
    46   1      }
    47          
    48          
-   49          //’œ∞≠ŒÔ ∂±   
-   50          char Barrier_Executed = 0;
+   49          //ÈöúÁ¢çÁâ©ËØÜÂà´   
+   50          char Barrier_Executed = 1;
    51          char Barrier_Flag1 = 0;
    52          void Elem_Barrier_Timer(void)  
    53          {
    54   1              static float Barrier_Timer;     
-   55   1              #if BARRIER_DIR == 0                                            //œÚ”“±‹’œ
-                               if(Barrier_Flag1 == 1)                                  // ∂±µΩ’œ∞≠ŒÔ
+   55   1              #if BARRIER_DIR == 0                                            //ÂêëÂè≥ÈÅøÈöú
+                               if(Barrier_Flag1 == 1)                                  //ËØÜÂà´Âà∞ÈöúÁ¢çÁâ©
                                {
-C251 COMPILER V5.60.0,  Element                                                            05/06/24  20:49:02  PAGE 2   
+C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 2   
 
+                           Exp_Speed = 220;
                                        Barrier_Timer--;
                                        if(Barrier_Timer > 90)
                                                Ratio = -0.235;
@@ -85,127 +86,129 @@ stmt  level    source
                                else
                                        Barrier_Timer = 100;
                        #elif BARRIER_DIR == 1  
-   75   1                      //œÚ◊Û±‹’œ
-   76   1                      if(Barrier_Flag1 == 1)                                  // ∂±µΩ’œ∞≠ŒÔ
-   77   1                      {
-   78   2                              Barrier_Timer--;
-   79   2                              if(Barrier_Timer > 64)
-   80   2                                      Ratio = 0.49;
-   81   2                              else if(Barrier_Timer > 18 && Barrier_Timer <= 64)
-   82   2                                      Ratio = -0.43;
-   83   2                              else 
-   84   2                                      Ratio += 0.04;
-   85   2                              if(Barrier_Timer == 0)
-   86   2                              {
-   87   3                                      Barrier_Flag1 = 0;
-   88   3                                      Barrier_Executed = 1;
-   89   3                      Special_Elem = 0;
-   90   3                              }
-   91   2                      }
-   92   1                      else
-   93   1                              Barrier_Timer = 100;
-   94   1                      
-   95   1              #endif
-   96   1      }
-   97          
-   98          char Circle_Flag3 = 0;
+   76   1                      //ÂêëÂ∑¶ÈÅøÈöú
+   77   1                      if(Barrier_Flag1 == 1)                                  //ËØÜÂà´Âà∞ÈöúÁ¢çÁâ©
+   78   1                      {
+   79   2                  Exp_Speed = 220;
+   80   2                              Barrier_Timer--;
+   81   2                              if(Barrier_Timer > 64)
+   82   2                                      Ratio = 0.49;
+   83   2                              else if(Barrier_Timer > 18 && Barrier_Timer <= 64)
+   84   2                                      Ratio = -0.43;
+   85   2                              else 
+   86   2                                      Ratio += 0.04;
+   87   2                              if(Barrier_Timer == 0)
+   88   2                              {
+   89   3                                      Barrier_Flag1 = 0;
+   90   3                                      Barrier_Executed = 1;
+   91   3                      Special_Elem = 0;
+   92   3                              }
+   93   2                      }
+   94   1                      else
+   95   1                              Barrier_Timer = 100;
+   96   1                      
+   97   1              #endif
+   98   1      }
    99          
-  100          void Elem_Circle(float Speed,float Gyro_Z)
-  101          {
-  102   1          static char Elem_Over;
-  103   1              static float Sum_Dis1 = 0;
-  104   1              static float Sum_Angle_C1 = 0;
-  105   1              if(Circle_Delay2 > 0)                                   //≥ˆª∑£¨«Â≥˝±Í÷æŒª
-  106   1              {
-  107   2                      Circle_Flag1 = 0;
-  108   2                      Circle_Flag2 = 0;
-  109   2                      if(Circle_Flag3 == LEFT_CIRCLE)         //”√¿¥º«¬º≥ˆª∑ ±µƒ∑ΩœÚ
-  110   2                              Ratio -= 0.05;
-  111   2                      else if(Circle_Flag3 == RIGHT_CIRCLE)
-  112   2                              Ratio += 0.05;
-  113   2                      Circle_Delay2--;
-  114   2                      return ;                                                //ÕÀ≥ˆ∫Ø ˝
-  115   2              }
-  116   1      
-  117   1              if(Circle_Flag1 == 1)                                       // ∂±µΩª∑µ∫
-  118   1              {
-  119   2             Gyro_Z = (Gyro_Z*2000)/32768;       
-  120   2                      if(Sum_Dis1 > DIS_ROUND_IN)                         //¬∑≥Ãª˝∑÷£¨ª˝¬˙Ω¯ª∑
-  121   2                      {
-  122   3                              Sum_Angle_C1 += Gyro_Z * 0.005;     //Ω¯ª∑ø™ ºΩ«∂»ª˝∑÷
-  123   3                  //±Í÷æŒªŒ¥«Â¡„ ±÷ª÷√Œª“ª¥Œ£¨∑¿÷π÷ÿ∏¥ ∂±
-C251 COMPILER V5.60.0,  Element                                                            05/06/24  20:49:02  PAGE 3   
+  100          char Circle_Flag3 = 0;
+  101          
+  102          void Elem_Circle(float Speed,float Gyro_Z)
+  103          {
+  104   1          static char Elem_Over;
+  105   1              static float Sum_Dis1 = 0;
+  106   1          static float Sum_Angle_C1 = 0;
+  107   1              if(Circle_Delay2 > 0)                                   //Âá∫ÁéØÔºåÊ∏ÖÈô§Ê†áÂøó‰Ωç
+  108   1              {
+  109   2                      Circle_Flag1 = 0;
+  110   2                      Circle_Flag2 = 0;
+  111   2                      if(Circle_Flag3 == LEFT_CIRCLE)         //Áî®Êù•ËÆ∞ÂΩïÂá∫ÁéØÊó∂ÁöÑÊñπÂêë
+  112   2                              Ratio -= 0.05;
+  113   2                      else if(Circle_Flag3 == RIGHT_CIRCLE)
+  114   2                              Ratio += 0.05;
+  115   2                      Circle_Delay2--;
+  116   2                      return ;                                                //ÈÄÄÂá∫ÂáΩÊï∞
+  117   2              }
+  118   1      
+  119   1              if(Circle_Flag1 == 1)                                       //ËØÜÂà´Âà∞ÁéØÂ≤õ
+  120   1              {
+  121   2             Gyro_Z = (Gyro_Z*2000)/32768;       
+  122   2                      if(Sum_Dis1 > DIS_ROUND_IN)                         //Ë∑ØÁ®ãÁßØÂàÜÔºåÁßØÊª°ËøõÁéØ
+  123   2                      {
+C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 3   
 
-  124   3                              if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] >= ADC_proc[3]+ADC_proc[4]))
-  125   3                              {
-  126   4                                      Circle_Flag2 = LEFT_CIRCLE;     //≈–Œ™◊Ûª∑µ∫
-  127   4                                      x10_ms = 13;
-  128   4                              }
-  129   3                              else if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] < ADC_proc[3]+ADC_proc[4]))
-  130   3                              {
-  131   4                                      Circle_Flag2 = RIGHT_CIRCLE;
-  132   4                                      x10_ms = 13;
-  133   4                              }
-  134   3                              
-  135   3                              Circle_Flag3 = Circle_Flag2;            //¡Ÿ ±±‰¡øº«¬º∑ΩœÚ
+  124   3                              Sum_Angle_C1 += Gyro_Z * 0.005;     //ËøõÁéØÂºÄÂßãËßíÂ∫¶ÁßØÂàÜ
+  125   3                  //Ê†áÂøó‰ΩçÊú™Ê∏ÖÈõ∂Êó∂Âè™ÁΩÆ‰Ωç‰∏ÄÊ¨°ÔºåÈò≤Ê≠¢ÈáçÂ§çËØÜÂà´
+  126   3                              if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] >= ADC_proc[3]+ADC_proc[4]))
+  127   3                              {
+  128   4                                      Circle_Flag2 = LEFT_CIRCLE;     //Âà§‰∏∫Â∑¶ÁéØÂ≤õ
+  129   4                                      x10_ms = 13;
+  130   4                              }
+  131   3                              else if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] < ADC_proc[3]+ADC_proc[4]))
+  132   3                              {
+  133   4                                      Circle_Flag2 = RIGHT_CIRCLE;
+  134   4                                      x10_ms = 13;
+  135   4                              }
   136   3                              
-  137   3                              if(Sum_Angle_C1 < 24 && Circle_Flag2 == LEFT_CIRCLE )   //Ω«∂»Œ¥ª˝¬˙£¨πÃ∂®∆´≤Ó÷µ
-  138   3                              {
-  139   4                      Ratio = 0.5;  
-  140   4                  }
-  141   3                              else if(Sum_Angle_C1 > -24 && Circle_Flag2 == RIGHT_CIRCLE)
-  142   3                              {
-  143   4                      Ratio = -0.5;
-  144   4                  }
-  145   3                      }
-  146   2                      else
-  147   2                              Sum_Dis1 += Speed;
-  148   2                      
-  149   2                      if(Sum_Angle_C1 > ROUND_L || Sum_Angle_C1 < ROUND_R )              //≥ˆª∑Ãıº˛÷Æ“ª£¨Ω«∂»ª˝∑÷πª¥Û
-  150   2                      {
-  151   3                              if(ADC_proc[0] > 59 || ADC_proc[4] > 59 || ADC_proc[2] > 62)   //‘§≥ˆª∑ ∑¿÷πŒÛ≈–‘Ÿ¥Œ»Îª∑
-  152   3                              {
-  153   4                      Circle_Delay2 = 100;   //—” ±1000ms
-  154   4                                      Sum_Dis1 = 0;
-  155   4                                      Sum_Angle_C1 = 0;
-  156   4                                      Circle_Flag2 = 0;
-  157   4                      if(Elem_Over == 0)
-  158   4                      {
-  159   5                          Elem_Over = 1;
-  160   5                          Special_Elem++;
-  161   5                      }
-  162   4                              }
-  163   3                      }
-  164   2              }
-  165   1              else
-  166   1              {
-  167   2                      Sum_Dis1 = 0;
-  168   2                      Sum_Angle_C1 = 0;
-  169   2                      Circle_Flag2 = 0;
-  170   2              }
-  171   1      }
+  137   3                              Circle_Flag3 = Circle_Flag2;            //‰∏¥Êó∂ÂèòÈáèËÆ∞ÂΩïÊñπÂêë
+  138   3                              
+  139   3                              if(Sum_Angle_C1 < 24 && Circle_Flag2 == LEFT_CIRCLE )   //ËßíÂ∫¶Êú™ÁßØÊª°ÔºåÂõ∫ÂÆöÂÅèÂ∑ÆÂÄº
+  140   3                              {
+  141   4                      Ratio = 0.34;  
+  142   4                  }
+  143   3                              else if(Sum_Angle_C1 > -24 && Circle_Flag2 == RIGHT_CIRCLE)
+  144   3                              {
+  145   4                      Ratio = -0.34;
+  146   4                  }
+  147   3                      }
+  148   2                      else
+  149   2                              Sum_Dis1 += Speed;
+  150   2                      
+  151   2                      if(Sum_Angle_C1 > ROUND_L || Sum_Angle_C1 < ROUND_R )              //Âá∫ÁéØÊù°‰ª∂‰πã‰∏ÄÔºåËßíÂ∫¶ÁßØÂàÜÂ§ü
+             -Â§ß
+  152   2                      {
+  153   3                              if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //È¢ÑÂá∫ÁéØ Èò≤Ê≠¢ËØØÂà§ÂÜçÊ¨°ÂÖ•ÁéØ
+  154   3                              {
+  155   4                      Circle_Delay2 = 120;   //Âª∂Êó∂1000ms
+  156   4                                      Sum_Dis1 = 0;
+  157   4                                      Sum_Angle_C1 = 0;
+  158   4                                      Circle_Flag2 = 0;
+  159   4                      if(Elem_Over == 0)
+  160   4                      {
+  161   5                          Elem_Over = 1;
+  162   5                          Special_Elem++;
+  163   5                      }
+  164   4                              }
+  165   3                      }
+  166   2              }
+  167   1              else
+  168   1              {
+  169   2                      Sum_Dis1 = 0;
+  170   2                      Sum_Angle_C1 = 0;
+  171   2                      Circle_Flag2 = 0;
+  172   2              }
+  173   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       675     ------
+  code size            =       724     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-  edata size           =        25     ------
+  edata size           =        31     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
+C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 4   
+
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  Element                                                            05/06/24  20:49:02  PAGE 4   
-
-  hconst size          =        63     ------
+  hconst size          =        69     ------
 End of Module Information.
 
 

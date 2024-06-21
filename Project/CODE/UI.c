@@ -13,13 +13,10 @@ extern float Ratio;
 extern float Flag_Out_L;
 extern float Flag_Out_R;
 extern volatile float Exp_Speed;
-extern volatile uint16 Dis_Process;
+extern float Dis_Process;
 uint8 page=0;
 float value[4][7];
 char value_name[4][7][7];
-///////////////////////////////////////////////////待显示参数
-
-
 
 
 void value_name_init(void)//将name改为想要的参数名，但“ ”中的总长度不要变

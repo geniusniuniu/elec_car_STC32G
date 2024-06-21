@@ -769,7 +769,7 @@ static void vl53l0x_set_signal_rate_limit (float limit_mcps)
 // 使用示例     vl53l0x_get_distance();
 // 备注信息     在开始单次射程测量后也调用此函数
 //-------------------------------------------------------------------------------------------------------------------
-#define FILTER_THRESHOLD 800 // 设置限幅阈值，根据需要调整
+#define FILTER_THRESHOLD 900 // 设置限幅阈值，根据需要调整
 
 void vl53l0x_get_distance(void)
 {

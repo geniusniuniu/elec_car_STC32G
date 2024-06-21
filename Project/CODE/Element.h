@@ -8,7 +8,7 @@
 #define ROUND_R 			-100  	//车转一圈陀螺仪角度积分
 #define ROUND_L 		 	100  
 
-#define DIS_ROUND_IN        7000
+#define DIS_ROUND_IN        7200
 
 #define BARRIER_FIELD_STATUS	0	// 可以根据赛道状态改变，1表示赛道周围空旷，可以常开避障
 									// 0 表示赛道周围多干扰，只有经过障碍前
@@ -19,13 +19,12 @@
 									
 extern char Barrier_Executed;
 extern char Barrier_Flag1;
+extern char Special_Elem;
 
-extern char Circle_Flag1;
-extern char Circle_Flag2;
+extern float Circle_Flag1;
+extern float Circle_Flag2;
 extern int Circle_Delay1;	
 extern int Circle_Delay2;
-
-extern char Special_Elem;
 
 void Elem_Barrier_Timer(void);  //2秒钟
 void Elem_Up_Down(float Angle);  

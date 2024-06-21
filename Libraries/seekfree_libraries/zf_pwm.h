@@ -1,16 +1,16 @@
 /*********************************************************************************************************************
  * COPYRIGHT NOTICE
- * Copyright (c) 2020,��ɿƼ�
+ * Copyright (c) 2020,逐飞科技
  * All rights reserved.
- * ��������QQȺ��һȺ��179029047(����)  ��Ⱥ��244861897(����)  ��Ⱥ��824575535
+ * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
  *
- * �����������ݰ�Ȩ������ɿƼ����У�δ����������������ҵ��;��
- * ��ӭ��λʹ�ò������������޸�����ʱ���뱣����ɿƼ��İ�Ȩ������
+ * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+ * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
  *
  * @file       		pwm
- * @company	   		�ɶ���ɿƼ����޹�˾
- * @author     		��ɿƼ�(QQ790875685)
- * @version    		�鿴doc��version�ļ� �汾˵��
+ * @company	   		成都逐飞科技有限公司
+ * @author     		逐飞科技(QQ790875685)
+ * @version    		查看doc内version文件 版本说明
  * @Software 		MDK FOR C251 V5.60
  * @Target core		STC32G12K128
  * @Taobao   		https://seekfree.taobao.com/
@@ -28,16 +28,16 @@
 
 typedef enum
 {
-	//PWMA��PWMB�����鲻ͬ��PWM
+	//PWMA和PWMB是两组不同的PWM
 	
-	//������PWMAͨ����
-	//ͬһ��PWM��ͬһʱ�̣�ֻ����ͬһ��PWM�����
-	//����:PWMA_CH1P_P10 �� PWMA_CH1N_P11����һ�������
+	//以下是PWMA通道。
+	//同一组PWM，同一时刻，只能有同一个PWM输出。
+	//例如:PWMA_CH1P_P10 和 PWMA_CH1N_P11不能一起输出。
 	PWMA_CH1P_P10 = 0x00,PWMA_CH1N_P11,
 	PWMA_CH1P_P20,		 PWMA_CH1N_P21,
 	PWMA_CH1P_P60,		 PWMA_CH1N_P61,
 
-	PWMA_CH2P_P12 = 0x10,//���������� USB �ں˵�Դ��ѹ��
+	PWMA_CH2P_P12 = 0x10,//该引脚已做 USB 内核电源稳压脚
 	PWMA_CH2N_P13,          
 	PWMA_CH2P_P22,		 PWMA_CH2N_P23,
 	PWMA_CH2P_P62,		 PWMA_CH2N_P63,
@@ -51,18 +51,18 @@ typedef enum
 	PWMA_CH4P_P66,		 PWMA_CH4N_P67,
 	PWMA_CH4P_P34,		 PWMA_CH4N_P33,
 	
-	//������PWMBͨ����
-	//ͬһ��PWM��ͬһʱ�̣�ֻ����ͬһ��PWM�����
-	//����:PWMB_CH1_P20 �� PWMB_CH1_P17 ����ͬʱ��� 
-	//���ǲ�ͬ��ͨ������ͬһʱ�������
-	//����:PWMB_CH1_P20 �� PWMB_CH2_P21����ͬʱ���
+	//以下是PWMB通道。
+	//同一组PWM，同一时刻，只能有同一个PWM输出。
+	//例如:PWMB_CH1_P20 和 PWMB_CH1_P17 不能同时输出 
+	//但是不同的通道可以同一时刻输出。
+	//例如:PWMB_CH1_P20 和 PWMB_CH2_P21可以同时输出
 	PWMB_CH1_P20 = 0x40,
 	PWMB_CH1_P17,
 	PWMB_CH1_P00,
 	PWMB_CH1_P74,
 
 	PWMB_CH2_P21 = 0x50,
-	PWMB_CH2_P54,		//������Ϊ��λ����
+	PWMB_CH2_P54,		//该引脚为复位引脚
 	PWMB_CH2_P01,
 	PWMB_CH2_P75,
 

@@ -7,33 +7,33 @@
 #include "PID.h"
 #include "Buzzer.h"
 #include "MPU6050.h"
+#include "isr.h"
 
-extern float Exp_Speed;
 extern float Ratio;
 extern float ADC_proc[5];
 
-//ÏÂÆÂ±êÖ¾Î»
+//ä¸‹å¡æ ‡å¿—ä½
 char Down_Flag = 0;
 
-//»·µº±êÖ¾Î»
-char Circle_Flag1 = 0;  // ×óÓÒ»·µº±êÖ¾Î»
-char Circle_Flag2 = 0;
+//ç¯å²›æ ‡å¿—ä½
+float Circle_Flag1 = 0;  // å·¦å³ç¯å²›æ ‡å¿—ä½
+float Circle_Flag2 = 0;
 
 
-//³ö»·ÑÓÊ±
+//å‡ºç¯å»¶æ—¶
 int circle_Delay1 = 0;
 int Circle_Delay2 = 0;
 
-//¼ÇÂ¼ÔªËØ¸öÊı
+//è®°å½•å…ƒç´ ä¸ªæ•°
 char Special_Elem = 0;
 
 
 void Elem_Up_Down(float Angle)  
 {
     static char Elem_Over;
-	if(Angle > -2)          //ÉÏÆÂ
+	if(Angle > -2)          //ä¸Šå¡
 		Exp_Speed = 320;
-	else if(Angle < -16)  //ÏÂÆÂ
+	else if(Angle < -16)  //ä¸‹å¡
     {
         Down_Flag = 5;
         if(Elem_Over == 0)
@@ -46,15 +46,16 @@ void Elem_Up_Down(float Angle)
 }
 
 
-//ÕÏ°­ÎïÊ¶±ğ   
-char Barrier_Executed = 0;
+//éšœç¢ç‰©è¯†åˆ«   
+char Barrier_Executed = 1;
 char Barrier_Flag1 = 0;
 void Elem_Barrier_Timer(void)  
 {
 	static float Barrier_Timer;	
-	#if BARRIER_DIR == 0						//ÏòÓÒ±ÜÕÏ
-		if(Barrier_Flag1 == 1)					//Ê¶±ğµ½ÕÏ°­Îï
+	#if BARRIER_DIR == 0						//å‘å³é¿éšœ
+		if(Barrier_Flag1 == 1)					//è¯†åˆ«åˆ°éšœç¢ç‰©
 		{
+            Exp_Speed = 220;
 			Barrier_Timer--;
 			if(Barrier_Timer > 90)
 				Ratio = -0.235;
@@ -72,9 +73,10 @@ void Elem_Barrier_Timer(void)
 		else
 			Barrier_Timer = 100;
 	#elif BARRIER_DIR == 1  
-		//Ïò×ó±ÜÕÏ
-		if(Barrier_Flag1 == 1)					//Ê¶±ğµ½ÕÏ°­Îï
+		//å‘å·¦é¿éšœ
+		if(Barrier_Flag1 == 1)					//è¯†åˆ«åˆ°éšœç¢ç‰©
 		{
+            Exp_Speed = 220;
 			Barrier_Timer--;
 			if(Barrier_Timer > 64)
 				Ratio = 0.49;
@@ -101,29 +103,29 @@ void Elem_Circle(float Speed,float Gyro_Z)
 {
     static char Elem_Over;
 	static float Sum_Dis1 = 0;
-	static float Sum_Angle_C1 = 0;
-	if(Circle_Delay2 > 0)					//³ö»·£¬Çå³ı±êÖ¾Î»
+    static float Sum_Angle_C1 = 0;
+	if(Circle_Delay2 > 0)					//å‡ºç¯ï¼Œæ¸…é™¤æ ‡å¿—ä½
 	{
 		Circle_Flag1 = 0;
 		Circle_Flag2 = 0;
-		if(Circle_Flag3 == LEFT_CIRCLE)		//ÓÃÀ´¼ÇÂ¼³ö»·Ê±µÄ·½Ïò
+		if(Circle_Flag3 == LEFT_CIRCLE)		//ç”¨æ¥è®°å½•å‡ºç¯æ—¶çš„æ–¹å‘
 			Ratio -= 0.05;
 		else if(Circle_Flag3 == RIGHT_CIRCLE)
 			Ratio += 0.05;
 		Circle_Delay2--;
-		return ;        					//ÍË³öº¯Êı
+		return ;        					//é€€å‡ºå‡½æ•°
 	}
 
-	if(Circle_Flag1 == 1)					    //Ê¶±ğµ½»·µº
+	if(Circle_Flag1 == 1)					    //è¯†åˆ«åˆ°ç¯å²›
 	{
        Gyro_Z = (Gyro_Z*2000)/32768;       
-		if(Sum_Dis1 > DIS_ROUND_IN)			    //Â·³Ì»ı·Ö£¬»ıÂú½ø»·
+		if(Sum_Dis1 > DIS_ROUND_IN)			    //è·¯ç¨‹ç§¯åˆ†ï¼Œç§¯æ»¡è¿›ç¯
 		{
-			Sum_Angle_C1 += Gyro_Z * 0.005;     //½ø»·¿ªÊ¼½Ç¶È»ı·Ö
-            //±êÖ¾Î»Î´ÇåÁãÊ±Ö»ÖÃÎ»Ò»´Î£¬·ÀÖ¹ÖØ¸´Ê¶±ğ
+			Sum_Angle_C1 += Gyro_Z * 0.005;     //è¿›ç¯å¼€å§‹è§’åº¦ç§¯åˆ†
+            //æ ‡å¿—ä½æœªæ¸…é›¶æ—¶åªç½®ä½ä¸€æ¬¡ï¼Œé˜²æ­¢é‡å¤è¯†åˆ«
 			if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] >= ADC_proc[3]+ADC_proc[4]))
 			{
-				Circle_Flag2 = LEFT_CIRCLE;     //ÅĞÎª×ó»·µº
+				Circle_Flag2 = LEFT_CIRCLE;     //åˆ¤ä¸ºå·¦ç¯å²›
 				x10_ms = 13;
 			}
 			else if(Circle_Flag2 == 0 && (ADC_proc[1]+ ADC_proc[0] < ADC_proc[3]+ADC_proc[4]))
@@ -132,25 +134,25 @@ void Elem_Circle(float Speed,float Gyro_Z)
 				x10_ms = 13;
 			}
 			
-			Circle_Flag3 = Circle_Flag2;		//ÁÙÊ±±äÁ¿¼ÇÂ¼·½Ïò
+			Circle_Flag3 = Circle_Flag2;		//ä¸´æ—¶å˜é‡è®°å½•æ–¹å‘
 			
-			if(Sum_Angle_C1 < 24 && Circle_Flag2 == LEFT_CIRCLE )	//½Ç¶ÈÎ´»ıÂú£¬¹Ì¶¨Æ«²îÖµ
+			if(Sum_Angle_C1 < 24 && Circle_Flag2 == LEFT_CIRCLE )	//è§’åº¦æœªç§¯æ»¡ï¼Œå›ºå®šåå·®å€¼
 			{
-                Ratio = 0.5;  
+                Ratio = 0.34;  
             }
 			else if(Sum_Angle_C1 > -24 && Circle_Flag2 == RIGHT_CIRCLE)
 			{
-                Ratio = -0.5;
+                Ratio = -0.34;
             }
 		}
 		else
 			Sum_Dis1 += Speed;
 		
-		if(Sum_Angle_C1 > ROUND_L || Sum_Angle_C1 < ROUND_R )	           //³ö»·Ìõ¼şÖ®Ò»£¬½Ç¶È»ı·Ö¹»´ó
+		if(Sum_Angle_C1 > ROUND_L || Sum_Angle_C1 < ROUND_R )	           //å‡ºç¯æ¡ä»¶ä¹‹ä¸€ï¼Œè§’åº¦ç§¯åˆ†å¤Ÿå¤§
 		{
-			if(ADC_proc[0] > 59 || ADC_proc[4] > 59 || ADC_proc[2] > 62)   //Ô¤³ö»· ·ÀÖ¹ÎóÅĞÔÙ´ÎÈë»·
+			if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //é¢„å‡ºç¯ é˜²æ­¢è¯¯åˆ¤å†æ¬¡å…¥ç¯
 			{
-                Circle_Delay2 = 100;   //ÑÓÊ±1000ms
+                Circle_Delay2 = 120;   //å»¶æ—¶1000ms
 				Sum_Dis1 = 0;
 				Sum_Angle_C1 = 0;
 				Circle_Flag2 = 0;

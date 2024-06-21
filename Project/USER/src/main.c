@@ -9,44 +9,31 @@
 #include "Buzzer.h"
 #include "Key.h"
 #include "ui.h"
+#include "isr.h"
 
-extern float Diff;
-extern float Plus;
-extern float Ratio;
-extern short gx,gy,gz;
-extern volatile float Exp_Speed;
-extern float Exp_Speed_L;
-extern float Exp_Speed_R;
-extern float Act_PwmL,Act_PwmR;
-extern char Isr_Flag_10;
-extern float Flag_Out_L;
-extern float Flag_Out_R;
+#define FILTER_N            12
 
-volatile uint16 Dis_Process = 0;
-char Distance_Num = 0;
-
+float Dis_Process = 0;
 float Adjust_Val = 0;
 char KeyValue = 0;	
 
 void Init_all(void);
-
-#define FILTER_N 12
-
-uint16 filter_buf[FILTER_N + 1];
+void Get_Ratio(void);
+void Speed_Gain(void);
 
 uint16 Filter_Window(uint16 Dis) 
 {
-  int i;
-  uint16 filter_sum = 0;
-  filter_buf[FILTER_N] = Dis;
-  for(i = 0; i < FILTER_N; i++) 
-  {
-    filter_buf[i] = filter_buf[i + 1]; // 所有数据左移，低位仍掉
-    filter_sum += filter_buf[i];
-  }
-  return (uint16)(filter_sum / FILTER_N);
+    static uint16 filter_buf[FILTER_N + 1];
+    int i;    
+    uint16 filter_sum = 0;
+    filter_buf[FILTER_N] = Dis;
+    for(i = 0; i < FILTER_N; i++) 
+    {
+        filter_buf[i] = filter_buf[i + 1]; // 所有数据左移，低位仍掉
+        filter_sum += filter_buf[i];
+    }
+    return (uint16)(filter_sum / FILTER_N);
 }
-
 
 void main(void)	  
 {
@@ -54,8 +41,8 @@ void main(void)
 	EnableGlobalIRQ();	
 	Adjust_Val = 0;
 	while(1)
-	{		
-		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",ADC_proc[0] ,ADC_proc[1],ADC_proc[2],ADC_proc[3],Ratio,ADC_proc[4],Right_Wheel.out);
+	{	
+		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,Dis_Process);
 /******************************************** 按键读值**********************************************************************/ 	
 		ui_show();
 		KeyValue = GetKey_Value(0);
@@ -63,24 +50,23 @@ void main(void)
 		else if (KeyValue == KEY3_PRES) 	{page--; if(page <= 0)  page = 0;oled_all_static_state();}			
 		else if (KeyValue == KEY0_PRES) 	Adjust_Val += 0.05;
 		else if (KeyValue == KEY1_PRES) 	Adjust_Val -= 0.05;
-	
+        
 /******************************************** 类似中断服务处理 **************************************************************/ 
 		if(Isr_Flag_10 == 1)
 		{
 			MPU6050_Refresh_DMP();				//读取角度值
 			MPU_Get_Gyroscope(&gx, &gy, &gz);	//读取角速度
-            vl53l0x_get_distance();             //距离测量
-            if (vl53l0x_finsh_flag == 1)        //一次测距有效
-                Dis_Process = Filter_Window(vl53l0x_distance_mm);
-            Elem_Up_Down(Pitch);	
-            
-            //丢线
-            if(Flag_Out_R != 0 || Flag_Out_L != 0)
+//            vl53l0x_get_distance();             //距离测量
+            if(vl53l0x_finsh_flag == 1)         //一次测距有效
             {
-                Exp_Speed = 100;
-                x10_ms = 15;
+                Dis_Process = Filter_Window(vl53l0x_distance_mm);
             }
-            //下坡
+//            if(Dis_Process <= 100)           //幅值滤波（TOF读值会莫名跳变）
+//                Dis_Process = 810;
+            Speed_Gain();
+/************************************************ 上下坡道 ********************************************/
+            Elem_Up_Down(Pitch);
+//############如果下坡连着急弯###########只能注释不可删除
 //            if(Down_Flag>0)
 //            {
 //                Down_Flag--;
@@ -88,30 +74,50 @@ void main(void)
 //            }
 //            else
 //                Down_Flag=0;
-            
-/************************************************ 避开路障 ***********************************************/            
-        //经过障碍前的某个元素（环岛，坡道），再开启避障
-//        if(Special_Elem >= 5)   //第一个特殊元素就是避障
-//           Barrier_Executed = 0;
-		if(Barrier_Executed == 0)
-		{	
-			if (Dis_Process < 880)		//	检测到路障
-				Distance_Num++;
-            else
-                Distance_Num = 0;
-            if(Distance_Num > 2)       //连续判别两次以上
-            {
-                Barrier_Flag1 = 1;
-                x10_ms = 13;
-                Distance_Num = 0;
-            }
-            Elem_Barrier_Timer();
-		}            
-			Isr_Flag_10 = 0;
-		}
-          
-	}
+
+/************************************************ 大弯丢线 ********************************************/ 		
+    if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
+        {
+            Exp_Speed = 20;
+           // x10_ms = 15;                            //蜂鸣器响提示丢线
+            Ratio = 0.5+(Speed_R/Exp_Speed)*0.15;	
+        }
+        else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
+        {
+            Exp_Speed = 20;
+           // x10_ms = 15;
+            Ratio = -0.5-(Speed_L/Exp_Speed)*0.15;	
+        }
+        else
+            Edge_Delay = 0; 
+        
+        Isr_Flag_10 = 0;
+        }
+	}	        
 }
+
+void Speed_Gain(void)
+{
+    int i = 0;
+    static float Speed_Buf[6] = {0};
+    Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
+    for(i ; i < 5; i++) 
+    {
+        Speed_Buf[i] = Speed_Buf[i + 1]; // 所有数据左移，低位仍掉
+        Sum_Dis += Speed_Buf[i];
+    }
+    if(Sum_Dis <= SUM_THRESHOLD)    // 5次之内积分值高于SUM_THRESHOLD则是直线
+    {
+        Sum_Dis = 0;
+        Exp_Speed_gain = 0.8;
+    }
+    else
+    {
+        Sum_Dis = 0;
+        Exp_Speed_gain = 1.0;
+    }
+}
+
 
 
 void Init_all(void)
@@ -132,7 +138,6 @@ void Init_all(void)
 ////测距模块初始化
 	//gpio_mode(P3_2, GPIO);
     vl53l0x_init();
-//    dl1a_init();
 ////OLED初始化
 	ui_init();					
 	
@@ -156,11 +161,13 @@ void Init_all(void)
 	ADC_InitAll(); 
 	
     ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
-//	PID_Init(&Left_Wheel_PID , 20, 0.5, 0, 9000, 2000);
-//	PID_Init(&Right_Wheel_PID, 20, 0.5, 0, 9000, 2000);
 	PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
 	
+    // PID_Incremental_Init(PID_Incremental *pid, float Kp, float Ki, float Kd,float Out_Limit, float Integral_Limit,uint8 use_lowpass_filter)
     PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
     PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+    
+//    PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+//    PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
 	
 } 

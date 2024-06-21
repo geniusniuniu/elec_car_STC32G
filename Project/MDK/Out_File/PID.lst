@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  PID                                                                05/06/24  20:34:05  PAGE 1   
+C251 COMPILER V5.60.0,  PID                                                                21/06/24  14:31:53  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE PID
@@ -66,7 +66,7 @@ stmt  level    source
    53          
    54          //***********************************************************ÔöÁ¿Ê½PID***********************************
              -***************//
-C251 COMPILER V5.60.0,  PID                                                                05/06/24  20:34:05  PAGE 2   
+C251 COMPILER V5.60.0,  PID                                                                21/06/24  14:31:53  PAGE 2   
 
    55          
    56          
@@ -135,7 +135,7 @@ Module Information          Static   Overlayable
   code size            =       813     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  PID                                                                05/06/24  20:34:05  PAGE 3   
+C251 COMPILER V5.60.0,  PID                                                                21/06/24  14:31:53  PAGE 3   
 
   idata size           =    ------     ------
   pdata size           =    ------     ------

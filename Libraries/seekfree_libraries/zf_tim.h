@@ -1,16 +1,16 @@
 /*********************************************************************************************************************
  * COPYRIGHT NOTICE
- * Copyright (c) 2020,��ɿƼ�
+ * Copyright (c) 2020,逐飞科技
  * All rights reserved.
- * ��������QQȺ��һȺ��179029047(����)  ��Ⱥ��244861897(����)  ��Ⱥ��824575535
+ * 技术讨论QQ群：一群：179029047(已满)  二群：244861897(已满)  三群：824575535
  *
- * �����������ݰ�Ȩ������ɿƼ����У�δ����������������ҵ��;��
- * ��ӭ��λʹ�ò������������޸�����ʱ���뱣����ɿƼ��İ�Ȩ������
+ * 以下所有内容版权均属逐飞科技所有，未经允许不得用于商业用途，
+ * 欢迎各位使用并传播本程序，修改内容时必须保留逐飞科技的版权声明。
  *
  * @file       		ctime
- * @company	   		�ɶ���ɿƼ����޹�˾
- * @author     		��ɿƼ�(QQ790875685)
- * @version    		�鿴doc��version�ļ� �汾˵��
+ * @company	   		成都逐飞科技有限公司
+ * @author     		逐飞科技(QQ790875685)
+ * @version    		查看doc内version文件 版本说明
  * @Software 		MDK FOR C251 V5.60
  * @Target core		STC32G12K128
  * @Taobao   		https://seekfree.taobao.com/
@@ -23,8 +23,8 @@
 
 
 
-//��ö�ٶ��岻�����û��޸�
-typedef enum    // ö��ADCͨ��
+//此枚举定义不允许用户修改
+typedef enum    // 枚举ADC通道
 {
     CTIM0_P34=0,    
 	CTIM1_P35,    	
@@ -34,8 +34,8 @@ typedef enum    // ö��ADCͨ��
 }CTIMN_enum;
 
 
-//��ö�ٶ��岻�����û��޸�
-typedef enum    // ö��ADCͨ��
+//此枚举定义不允许用户修改
+typedef enum    // 枚举ADC通道
 {
     TIM_0,    
 	TIM_1,    	
@@ -46,8 +46,8 @@ typedef enum    // ö��ADCͨ��
 
 
 #define TIM2_CLEAR_FLAG		AUXINTIF &= ~0x01; 
-#define TIM3_CLEAR_FLAG		AUXINTIF &= ~0x02; // ���жϱ�־
-#define TIM4_CLEAR_FLAG		AUXINTIF &= ~0x04; // ���жϱ�־
+#define TIM3_CLEAR_FLAG		AUXINTIF &= ~0x02; // 清中断标志
+#define TIM4_CLEAR_FLAG		AUXINTIF &= ~0x04; // 清中断标志
 
 
 void   ctimer_count_init(CTIMN_enum tim_n);

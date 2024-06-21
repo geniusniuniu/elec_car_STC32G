@@ -9,52 +9,56 @@
 #define LED P52
 
 extern char Down_Flag;
-extern volatile uint16 Dis_Process;
+extern float Dis_Process;
 
 short gx, gy, gz;
 char Speed_Delay = 40;
 char Isr_Flag_10 = 0;
+char Distance_Num = 0;
+char  Flag_Stop = 0;
+char Edge_Delay = 0;
+char count = 0;
+char Read_Nums = 0;
+
 float Flag_Out_L = 0;
 float Flag_Out_R = 0;
-
-float sum_L,sum_R;
 float Diff,Plus;
 float Ratio = 0;
 float Diff_Mid,Plus_Mid;
 float Ratio_Mid = 0;
 float Exp_Speed_L = 0;
 float Exp_Speed_R = 0;
-volatile float Exp_Speed = 0;
-
-char  Flag_Stop = 0;
 float Act_PwmL;	
 float Act_PwmR;
 float Angle_Edge = 0;
+float Sum_Dis = 0;
+float Exp_Speed_gain = 1.0;
+float sum_L,sum_R;
+volatile float Exp_Speed = 0;
 
-char Edge_Delay = 0;
-char count = 0;
 void Get_Ratio(void);
 
 void TM4_Isr() interrupt 20
 {
-	TIM4_CLEAR_FLAG; //清除中断标志
+	TIM4_CLEAR_FLAG;       //清除中断标志
 	count++;
     Isr_Flag_10 = 1;
-	Get_Speed();  //获取车速
-	ADC_GetValue();						//获取电感值
-	Get_Ratio();						//计算偏差值
-    
+	Get_Speed();            //获取车速
+	ADC_GetValue();			//获取电感值
+    Get_Ratio();			//计算偏差值
+    vl53l0x_get_distance();             //距离测量
+   
 /*********************** 直道弯道变速 **********************************/ 
 	
-    Turn_PID.Kpa = -0.001;//理论来讲kpa和kpb同号
-    Turn_PID.Kpb = -120;//-170;  
-    Turn_PID.Kd = 1.5;
+    Turn_PID.Kpa = -0.0006;//理论来讲kpa和kpb同号
+    Turn_PID.Kpb = -80;//-170;  
+    Turn_PID.Kd = -35;//20;  //1.5
     
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
 //        Turn_PID.Kpb = -120;//-170;  
 //		Turn_PID.Kd = 1.5;// 
-        Exp_Speed = 260;   
+        Exp_Speed = 280;   
     }
     else
     {
@@ -62,51 +66,53 @@ void TM4_Isr() interrupt 20
 //		Turn_PID.Kd = 14.5;// 
         Exp_Speed = 240;        
     } 
-
 /************************************************ 圆环判别 ***********************************************/ 
     
 	if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
 	{
         Circle_Flag1 = 1; 
-        x10_ms = 30;  									//识别到圆环标志位
+        x10_ms = 20;  				//识别到圆环标志位
 	}
     if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
         Dis_Process = 810;
-    
 	if(Dis_Process < 400)	        //测距值小于50cm，区分坡道，且只执行一次
-		Circle_Delay1 = 500;        //延时5秒
+		Circle_Delay1 = 120;        //延时0.5秒
     
-    if(Circle_Flag2 != 0)           //一旦距离积分足够，Circle_Delay1取消延时
-        Circle_Delay1 = 0;
+//    if(Circle_Flag2 != 0)           //一旦距离积分足够，Circle_Delay1取消延时
+//        Circle_Delay1 = 0;
 	if(Circle_Delay1 > 0)			//检测到坡道
 	{
 		Circle_Flag1 = 0;			//清零环岛标志位						
 		Circle_Delay1--;
 	}
-    Elem_Circle((Speed_L+Speed_R)/2,gz);
-	
-/************************************************ 大弯丢线 ********************************************/ 		
-	if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //--Edge_Delay 保证清零时不会再进判断
-	{
-		Ratio = 0.45+((int)(Speed_R/10))*0.015;	
-	}
-	else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
-	{
-		Ratio = -0.45-((int)(Speed_L/10))*0.015;	
-	}
-	else
-		Edge_Delay = 0;
-    
-	
+    Elem_Circle((Speed_L+Speed_R)/2,gz);   
+
+/*********************************避开路障***************************************/            
+
+//          if(Special_Elem >= 5)           //经过障碍前的某个元素（环岛，坡道），再开启避障
+//              Barrier_Executed = 0;
+    if(Barrier_Executed == 0)
+    {	
+        if (Dis_Process < 800)		//	检测到路障
+            Distance_Num++;
+        else
+            Distance_Num = 0;
+        if(Distance_Num >= 3)        //连续判别3次或以上
+        {
+            Barrier_Flag1 = 1;
+            x10_ms = 13;
+            Distance_Num = 0;
+        }
+        Elem_Barrier_Timer();
+    }
+
+
 /************************************************ 转向环计算 **********************************************/    
     
 	Limit_Out(&Ratio,-0.9,0.9);   //限幅
 	PID_Calculate(&Turn_PID,Ratio*150,gz/100); 				
 	Limit_Out(&Turn_PID.PID_Out,-8000,8000);
-	
-//    if(Barrier_Executed == 0)
-//        Exp_Speed = 220;
-
+	Exp_Speed *= Exp_Speed_gain;
 	if(Ratio >= 0)	
 	{
 		Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;
@@ -122,14 +128,17 @@ void TM4_Isr() interrupt 20
 	PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
     
 /********************************************* 驶离赛道，撞到障碍，停车 *********************************************/
-	if(Speed_Delay > 0)
+	if(Speed_Delay > 0)         //刚启动时候给定一小段延时
         Speed_Delay --;
-    if(Speed_Delay == 0 && abs(Speed_L) < 5 && abs(Speed_R) < 5)
+    
+    if(Speed_Delay == 0 && abs(Speed_L) < 15 && abs(Speed_R) < 15)
 		Flag_Stop = 1;
+    else if(abs(Speed_L) >= 15 || abs(Speed_R) >= 15)
+       Flag_Stop = 0; 
     
 /********************************************* 设置左右PWM ************************************************/ 	  
 
-    if(Dis_Process < 150 || Flag_Stop == 1) 
+    if(Dis_Process < 120 || Flag_Stop == 1) 
 	{
 		Act_PwmL = Left_SetSpeed(0);		
 		Act_PwmR = Right_SetSpeed(0);
@@ -158,6 +167,7 @@ void TM4_Isr() interrupt 20
 
 }
 
+
 //对ADC值进行处理得到差比和
 void Get_Ratio(void)
 {    
@@ -167,17 +177,17 @@ void Get_Ratio(void)
     
 	sum_L = sqrt(ADC_proc[0]*ADC_proc[0]+ADC_proc[1]*ADC_proc[1]);
 	sum_R = sqrt(ADC_proc[4]*ADC_proc[4]+ADC_proc[3]*ADC_proc[3]);
-	Diff = sum_L - sum_R;
-	Plus = sum_L + sum_R;
+	Diff  = sum_L - sum_R;
+	Plus  = sum_L + sum_R;
 	   
-    sum_01  = ADC_proc[0] + ADC_proc[1];
-    sum_34  = ADC_proc[3] + ADC_proc[4];
-    sum     = sum_01 + sum_34;
+    sum_01 = ADC_proc[0] + ADC_proc[1];
+    sum_34 = ADC_proc[3] + ADC_proc[4];
+    sum    = sum_01 + sum_34;
     
 	if((sum > EDGE_PROTECT) && Barrier_Flag1 == 0)  
 	{
-		Ratio = Diff/Plus;									//如果小于EDGE_PROTECT//视作丢线，下次偏差值
-		Flag_Out_L = 0;										//在上次基础上再次加（减）
+		Ratio = Diff/Plus;	//如果小于EDGE_PROTECT//视作丢线，下次偏差值
+		Flag_Out_L = 0;		//在上次基础上再次加（减）
 		Flag_Out_R = 0;
 		Edge_Delay= 0;
 	}																			
@@ -186,9 +196,9 @@ void Get_Ratio(void)
         if(ADC_proc[0] + ADC_proc[4] < 5) 
             Flag_Stop = 1;
         //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
-		if(Barrier_Flag1 == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
+		else if(Barrier_Flag1 == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
 		{
-           Edge_Delay = 2;	//50ms	
+           Edge_Delay = 100;	//50ms	
            if(sum_01 >= sum_34 && Flag_Out_R == 0) 
            {  
                  Flag_Out_L = 1;
@@ -200,10 +210,6 @@ void Get_Ratio(void)
         }
 	}
 }
-
-
-
-
 
 
 
