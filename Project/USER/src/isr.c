@@ -48,43 +48,37 @@ void TM4_Isr() interrupt 20
     Get_Ratio();			//计算偏差值
     vl53l0x_get_distance();             //距离测量
    
-/*********************** 直道弯道变速 **********************************/ 
-	
+/*********************** 直道弯道变速 **********************************/ 	
     Turn_PID.Kpa = -0.0006;//理论来讲kpa和kpb同号
     Turn_PID.Kpb = -80;//-170;  
     Turn_PID.Kd = -35;//20;  //1.5
     
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
-//        Turn_PID.Kpb = -120;//-170;  
-//		Turn_PID.Kd = 1.5;// 
-        Exp_Speed = 280;   
+        Exp_Speed = 260;   
     }
     else
     {
-//        Turn_PID.Kpb = -120;//-250; 
-//		Turn_PID.Kd = 14.5;// 
-        Exp_Speed = 240;        
+        Exp_Speed = 240-(Ratio/0.1)*18;        
     } 
 /************************************************ 圆环判别 ***********************************************/ 
     
 	if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
 	{
+        if(ADC_proc[0] + ADC_proc[4] >= 85 )
         Circle_Flag1 = 1; 
-        x10_ms = 20;  				//识别到圆环标志位
-	}
-    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
-        Dis_Process = 810;
-	if(Dis_Process < 400)	        //测距值小于50cm，区分坡道，且只执行一次
-		Circle_Delay1 = 120;        //延时0.5秒
+    }    
+
+//    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
+//        Dis_Process = 810;
+//	if(Dis_Process < 400)	        //测距值小于50cm，区分坡道，且只执行一次
+//		Circle_Delay1 = 100;        //延时0.5秒
     
-//    if(Circle_Flag2 != 0)           //一旦距离积分足够，Circle_Delay1取消延时
-//        Circle_Delay1 = 0;
-	if(Circle_Delay1 > 0)			//检测到坡道
-	{
-		Circle_Flag1 = 0;			//清零环岛标志位						
-		Circle_Delay1--;
-	}
+//	if(Circle_Delay1 > 0)			//检测到坡道
+//	{
+//		Circle_Flag1 = 0;			//清零环岛标志位						
+//		Circle_Delay1--;
+//	}
     Elem_Circle((Speed_L+Speed_R)/2,gz);   
 
 /*********************************避开路障***************************************/            
@@ -167,7 +161,6 @@ void TM4_Isr() interrupt 20
 
 }
 
-
 //对ADC值进行处理得到差比和
 void Get_Ratio(void)
 {    
@@ -180,9 +173,9 @@ void Get_Ratio(void)
 	Diff  = sum_L - sum_R;
 	Plus  = sum_L + sum_R;
 	   
-    sum_01 = ADC_proc[0] + ADC_proc[1];
-    sum_34 = ADC_proc[3] + ADC_proc[4];
-    sum    = sum_01 + sum_34;
+    sum_01= ADC_proc[0] + ADC_proc[1];
+    sum_34= ADC_proc[3] + ADC_proc[4];
+    sum   = sum_01 + sum_34;
     
 	if((sum > EDGE_PROTECT) && Barrier_Flag1 == 0)  
 	{

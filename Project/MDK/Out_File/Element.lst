@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 1   
+C251 COMPILER V5.60.0,  Element                                                            11/07/24  19:11:21  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE Element
@@ -42,9 +42,9 @@ stmt  level    source
    31          void Elem_Up_Down(float Angle)  
    32          {
    33   1          static char Elem_Over;
-   34   1              if(Angle > -2)          //上坡
+   34   1              if(Angle > 5.5)          //上坡
    35   1                      Exp_Speed = 320;
-   36   1              else if(Angle < -16)  //下坡
+   36   1              else if(Angle < -10)  //下坡
    37   1          {
    38   2              Down_Flag = 5;
    39   2              if(Elem_Over == 0)
@@ -58,7 +58,7 @@ stmt  level    source
    47          
    48          
    49          //障碍物识别   
-   50          char Barrier_Executed = 1;
+   50          char Barrier_Executed = 0;
    51          char Barrier_Flag1 = 0;
    52          void Elem_Barrier_Timer(void)  
    53          {
@@ -66,7 +66,7 @@ stmt  level    source
    55   1              #if BARRIER_DIR == 0                                            //向右避障
                                if(Barrier_Flag1 == 1)                                  //识别到障碍物
                                {
-C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 2   
+C251 COMPILER V5.60.0,  Element                                                            11/07/24  19:11:21  PAGE 2   
 
                            Exp_Speed = 220;
                                        Barrier_Timer--;
@@ -84,16 +84,16 @@ stmt  level    source
                                        }
                                }
                                else
-                                       Barrier_Timer = 100;
+                                       Barrier_Timer = 130;
                        #elif BARRIER_DIR == 1  
    76   1                      //向左避障
    77   1                      if(Barrier_Flag1 == 1)                                  //识别到障碍物
    78   1                      {
    79   2                  Exp_Speed = 220;
    80   2                              Barrier_Timer--;
-   81   2                              if(Barrier_Timer > 64)
+   81   2                              if(Barrier_Timer > 70)
    82   2                                      Ratio = 0.49;
-   83   2                              else if(Barrier_Timer > 18 && Barrier_Timer <= 64)
+   83   2                              else if(Barrier_Timer > 18 && Barrier_Timer <= 70)
    84   2                                      Ratio = -0.43;
    85   2                              else 
    86   2                                      Ratio += 0.04;
@@ -105,7 +105,7 @@ stmt  level    source
    92   3                              }
    93   2                      }
    94   1                      else
-   95   1                              Barrier_Timer = 100;
+   95   1                              Barrier_Timer = 120;
    96   1                      
    97   1              #endif
    98   1      }
@@ -134,7 +134,7 @@ stmt  level    source
   121   2             Gyro_Z = (Gyro_Z*2000)/32768;       
   122   2                      if(Sum_Dis1 > DIS_ROUND_IN)                         //路程积分，积满进环
   123   2                      {
-C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 3   
+C251 COMPILER V5.60.0,  Element                                                            11/07/24  19:11:21  PAGE 3   
 
   124   3                              Sum_Angle_C1 += Gyro_Z * 0.005;     //进环开始角度积分
   125   3                  //标志位未清零时只置位一次，防止重复识别
@@ -191,7 +191,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       724     ------
+  code size            =       726     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -203,7 +203,7 @@ Module Information          Static   Overlayable
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
-C251 COMPILER V5.60.0,  Element                                                            21/06/24  14:37:54  PAGE 4   
+C251 COMPILER V5.60.0,  Element                                                            11/07/24  19:11:21  PAGE 4   
 
   far data size        =    ------     ------
   huge data size       =    ------     ------

@@ -14,7 +14,7 @@ extern float Flag_Out_L;
 extern float Flag_Out_R;
 extern volatile float Exp_Speed;
 extern float Dis_Process;
-uint8 page=0;
+char page=0;
 float value[4][7];
 char value_name[4][7][7];
 
@@ -52,29 +52,37 @@ void value_name_init(void)//将name改为想要的参数名，但“ ”中的总长度不要变
 void refresh_value()//value=填入变量名
 {
 	//page=0
-    value[0][0]= ADC_proc[0];
-	value[0][1]= ADC_proc[1];
-	value[0][2]= ADC_proc[3];
-	value[0][3]= ADC_proc[4];
-	
-	//page=1
-	value[1][0]= ADC_proc[2];
-	value[1][1]= Ratio;
-	value[1][2]= Dis_Process;
-	value[1][3]= Pitch;
-	
-	//page=2
-	value[2][0]= Left_Wheel.Kp;
-	value[2][1]= Left_Wheel.Ki;
-	value[2][2]= Left_Wheel.Kd;
-	value[2][3]= gy;
-	
-	//page=3
-	value[3][0]= Exp_Speed;
-	value[3][1]= Flag_Out_L;
-	value[3][2]= Flag_Out_R;
-	value[3][3]= 0.0;
-		
+    if(page == 0)
+    {
+        value[0][0]= ADC_proc[0];
+        value[0][1]= ADC_proc[1];
+        value[0][2]= ADC_proc[3];
+        value[0][3]= ADC_proc[4];
+    }
+	else if(page == 1)
+    {
+        //page=1
+        value[1][0]= ADC_proc[2];
+        value[1][1]= Ratio;
+        value[1][2]= Dis_Process;
+        value[1][3]= Pitch;
+    }
+	else if(page == 2)
+    {
+        //page=2
+        value[2][0]= Left_Wheel.Kp;
+        value[2][1]= Left_Wheel.Ki;
+        value[2][2]= Left_Wheel.Kd;
+        value[2][3]= gy;
+	}
+    else if(page == 3)
+    {
+        //page=3
+        value[3][0]= Exp_Speed;
+        value[3][1]= Flag_Out_L;
+        value[3][2]= Flag_Out_R;
+        value[3][3]= 0.0;
+    }	
 }
 //                         oled显示函数
 ///////////////////////////////////////////////////////////////////////

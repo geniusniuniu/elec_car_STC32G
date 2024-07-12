@@ -11,7 +11,7 @@
 #include "ui.h"
 #include "isr.h"
 
-#define FILTER_N            12
+#define FILTER_N 12
 
 float Dis_Process = 0;
 float Adjust_Val = 0;
@@ -44,7 +44,8 @@ void main(void)
 	{	
 		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,Dis_Process);
 /******************************************** 按键读值**********************************************************************/ 	
-		ui_show();
+		
+        ui_show();
 		KeyValue = GetKey_Value(0);
 		if 		(KeyValue == KEY2_PRES) 	{page++; if(page >= 3)  page = 3;oled_all_static_state();}		
 		else if (KeyValue == KEY3_PRES) 	{page--; if(page <= 0)  page = 0;oled_all_static_state();}			
@@ -56,13 +57,10 @@ void main(void)
 		{
 			MPU6050_Refresh_DMP();				//读取角度值
 			MPU_Get_Gyroscope(&gx, &gy, &gz);	//读取角速度
-//            vl53l0x_get_distance();             //距离测量
             if(vl53l0x_finsh_flag == 1)         //一次测距有效
             {
                 Dis_Process = Filter_Window(vl53l0x_distance_mm);
             }
-//            if(Dis_Process <= 100)           //幅值滤波（TOF读值会莫名跳变）
-//                Dis_Process = 810;
             Speed_Gain();
 /************************************************ 上下坡道 ********************************************/
             Elem_Up_Down(Pitch);
@@ -76,17 +74,15 @@ void main(void)
 //                Down_Flag=0;
 
 /************************************************ 大弯丢线 ********************************************/ 		
-    if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
+        if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
         {
-            Exp_Speed = 20;
-           // x10_ms = 15;                            //蜂鸣器响提示丢线
-            Ratio = 0.5+(Speed_R/Exp_Speed)*0.15;	
+            Exp_Speed = 100;
+            Ratio = 0.45+(Speed_R/100)*0.15;	
         }
         else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
         {
-            Exp_Speed = 20;
-           // x10_ms = 15;
-            Ratio = -0.5-(Speed_L/Exp_Speed)*0.15;	
+            Exp_Speed = 100;
+            Ratio = -0.45-(Speed_L/100)*0.15;	
         }
         else
             Edge_Delay = 0; 

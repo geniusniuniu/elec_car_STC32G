@@ -5,7 +5,7 @@
 #include <string.h>
 #include "SEEKFREE_OLED.h"
 
-extern uint8 page;
+extern char page;
 
 void ui_init(void);
 void ui_show(void);

@@ -31,9 +31,9 @@ char Special_Elem = 0;
 void Elem_Up_Down(float Angle)  
 {
     static char Elem_Over;
-	if(Angle > -2)          //上坡
+	if(Angle > 5.5)          //上坡
 		Exp_Speed = 320;
-	else if(Angle < -16)  //下坡
+	else if(Angle < -10)  //下坡
     {
         Down_Flag = 5;
         if(Elem_Over == 0)
@@ -47,7 +47,7 @@ void Elem_Up_Down(float Angle)
 
 
 //障碍物识别   
-char Barrier_Executed = 1;
+char Barrier_Executed = 0;
 char Barrier_Flag1 = 0;
 void Elem_Barrier_Timer(void)  
 {
@@ -71,16 +71,16 @@ void Elem_Barrier_Timer(void)
 			}
 		}
 		else
-			Barrier_Timer = 100;
+			Barrier_Timer = 130;
 	#elif BARRIER_DIR == 1  
 		//向左避障
 		if(Barrier_Flag1 == 1)					//识别到障碍物
 		{
             Exp_Speed = 220;
 			Barrier_Timer--;
-			if(Barrier_Timer > 64)
+			if(Barrier_Timer > 70)
 				Ratio = 0.49;
-			else if(Barrier_Timer > 18 && Barrier_Timer <= 64)
+			else if(Barrier_Timer > 18 && Barrier_Timer <= 70)
 				Ratio = -0.43;
 			else 
 				Ratio += 0.04;
@@ -92,7 +92,7 @@ void Elem_Barrier_Timer(void)
 			}
 		}
 		else
-			Barrier_Timer = 100;
+			Barrier_Timer = 120;
 		
 	#endif
 }

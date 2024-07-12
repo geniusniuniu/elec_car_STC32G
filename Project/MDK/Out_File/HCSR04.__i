@@ -1,1 +1,0 @@
-"..\CODE\HCSR04.c" XSMALL INTR2 WARNINGLEVEL (3) BROWSE INCDIR(..\..\Libraries\libraries;..\..\Libraries\seekfree_libraries;..\..\Libraries\seekfree_peripheral;..\CODE;..\USER\inc;..\USER\src) DEBUG PRINT(.\Out_File\HCSR04.lst) OBJECT(.\Out_File\HCSR04.obj)

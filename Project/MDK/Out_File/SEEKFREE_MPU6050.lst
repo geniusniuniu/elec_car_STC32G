@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   18/06/24  22:50:51  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   11/07/24  14:31:58  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_MPU6050
@@ -66,7 +66,7 @@ stmt  level    source
    50   1          simiic_write_reg(MPU6050_DEV_ADDR, SMPLRT_DIV, 0x07);   //125HZ采样率
    51   1          while(0x07 != simiic_read_reg(MPU6050_DEV_ADDR, SMPLRT_DIV,SIMIIC))
    52   1          {
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   18/06/24  22:50:51  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   11/07/24  14:31:58  PAGE 2   
 
    53   2                      delay_ms(1);
    54   2              //卡在这里原因有以下几点
@@ -134,7 +134,7 @@ stmt  level    source
              -------------
   111          void mpu6050_get_gyro(void)
   112          {
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   18/06/24  22:50:51  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   11/07/24  14:31:58  PAGE 3   
 
   113   1          uint8 dat[6];
   114   1      

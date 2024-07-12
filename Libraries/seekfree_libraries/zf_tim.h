@@ -55,7 +55,7 @@ void   ctimer_count_clean(CTIMN_enum tim_n);
 uint16 ctimer_count_read(CTIMN_enum tim_n);
 
 void pit_timer_ms(TIMN_enum tim_n,uint16 time_ms);
-
+void pit_timer_us(TIMN_enum tim_n,uint16 time_us);
 
 
 #endif

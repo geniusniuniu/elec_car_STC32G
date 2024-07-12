@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  HCSR04                                                             21/06/24  14:31:54  PAGE 1   
+C251 COMPILER V5.60.0,  HCSR04                                                             11/07/24  14:32:01  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE HCSR04
@@ -66,7 +66,7 @@ stmt  level    source
    55   2                      Distance_mm = (SOUND_SPEED * time_end) / 20.0;
    56   2              } 
    57   1          return Distance_mm;
-C251 COMPILER V5.60.0,  HCSR04                                                             21/06/24  14:31:54  PAGE 2   
+C251 COMPILER V5.60.0,  HCSR04                                                             11/07/24  14:32:01  PAGE 2   
 
    58   1      }
 

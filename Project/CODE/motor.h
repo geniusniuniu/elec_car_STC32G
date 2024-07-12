@@ -4,7 +4,7 @@
 #include "zf_tim.h"
 #include "PID.h"
 
-#define SPEED_MAX 			9000
+#define SPEED_MAX 			8500
 #define SPECIAL_SPEED 		600
 
 

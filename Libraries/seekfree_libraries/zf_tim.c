@@ -239,3 +239,48 @@ void pit_timer_ms(TIMN_enum tim_n,uint16 time_ms)
 	}
 }
 
+
+
+void pit_timer_us(TIMN_enum tim_n,uint16 time_us)
+{
+	uint16 temp;
+	temp = (uint16)65536 - (uint16)(sys_clk/1000 / (12 * (1000 / time_us)));	
+	if(TIM_0 == tim_n)
+	{
+		TMOD |= 0x00; 	
+		TL0 = temp; 	
+		TH0 = temp >> 8;
+		TR0 = 1; 		// 启动定时器
+		ET0 = 1; 		// 使能定时器中断
+	}
+	else if(TIM_1 == tim_n)
+	{
+		TMOD |= 0x00; 
+		TL1 = temp; 	
+		TH1 = temp >> 8;
+		TR1 = 1; // 启动定时器
+		ET1 = 1; // 使能定时器中断
+	}
+	else if(TIM_2 == tim_n)
+	{
+		T2L = temp; 	
+		T2H = temp >> 8;
+		AUXR |= 0x10; // 启动定时器
+		IE2 |= 0x04; // 使能定时器中断
+	}
+	else if(TIM_3 == tim_n)
+	{
+		T3L = temp; 	
+		T3H = temp >> 8;
+		T4T3M |= 0x08; // 启动定时器
+		IE2 |= 0x20; // 使能定时器中断
+	}
+	else if(TIM_4 == tim_n)
+	{
+		T4L = temp; 	
+		T4H = temp >> 8;
+		T4T3M |= 0x80; // 启动定时器
+		IE2 |= 0x40; // 使能定时器中断
+	}
+}
+
