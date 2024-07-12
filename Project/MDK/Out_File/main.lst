@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               11/07/24  19:40:54  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -22,7 +22,7 @@ stmt  level    source
    11          #include "ui.h"
    12          #include "isr.h"
    13          
-   14          #define FILTER_N 12
+   14          #define FILTER_N 8
    15          
    16          float Dis_Process = 0;
    17          float Adjust_Val = 0;
@@ -53,141 +53,143 @@ stmt  level    source
    42   1              Adjust_Val = 0;
    43   1              while(1)
    44   1              {       
-   45   2                      printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,
-             -Dis_Process);
-   46   2      /******************************************** 按键读值***********************************************
+   45   2                      //printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Rati
+             -o,Dis_Process);
+   46   2              printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Act_PwmL ,Act_PwmR,Exp_Speed_L,Exp_Speed_R,Dis_Bar,Dis
+             -_Process); 
+   47   2      /******************************************** 按键读值***********************************************
              -***********************/       
-   47   2                      
-   48   2              ui_show();
-   49   2                      KeyValue = GetKey_Value(0);
-   50   2                      if              (KeyValue == KEY2_PRES)         {page++; if(page >= 3)  page = 3;oled_all_static_state();}              
-   51   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
-   52   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
-   53   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
-   54   2              
-   55   2      /******************************************** 类似中断服务处理 **********************************
-C251 COMPILER V5.60.0,  main                                                               11/07/24  19:40:54  PAGE 2   
+   48   2                      
+   49   2              ui_show();
+   50   2                      KeyValue = GetKey_Value(0);
+   51   2                      if              (KeyValue == KEY2_PRES)         {page++; if(page >= 3)  page = 3;oled_all_static_state();}              
+   52   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
+   53   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
+   54   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
+C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 2   
 
+   55   2              
+   56   2      /******************************************** 类似中断服务处理 **********************************
              -****************************/ 
-   56   2                      if(Isr_Flag_10 == 1)
-   57   2                      {
-   58   3                              MPU6050_Refresh_DMP();                          //读取角度值
-   59   3                              MPU_Get_Gyroscope(&gx, &gy, &gz);       //读取角速度
-   60   3                  if(vl53l0x_finsh_flag == 1)         //一次测距有效
-   61   3                  {
-   62   4                      Dis_Process = Filter_Window(vl53l0x_distance_mm);
-   63   4                  }
-   64   3                  Speed_Gain();
-   65   3      /************************************************ 上下坡道 ******************************************
+   57   2                      if(Isr_Flag_10 == 1)
+   58   2                      {
+   59   3                              MPU6050_Refresh_DMP();                          //读取角度值
+   60   3                              MPU_Get_Gyroscope(&gx, &gy, &gz);       //读取角速度
+   61   3                  if(vl53l0x_finsh_flag == 1)         //一次测距有效
+   62   3                  {
+   63   4                      Dis_Process = Filter_Window(vl53l0x_distance_mm);
+   64   4                  }
+   65   3                  Speed_Gain();
+   66   3      /************************************************ 上下坡道 ******************************************
              -**/
-   66   3                  Elem_Up_Down(Pitch);
-   67   3      //############如果下坡连着急弯###########只能注释不可删除
-   68   3      //            if(Down_Flag>0)
-   69   3      //            {
-   70   3      //                Down_Flag--;
-   71   3      //                Exp_Speed = 60;
-   72   3      //            }
-   73   3      //            else
-   74   3      //                Down_Flag=0;
-   75   3      
-   76   3      /************************************************ 大弯丢线 ******************************************
+   67   3                  Elem_Up_Down(Pitch);
+   68   3      //############如果下坡连着急弯###########只能注释不可删除
+   69   3      //            if(Down_Flag>0)
+   70   3      //            {
+   71   3      //                Down_Flag--;
+   72   3      //                Exp_Speed = 60;
+   73   3      //            }
+   74   3      //            else
+   75   3      //                Down_Flag=0;
+   76   3      
+   77   3      /************************************************ 大弯丢线 ******************************************
              -**/                 
-   77   3              if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
-   78   3              {
-   79   4                  Exp_Speed = 100;
-   80   4                  Ratio = 0.45+(Speed_R/100)*0.15;    
-   81   4              }
-   82   3              else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
-   83   3              {
-   84   4                  Exp_Speed = 100;
-   85   4                  Ratio = -0.45-(Speed_L/100)*0.15;   
-   86   4              }
-   87   3              else
-   88   3                  Edge_Delay = 0; 
-   89   3              
-   90   3              Isr_Flag_10 = 0;
-   91   3              }
-   92   2              }               
-   93   1      }
-   94          
-   95          void Speed_Gain(void)
-   96          {
-   97   1          int i = 0;
-   98   1          static float Speed_Buf[6] = {0};
-   99   1          Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
-  100   1          for(i ; i < 5; i++) 
-  101   1          {
-  102   2              Speed_Buf[i] = Speed_Buf[i + 1]; // 所有数据左移，低位仍掉
-  103   2              Sum_Dis += Speed_Buf[i];
-  104   2          }
-  105   1          if(Sum_Dis <= SUM_THRESHOLD)    // 5次之内积分值高于SUM_THRESHOLD则是直线
-  106   1          {
-  107   2              Sum_Dis = 0;
-  108   2              Exp_Speed_gain = 0.8;
-  109   2          }
-  110   1          else
-  111   1          {
-  112   2              Sum_Dis = 0;
-  113   2              Exp_Speed_gain = 1.0;
-  114   2          }
-  115   1      }
-  116          
+   78   3              if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
+   79   3              {
+   80   4                  Exp_Speed = 100;
+   81   4                  Ratio = 0.45+(Speed_R/100)*0.15;    
+   82   4              }
+   83   3              else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
+   84   3              {
+   85   4                  Exp_Speed = 100;
+   86   4                  Ratio = -0.45-(Speed_L/100)*0.15;   
+   87   4              }
+   88   3              else
+   89   3                  Edge_Delay = 0; 
+   90   3              
+   91   3              Isr_Flag_10 = 0;
+   92   3              }
+   93   2              }               
+   94   1      }
+   95          
+   96          void Speed_Gain(void)
+   97          {
+   98   1          int i = 0;
+   99   1          static float Speed_Buf[6] = {0};
+  100   1          Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
+  101   1          for(i ; i < 5; i++) 
+  102   1          {
+  103   2              Speed_Buf[i] = Speed_Buf[i + 1]; // 所有数据左移，低位仍掉
+  104   2              Sum_Dis += Speed_Buf[i];
+  105   2          }
+  106   1          if(Sum_Dis <= SUM_THRESHOLD)    // 5次之内积分值高于SUM_THRESHOLD则是直线
+  107   1          {
+  108   2              Sum_Dis = 0;
+  109   2              Exp_Speed_gain = 0.8;
+  110   2          }
+  111   1          else
+  112   1          {
+  113   2              Sum_Dis = 0;
+  114   2              Exp_Speed_gain = 1.0;
+  115   2          }
+  116   1      }
   117          
-  118          
-C251 COMPILER V5.60.0,  main                                                               11/07/24  19:40:54  PAGE 3   
+C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 3   
 
-  119          void Init_all(void)
-  120          {
-  121   1              WTST = 0;                                                
-  122   1              DisableGlobalIRQ();                             
-  123   1              sys_clk = 35000000;                             
-  124   1      
-  125   1              board_init();                                   
-  126   1      
-  127   1      ////编码器方向引脚初始化
-  128   1              gpio_mode(P5_3, GPIO);          
-  129   1              gpio_mode(P3_5, GPIO);  
-  130   1              
-  131   1      ////按键引脚初始化
-  132   1              Key_Init();
-  133   1              
-  134   1      ////测距模块初始化
-  135   1              //gpio_mode(P3_2, GPIO);
-  136   1          vl53l0x_init();
-  137   1      ////OLED初始化
-  138   1              ui_init();                                      
-  139   1              
-  140   1      ////MPU6050初始化
-  141   1              MPU6050_DMP_Init();     
-  142   1      //      
-  143   1      ////定时器初始化
-  144   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
-  145   1      //      
-  146   1      ////编码器初始化
-  147   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
-  148   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
-  149   1              
-  150   1      ////电机初始化
-  151   1              Motor_Init();
-  152   1              
-  153   1      ////蜂鸣器初始化
-  154   1               Buzzer_Init();
-  155   1              
-  156   1      ////初始化所有AD引脚
-  157   1              ADC_InitAll(); 
-  158   1              
-  159   1          ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
-  160   1              PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
-  161   1              
-  162   1          // PID_Incremental_Init(PID_Incremental *pid, float Kp, float Ki, float Kd,float Out_Limit, float Int
+  118          
+  119          
+  120          void Init_all(void)
+  121          {
+  122   1              WTST = 0;                                                
+  123   1              DisableGlobalIRQ();                             
+  124   1              sys_clk = 35000000;                             
+  125   1      
+  126   1              board_init();                                   
+  127   1      
+  128   1      ////编码器方向引脚初始化
+  129   1              gpio_mode(P5_3, GPIO);          
+  130   1              gpio_mode(P3_5, GPIO);  
+  131   1              
+  132   1      ////按键引脚初始化
+  133   1              Key_Init();
+  134   1              
+  135   1      ////测距模块初始化
+  136   1              //gpio_mode(P3_2, GPIO);
+  137   1          vl53l0x_init();
+  138   1      ////OLED初始化
+  139   1              ui_init();                                      
+  140   1              
+  141   1      ////MPU6050初始化
+  142   1              MPU6050_DMP_Init();     
+  143   1      //      
+  144   1      ////定时器初始化
+  145   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
+  146   1      //      
+  147   1      ////编码器初始化
+  148   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
+  149   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
+  150   1              
+  151   1      ////电机初始化
+  152   1              Motor_Init();
+  153   1              
+  154   1      ////蜂鸣器初始化
+  155   1               Buzzer_Init();
+  156   1              
+  157   1      ////初始化所有AD引脚
+  158   1              ADC_InitAll(); 
+  159   1              
+  160   1          ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
+  161   1              PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
+  162   1              
+  163   1          // PID_Incremental_Init(PID_Incremental *pid, float Kp, float Ki, float Kd,float Out_Limit, float Int
              -egral_Limit,uint8 use_lowpass_filter)
-  163   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
-  164   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
-  165   1          
-  166   1      //    PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
-  167   1      //    PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
-  168   1              
-  169   1      } 
+  164   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+  165   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+  166   1          
+  167   1      //    PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+  168   1      //    PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+  169   1              
+  170   1      } 
 
 
 Module Information          Static   Overlayable
@@ -199,12 +201,12 @@ Module Information          Static   Overlayable
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-  edata size           =        59     ------
+  edata size           =        51     ------
   bit size             =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 4   
+
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
-C251 COMPILER V5.60.0,  main                                                               11/07/24  19:40:54  PAGE 4   
-
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
@@ -43,8 +43,8 @@ stmt  level    source
    32          float Act_PwmR;
    33          float Angle_Edge = 0;
    34          float Sum_Dis = 0;
-   35          float Exp_Speed_gain = 1.0;
-   36          float sum_L,sum_R;
+   35          float sum_L,sum_R;
+   36          float Exp_Speed_gain = 1.0;
    37          volatile float Exp_Speed = 0;
    38          
    39          void Get_Ratio(void);
@@ -66,13 +66,13 @@ stmt  level    source
    55   1          
    56   1              if(Ratio >= -0.15 && Ratio <= 0.15) //直线
    57   1          {
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 2   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 2   
 
-   58   2              Exp_Speed = 260;   
+   58   2              Exp_Speed = 280;   
    59   2          }
    60   1          else
    61   1          {
-   62   2              Exp_Speed = 240-(Ratio/0.1)*18;        
+   62   2              Exp_Speed = 240-(Num2Abs(Ratio)/0.1)*15;  
    63   2          } 
    64   1      /************************************************ 圆环判别 **********************************************
              -*/ 
@@ -80,7 +80,7 @@ stmt  level    source
    66   1              if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
    67   1              {
    68   2              if(ADC_proc[0] + ADC_proc[4] >= 85 )
-   69   2              Circle_Flag1 = 1; 
+   69   2                  Circle_Flag1 = 1; 
    70   2          }    
    71   1      
    72   1      //    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
@@ -101,17 +101,17 @@ stmt  level    source
    87   1      //              Barrier_Executed = 0;
    88   1          if(Barrier_Executed == 0)
    89   1          {   
-   90   2              if (Dis_Process < 800)          //      检测到路障
+   90   2              if (Dis_Process < 880)                  //      检测到路障
    91   2                  Distance_Num++;
    92   2              else
    93   2                  Distance_Num = 0;
-   94   2              if(Distance_Num >= 3)        //连续判别3次或以上
+   94   2              if(Distance_Num >= 2)               //连续判别2次或以上
    95   2              {
    96   3                  Barrier_Flag1 = 1;
-   97   3                  x10_ms = 13;
+   97   3                  //x10_ms = 5;
    98   3                  Distance_Num = 0;
    99   3              }
-  100   2              Elem_Barrier_Timer();
+  100   2              Elem_Barrier(gz,(Speed_L+Speed_R)/2);
   101   2          }
   102   1      
   103   1      
@@ -121,7 +121,7 @@ stmt  level    source
   106   1              Limit_Out(&Ratio,-0.9,0.9);   //限幅
   107   1              PID_Calculate(&Turn_PID,Ratio*150,gz/100);                              
   108   1              Limit_Out(&Turn_PID.PID_Out,-8000,8000);
-  109   1              Exp_Speed *= Exp_Speed_gain;
+  109   1          Exp_Speed *= Exp_Speed_gain;
   110   1              if(Ratio >= 0)  
   111   1              {
   112   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;
@@ -134,7 +134,7 @@ stmt  level    source
   119   2              }
   120   1              
   121   1              PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 3   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 3   
 
   122   1              PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
   123   1          
@@ -202,7 +202,7 @@ stmt  level    source
   183   2                      Flag_Out_L = 0;         //在上次基础上再次加（减）
   184   2                      Flag_Out_R = 0;
   185   2                      Edge_Delay= 0;
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 4   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 4   
 
   186   2              }                                                                                                                                                       
   187   1              else                                                                                                                                            
@@ -270,7 +270,7 @@ stmt  level    source
   249   3              }
   250   2          }
   251   1      }
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 5   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 5   
 
   252          
   253          //UART2中断
@@ -338,7 +338,7 @@ stmt  level    source
   315          #define LED P52
   316          void INT0_Isr() interrupt 0
   317          {
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 6   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 6   
 
   318   1              LED = 0;        //点亮LED
   319   1      }
@@ -407,9 +407,9 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-C251 COMPILER V5.60.0,  isr                                                                11/07/24  19:40:54  PAGE 7   
+C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 7   
 
-  code size            =      1491     ------
+  code size            =      1521     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

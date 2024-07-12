@@ -47,7 +47,7 @@ void Elem_Up_Down(float Angle)
 
 
 //障碍物识别   
-char Barrier_Executed = 0;
+char Barrier_Executed = 1;
 char Barrier_Flag1 = 0;
 void Elem_Barrier_Timer(void)  
 {
@@ -96,6 +96,84 @@ void Elem_Barrier_Timer(void)
 		
 	#endif
 }
+
+
+char Barrier_Flag2 = 0;
+char Barrier_Flag3 = 0;
+float Dis_Bar = 0;
+float Sum_Angle_Bar = 0;
+void Elem_Barrier(float Gyro_Z,float Speed)
+{
+	Gyro_Z = (Gyro_Z*2000)/32768;	
+    
+	#if BARRIER_DIR == 0		    //向右避障
+		if(Barrier_Flag1==1)        
+		{
+            Sum_Angle_Bar += Gyro_Z*0.005;
+            Dis_Bar += Speed;
+			Ratio = -0.38;			
+
+		}
+		if(Sum_Angle_Bar < -23 && Dis_Bar > 4000) 
+		{
+			Barrier_Flag1 = 0;   
+			Barrier_Flag2 = 1;
+		}
+		if(Barrier_Flag2 == 1)      //左拐
+		{   
+            Sum_Angle_Bar += Gyro_Z*0.005;
+            Dis_Bar += Speed;
+			if(Sum_Angle_Bar > 20 && Dis_Bar > 8500)  
+			{
+                Barrier_Flag3 = 1;  //回正标志位			
+			}
+			else  	            //回正
+				Ratio = 0.395; 
+		}
+		if(Barrier_Flag3 == 1)		//回正后标志位清零
+        {
+            Sum_Angle_Bar = 0;
+            Dis_Bar = 0;
+            Barrier_Flag1 = 0;            
+            Barrier_Flag2 = 0;
+            Barrier_Executed = 1;
+            
+            Barrier_Flag3 = 0;
+		}
+    #elif BARRIER_DIR == 1               //向左避障
+        if(Barrier_Flag1==1)        
+        {
+            Ratio = 0.32 ;          
+            Dis += Speed;
+        }
+        if(Sum_Angle > 20 && Dis > 4000) 
+        {
+            Barrier_Flag1 = 0;     
+            Barrier_Flag2 = 1;
+        }
+        if(Barrier_Flag2 == 1)      //右拐
+        {   
+            if(Sum_Angle > -2 && Dis < 7000)  
+            {
+                Ratio = -0.35;      
+            }
+            else                  //回正
+                Barrier_Flag3 = 1;  //回正标志位
+        }
+
+        if(Barrier_Flag3 == 1)        //回正后标志位清零
+        {
+            Sum_Angle = 0;
+            Barrier_Flag1 = 0;          
+            Barrier_Flag2 = 0;
+            Barrier_Executed = 1;
+                
+            Barrier_Flag3 = 0;
+        }
+   #endif	
+}
+
+
 
 char Circle_Flag3 = 0;
 

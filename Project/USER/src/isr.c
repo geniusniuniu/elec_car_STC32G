@@ -32,8 +32,8 @@ float Act_PwmL;
 float Act_PwmR;
 float Angle_Edge = 0;
 float Sum_Dis = 0;
-float Exp_Speed_gain = 1.0;
 float sum_L,sum_R;
+float Exp_Speed_gain = 1.0;
 volatile float Exp_Speed = 0;
 
 void Get_Ratio(void);
@@ -55,18 +55,18 @@ void TM4_Isr() interrupt 20
     
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
-        Exp_Speed = 260;   
+        Exp_Speed = 280;   
     }
     else
     {
-        Exp_Speed = 240-(Ratio/0.1)*18;        
+        Exp_Speed = 240-(Num2Abs(Ratio)/0.1)*15;  
     } 
 /************************************************ 圆环判别 ***********************************************/ 
     
 	if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
 	{
         if(ADC_proc[0] + ADC_proc[4] >= 85 )
-        Circle_Flag1 = 1; 
+            Circle_Flag1 = 1; 
     }    
 
 //    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
@@ -87,17 +87,17 @@ void TM4_Isr() interrupt 20
 //              Barrier_Executed = 0;
     if(Barrier_Executed == 0)
     {	
-        if (Dis_Process < 800)		//	检测到路障
+        if (Dis_Process < 880)		        //	检测到路障
             Distance_Num++;
         else
             Distance_Num = 0;
-        if(Distance_Num >= 3)        //连续判别3次或以上
+        if(Distance_Num >= 2)               //连续判别2次或以上
         {
             Barrier_Flag1 = 1;
-            x10_ms = 13;
+            //x10_ms = 5;
             Distance_Num = 0;
         }
-        Elem_Barrier_Timer();
+        Elem_Barrier(gz,(Speed_L+Speed_R)/2);
     }
 
 
@@ -106,7 +106,7 @@ void TM4_Isr() interrupt 20
 	Limit_Out(&Ratio,-0.9,0.9);   //限幅
 	PID_Calculate(&Turn_PID,Ratio*150,gz/100); 				
 	Limit_Out(&Turn_PID.PID_Out,-8000,8000);
-	Exp_Speed *= Exp_Speed_gain;
+    Exp_Speed *= Exp_Speed_gain;
 	if(Ratio >= 0)	
 	{
 		Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;

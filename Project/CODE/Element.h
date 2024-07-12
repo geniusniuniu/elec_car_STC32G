@@ -14,11 +14,16 @@
 									// 0 表示赛道周围多干扰，只有经过障碍前
 									// 最后一个特殊元素在开启避障
 									
-#define BARRIER_DIR 		1 		//0表示向右避障，1表示向左避障
+#define BARRIER_DIR 		0 		//0表示向右避障，1表示向左避障
 									
 									
 extern char Barrier_Executed;
 extern char Barrier_Flag1;
+extern char Barrier_Flag2;
+extern char Barrier_Flag3;
+extern float Dis_Bar;
+extern float Sum_Angle_Bar;
+
 extern char Special_Elem;
 
 extern float Circle_Flag1;
@@ -29,5 +34,6 @@ extern int Circle_Delay2;
 void Elem_Barrier_Timer(void);  //2秒钟
 void Elem_Up_Down(float Angle);  
 void Elem_Circle(float Speed,float Gyro_Z);
+void Elem_Barrier(float Gyro_Z,float Speed);
 
 #endif

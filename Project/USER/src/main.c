@@ -11,7 +11,7 @@
 #include "ui.h"
 #include "isr.h"
 
-#define FILTER_N 12
+#define FILTER_N 8
 
 float Dis_Process = 0;
 float Adjust_Val = 0;
@@ -42,7 +42,8 @@ void main(void)
 	Adjust_Val = 0;
 	while(1)
 	{	
-		printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,Dis_Process);
+		//printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,Dis_Process);
+        printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Act_PwmL ,Act_PwmR,Exp_Speed_L,Exp_Speed_R,Dis_Bar,Dis_Process); 
 /******************************************** 按键读值**********************************************************************/ 	
 		
         ui_show();

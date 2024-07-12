@@ -62,7 +62,7 @@ void refresh_value()//value=填入变量名
 	else if(page == 1)
     {
         //page=1
-        value[1][0]= ADC_proc[2];
+        value[1][0]= Dis_Bar;
         value[1][1]= Ratio;
         value[1][2]= Dis_Process;
         value[1][3]= Pitch;

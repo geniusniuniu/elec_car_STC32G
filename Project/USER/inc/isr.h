@@ -24,10 +24,13 @@
 #define SUM_THRESHOLD  720
 
 extern volatile float Exp_Speed;
+extern float Exp_Speed_L;
+extern float Exp_Speed_R;
 extern float Diff;
 extern float Plus;
 extern float Ratio;
 extern float Act_PwmL,Act_PwmR;
+
 extern float Flag_Out_L;
 extern float Flag_Out_R;
 extern float Sum_Dis;
