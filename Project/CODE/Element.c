@@ -47,7 +47,7 @@ void Elem_Up_Down(float Angle)
 
 
 //障碍物识别   
-char Barrier_Executed = 1;
+char Barrier_Executed = 0;
 char Barrier_Flag1 = 0;
 void Elem_Barrier_Timer(void)  
 {
@@ -111,7 +111,7 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 		{
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			Ratio = -0.38;			
+			Ratio = -0.385;			
 
 		}
 		if(Sum_Angle_Bar < -23 && Dis_Bar > 4000) 

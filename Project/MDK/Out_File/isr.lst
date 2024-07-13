@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
@@ -60,19 +60,19 @@ stmt  level    source
    49   1          vl53l0x_get_distance();             //距离测量
    50   1         
    51   1      /*********************** 直道弯道变速 **********************************/       
-   52   1          Turn_PID.Kpa = -0.0006;//理论来讲kpa和kpb同号
+   52   1          Turn_PID.Kpa = -0.0005;//理论来讲kpa和kpb同号
    53   1          Turn_PID.Kpb = -80;//-170;  
    54   1          Turn_PID.Kd = -35;//20;  //1.5
    55   1          
    56   1              if(Ratio >= -0.15 && Ratio <= 0.15) //直线
    57   1          {
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 2   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 2   
 
    58   2              Exp_Speed = 280;   
    59   2          }
    60   1          else
    61   1          {
-   62   2              Exp_Speed = 240-(Num2Abs(Ratio)/0.1)*15;  
+   62   2              Exp_Speed = 240-(Num2Abs(Ratio)/0.1)*8;  
    63   2          } 
    64   1      /************************************************ 圆环判别 **********************************************
              -*/ 
@@ -134,7 +134,7 @@ stmt  level    source
   119   2              }
   120   1              
   121   1              PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 3   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 3   
 
   122   1              PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
   123   1          
@@ -202,17 +202,17 @@ stmt  level    source
   183   2                      Flag_Out_L = 0;         //在上次基础上再次加（减）
   184   2                      Flag_Out_R = 0;
   185   2                      Edge_Delay= 0;
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 4   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 4   
 
   186   2              }                                                                                                                                                       
   187   1              else                                                                                                                                            
   188   1              {
-  189   2              if(ADC_proc[0] + ADC_proc[4] < 5) 
+  189   2              if(ADC_proc[0] + ADC_proc[4] < 4) 
   190   2                  Flag_Stop = 1;
   191   2              //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
   192   2                      else if(Barrier_Flag1 == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
   193   2                      {
-  194   3                 Edge_Delay = 100;    //50ms  
+  194   3                 Edge_Delay = 60;     //50ms  
   195   3                 if(sum_01 >= sum_34 && Flag_Out_R == 0) 
   196   3                 {  
   197   4                       Flag_Out_L = 1;
@@ -270,7 +270,7 @@ stmt  level    source
   249   3              }
   250   2          }
   251   1      }
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 5   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 5   
 
   252          
   253          //UART2中断
@@ -338,7 +338,7 @@ stmt  level    source
   315          #define LED P52
   316          void INT0_Isr() interrupt 0
   317          {
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 6   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 6   
 
   318   1              LED = 0;        //点亮LED
   319   1      }
@@ -407,7 +407,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-C251 COMPILER V5.60.0,  isr                                                                12/07/24  21:17:13  PAGE 7   
+C251 COMPILER V5.60.0,  isr                                                                13/07/24  18:02:23  PAGE 7   
 
   code size            =      1521     ------
   ecode size           =    ------     ------

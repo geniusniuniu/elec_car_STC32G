@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_ICM20602
@@ -66,7 +66,7 @@ stmt  level    source
    48   1          uint8 dat;
    49   1              dat = simiic_read_reg(ICM20602_DEV_ADDR,ICM20602_WHO_AM_I,SIMIIC);
    50   1          while(0x12 != dat)   //读取ICM20602 ID
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 2   
 
    51   1          {
    52   2              dat = simiic_read_reg(ICM20602_DEV_ADDR,ICM20602_WHO_AM_I,SIMIIC);
@@ -134,7 +134,7 @@ stmt  level    source
   108   1      }
   109          
   110          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 3   
 
              -------------
   111          //  @brief      获取ICM20602陀螺仪数据
@@ -202,7 +202,7 @@ stmt  level    source
   166          void icm_simspi_w_reg_byte(uint8 cmd, uint8 val)
   167          {
   168   1          ICM20602_CSN (0);
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 4   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 4   
 
   169   1          cmd |= ICM20602_SPI_W;
   170   1          icm_simspi_wr_byte(cmd);                            
@@ -270,7 +270,7 @@ stmt  level    source
   226   2              icm_simspi_r_reg_byte(ICM20602_WHO_AM_I,&val);
   227   2                      
   228   2              //卡在这里原因有以下几点
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 5   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 5   
 
   229   2              //1 ICM20602坏了，如果是新的这样的概率极低
   230   2              //2 接线错误或者没有接好
@@ -338,7 +338,7 @@ stmt  level    source
   286          //  @brief      获取ICM20602陀螺仪数据
   287          //  @param      NULL
   288          //  @return     void
-C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  12/07/24  21:11:41  PAGE 6   
+C251 COMPILER V5.60.0,  SEEKFREE_ICM20602                                                  13/07/24  18:02:22  PAGE 6   
 
   289          //  @since      v1.0
   290          //  Sample usage:                               执行该函数后，直接查看对应的变量即可

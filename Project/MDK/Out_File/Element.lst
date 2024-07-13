@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  Element                                                            12/07/24  21:11:43  PAGE 1   
+C251 COMPILER V5.60.0,  Element                                                            13/07/24  18:02:24  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE Element
@@ -58,7 +58,7 @@ stmt  level    source
    47          
    48          
    49          //障碍物识别   
-   50          char Barrier_Executed = 1;
+   50          char Barrier_Executed = 0;
    51          char Barrier_Flag1 = 0;
    52          void Elem_Barrier_Timer(void)  
    53          {
@@ -66,7 +66,7 @@ stmt  level    source
    55   1              #if BARRIER_DIR == 0                                            //向右避障
    56   1                      if(Barrier_Flag1 == 1)                                  //识别到障碍物
    57   1                      {
-C251 COMPILER V5.60.0,  Element                                                            12/07/24  21:11:43  PAGE 2   
+C251 COMPILER V5.60.0,  Element                                                            13/07/24  18:02:24  PAGE 2   
 
    58   2                  Exp_Speed = 220;
    59   2                              Barrier_Timer--;
@@ -124,7 +124,7 @@ stmt  level    source
   111   1                      {
   112   2                  Sum_Angle_Bar += Gyro_Z*0.005;
   113   2                  Dis_Bar += Speed;
-  114   2                              Ratio = -0.38;                  
+  114   2                              Ratio = -0.385;                 
   115   2      
   116   2                      }
   117   1                      if(Sum_Angle_Bar < -23 && Dis_Bar > 4000) 
@@ -134,7 +134,7 @@ stmt  level    source
   121   2                      }
   122   1                      if(Barrier_Flag2 == 1)      //左拐
   123   1                      {   
-C251 COMPILER V5.60.0,  Element                                                            12/07/24  21:11:43  PAGE 3   
+C251 COMPILER V5.60.0,  Element                                                            13/07/24  18:02:24  PAGE 3   
 
   124   2                  Sum_Angle_Bar += Gyro_Z*0.005;
   125   2                  Dis_Bar += Speed;
@@ -202,7 +202,7 @@ stmt  level    source
   187   2                      Circle_Flag1 = 0;
   188   2                      Circle_Flag2 = 0;
   189   2                      if(Circle_Flag3 == LEFT_CIRCLE)         //用来记录出环时的方向
-C251 COMPILER V5.60.0,  Element                                                            12/07/24  21:11:43  PAGE 4   
+C251 COMPILER V5.60.0,  Element                                                            13/07/24  18:02:24  PAGE 4   
 
   190   2                              Ratio -= 0.05;
   191   2                      else if(Circle_Flag3 == RIGHT_CIRCLE)
@@ -271,7 +271,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-C251 COMPILER V5.60.0,  Element                                                            12/07/24  21:11:43  PAGE 5   
+C251 COMPILER V5.60.0,  Element                                                            13/07/24  18:02:24  PAGE 5   
 
   code size            =       977     ------
   ecode size           =    ------     ------

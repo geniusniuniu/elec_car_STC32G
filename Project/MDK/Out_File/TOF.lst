@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 1   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE TOF
@@ -66,7 +66,7 @@ stmt  level    source
    51          #include "math.h"
    52          
    53          #pragma warning disable = 183
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 2   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 2   
 
    54          
    55          
@@ -134,7 +134,7 @@ stmt  level    source
   115   1          VL53L0X_SCL_HIGH();
   116   1          vl53l0x_simiic_delay();
   117   1          VL53L0X_SCL_LOW();
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 3   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 3   
 
   118   1          vl53l0x_simiic_delay();
   119   1      }
@@ -202,7 +202,7 @@ stmt  level    source
   181   2              VL53L0X_SCL_HIGH();         //置时钟线为高，使数据线上数据有效
   182   2              vl53l0x_simiic_delay();
   183   2              c<<=1;
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 4   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 4   
 
   184   2              if(GET_VL53L0X_SDA) 
   185   2              {
@@ -270,7 +270,7 @@ stmt  level    source
   242          //  @param      reg                             寄存器地址
   243          //  @param      type                    选择通信方式是IIC  还是 SCCB
   244          //  @return     uint8                   返回寄存器的数据                        
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 5   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 5   
 
   245          //  @since      v1.0
   246          //  Sample usage:                               
@@ -338,7 +338,7 @@ stmt  level    source
              -------------
   304          static void vl53l0x_simiic_read_regs_1(uint8 dev_add, uint8 reg, uint8 *dat_add, uint32 num)
   305          {
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 6   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 6   
 
   306   1              vl53l0x_simiic_start();
   307   1          vl53l0x_send_ch( (dev_add<<1) | 0x00);  //发送器件地址加写位
@@ -406,7 +406,7 @@ stmt  level    source
   363   2      
   364   2              vl53l0x_write_register(0xFF, 0x06);
   365   2              vl53l0x_read_registers(0x83, &tmp, 1);
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 7   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 7   
 
   366   2              vl53l0x_write_register(0x83, tmp | 0x04);
   367   2              vl53l0x_write_register(0xFF, 0x07);
@@ -474,7 +474,7 @@ stmt  level    source
   426          //-------------------------------------------------------------------------------------------------------
              -------------
   427          // 函数简介     将超时数值从 ms 转换到对应的 MCLKs
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 8   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 8   
 
   428          // 参数说明     timeout_period_us   超时周期 微秒单位
   429          // 参数说明     vcsel_period_pclks  PCLK 值
@@ -542,7 +542,7 @@ stmt  level    source
   485          // 返回参数     void
   486          // 使用示例     vl53l0x_get_sequence_step_enables(enables);
   487          // 备注信息     
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 9   
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 9   
 
   488          //-------------------------------------------------------------------------------------------------------
              -------------
@@ -610,7 +610,7 @@ stmt  level    source
   544   1          timeouts->msrc_dss_tcc_mclks = reg_buffer[0] + 1;
   545   1          timeouts->msrc_dss_tcc_us = vl53l0x_timeout_mclks_to_microseconds(timeouts->msrc_dss_tcc_mclks, (uint
              -8)timeouts->pre_range_vcsel_period_pclks);
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 10  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 10  
 
   546   1      
   547   1          vl53l0x_read_registers(VL53L0X_PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI, reg_buffer, 2);
@@ -678,7 +678,7 @@ stmt  level    source
   604          
   605          //-------------------------------------------------------------------------------------------------------
              -------------
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 11  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 11  
 
   606          // 函数简介     设置测量定时预算 (以微秒为单位)
   607          // 参数说明     budget_us       设定的测量允许的时间
@@ -746,7 +746,7 @@ stmt  level    source
   668   4                      return_state = 1;
   669   4                      break;
   670   4                  }
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 12  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 12  
 
   671   3      
   672   3                  // 对于最终超时范围 必须添加预量程范围超时
@@ -814,7 +814,7 @@ stmt  level    source
   732   1          if (enables.final_range)
   733   1          {
   734   2              budget_us += (timeouts.final_range_us + VL53L0X_FINALlRANGE_OVERHEAD);
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 13  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 13  
 
   735   2          }
   736   1      
@@ -882,7 +882,7 @@ stmt  level    source
   794   2                 vl53l0x_distance_mm = distance;
   795   2             
   796   2          }
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 14  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 14  
 
   797   1      }
   798          
@@ -950,7 +950,7 @@ stmt  level    source
   855   2              // -------------------------------- VL53L0X 配置初始化 --------------------------------
   856   2              if (vl53l0x_get_spad_info(&data_buffer[0], &data_buffer[1]))
   857   2              {
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 15  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 15  
 
   858   3                              return_state = 1;
   859   3                  // 如果程序在输出了断言信息 并且提示出错位置在这里
@@ -1018,7 +1018,7 @@ stmt  level    source
   921   2              vl53l0x_write_register(0x27, 0x00);
   922   2              vl53l0x_write_register(0x50, 0x06);
   923   2              vl53l0x_write_register(0x51, 0x00);
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 16  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 16  
 
   924   2              vl53l0x_write_register(0x52, 0x96);
   925   2              vl53l0x_write_register(0x56, 0x08);
@@ -1086,7 +1086,7 @@ stmt  level    source
   987   2              measurement_timing_budget_us  = vl53l0x_get_measurement_timing_budget();
   988   2      
   989   2              // 默认情况下禁用 MSRC 和 TCC
-C251 COMPILER V5.60.0,  TOF                                                                12/07/24  21:11:43  PAGE 17  
+C251 COMPILER V5.60.0,  TOF                                                                13/07/24  18:02:24  PAGE 17  
 
   990   2              // MSRC = Minimum Signal Rate Check
   991   2              // TCC = Target CentreCheck

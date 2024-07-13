@@ -1,7 +1,7 @@
 #ifndef __ADC_H
 #define __ADC_H
 
-#define EDGE_PROTECT 	16
+#define EDGE_PROTECT 	12
 
 extern float ADC_proc[];
 

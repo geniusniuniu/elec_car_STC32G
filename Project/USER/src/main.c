@@ -69,26 +69,26 @@ void main(void)
 //            if(Down_Flag>0)
 //            {
 //                Down_Flag--;
-//                Exp_Speed = 60;
+//                Exp_Speed = 100;
 //            }
 //            else
 //                Down_Flag=0;
 
 /************************************************ 大弯丢线 ********************************************/ 		
-        if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
-        {
-            Exp_Speed = 100;
-            Ratio = 0.45+(Speed_R/100)*0.15;	
-        }
-        else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
-        {
-            Exp_Speed = 100;
-            Ratio = -0.45-(Speed_L/100)*0.15;	
-        }
-        else
-            Edge_Delay = 0; 
-        
-        Isr_Flag_10 = 0;
+            if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
+            {
+                Exp_Speed = 120;
+                Ratio = 0.2+(Speed_R/100)*0.15;	
+            }
+            else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
+            {
+                Exp_Speed = 120;
+                Ratio = -0.2-(Speed_L/100)*0.15;	
+            }
+            else
+                Edge_Delay = 0; 
+            
+            Isr_Flag_10 = 0;
         }
 	}	        
 }
@@ -96,7 +96,7 @@ void main(void)
 void Speed_Gain(void)
 {
     int i = 0;
-    static float Speed_Buf[6] = {0};
+    static float Speed_Buf[6] = {0,0};
     Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
     for(i ; i < 5; i++) 
     {

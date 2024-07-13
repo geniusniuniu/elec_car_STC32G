@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  motor                                                              12/07/24  21:11:43  PAGE 1   
+C251 COMPILER V5.60.0,  motor                                                              13/07/24  18:02:23  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE motor
@@ -66,7 +66,7 @@ stmt  level    source
    55   2                      {
    56   3                              pwm_duty(PWMA_CH2P_P62, (int)speed);
    57   3                              pwm_duty(PWMA_CH1P_P60, 0);
-C251 COMPILER V5.60.0,  motor                                                              12/07/24  21:11:43  PAGE 2   
+C251 COMPILER V5.60.0,  motor                                                              13/07/24  18:02:23  PAGE 2   
 
    58   3                      } 
    59   2                      else if(speed < 0)
@@ -134,7 +134,7 @@ stmt  level    source
   121   1              else                            {Speed_R = ctimer_count_read(CTIM0_P34); Speed_R = -Speed_R;}
   122   1              ctimer_count_clean(CTIM0_P34);                                                                  //清除计数值，开始下一轮计数
   123   1              
-C251 COMPILER V5.60.0,  motor                                                              12/07/24  21:11:43  PAGE 3   
+C251 COMPILER V5.60.0,  motor                                                              13/07/24  18:02:23  PAGE 3   
 
   124   1              Speed_L = Speed_L_Last*0.7 + Speed_L*0.3;
   125   1              Speed_R = Speed_R_Last*0.7 + Speed_R*0.3;

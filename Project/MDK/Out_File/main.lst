@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -66,7 +66,7 @@ stmt  level    source
    52   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
    53   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
    54   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
-C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 2   
+C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 2   
 
    55   2              
    56   2      /******************************************** 类似中断服务处理 **********************************
@@ -87,27 +87,28 @@ stmt  level    source
    69   3      //            if(Down_Flag>0)
    70   3      //            {
    71   3      //                Down_Flag--;
-   72   3      //                Exp_Speed = 60;
+   72   3      //                Exp_Speed = 100;
    73   3      //            }
    74   3      //            else
    75   3      //                Down_Flag=0;
    76   3      
    77   3      /************************************************ 大弯丢线 ******************************************
              -**/                 
-   78   3              if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
-   79   3              {
-   80   4                  Exp_Speed = 100;
-   81   4                  Ratio = 0.45+(Speed_R/100)*0.15;    
-   82   4              }
-   83   3              else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
-   84   3              {
-   85   4                  Exp_Speed = 100;
-   86   4                  Ratio = -0.45-(Speed_L/100)*0.15;   
-   87   4              }
-   88   3              else
-   89   3                  Edge_Delay = 0; 
-   90   3              
-   91   3              Isr_Flag_10 = 0;
+   78   3                  if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判�
+             -�
+   79   3                  {
+   80   4                      Exp_Speed = 120;
+   81   4                      Ratio = 0.2+(Speed_R/100)*0.15; 
+   82   4                  }
+   83   3                  else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
+   84   3                  {
+   85   4                      Exp_Speed = 120;
+   86   4                      Ratio = -0.2-(Speed_L/100)*0.15;        
+   87   4                  }
+   88   3                  else
+   89   3                      Edge_Delay = 0; 
+   90   3                  
+   91   3                  Isr_Flag_10 = 0;
    92   3              }
    93   2              }               
    94   1      }
@@ -115,7 +116,7 @@ stmt  level    source
    96          void Speed_Gain(void)
    97          {
    98   1          int i = 0;
-   99   1          static float Speed_Buf[6] = {0};
+   99   1          static float Speed_Buf[6] = {0,0};
   100   1          Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
   101   1          for(i ; i < 5; i++) 
   102   1          {
@@ -133,9 +134,9 @@ stmt  level    source
   114   2              Exp_Speed_gain = 1.0;
   115   2          }
   116   1      }
-  117          
-C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 3   
+C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 3   
 
+  117          
   118          
   119          
   120          void Init_all(void)
@@ -194,7 +195,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       837     ------
+  code size            =       849     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -202,9 +203,9 @@ Module Information          Static   Overlayable
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
   edata size           =        51     ------
-  bit size             =    ------     ------
-C251 COMPILER V5.60.0,  main                                                               12/07/24  21:17:14  PAGE 4   
+C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 4   
 
+  bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
