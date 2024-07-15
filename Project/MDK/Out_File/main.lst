@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               15/07/24  12:32:38  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -66,7 +66,7 @@ stmt  level    source
    52   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
    53   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 0.05;
    54   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 0.05;
-C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 2   
+C251 COMPILER V5.60.0,  main                                                               15/07/24  12:32:38  PAGE 2   
 
    55   2              
    56   2      /******************************************** 类似中断服务处理 **********************************
@@ -97,100 +97,102 @@ stmt  level    source
    78   3                  if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判�
              -�
    79   3                  {
-   80   4                      Exp_Speed = 120;
-   81   4                      Ratio = 0.2+(Speed_R/100)*0.15; 
-   82   4                  }
-   83   3                  else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
-   84   3                  {
-   85   4                      Exp_Speed = 120;
-   86   4                      Ratio = -0.2-(Speed_L/100)*0.15;        
-   87   4                  }
-   88   3                  else
-   89   3                      Edge_Delay = 0; 
-   90   3                  
-   91   3                  Isr_Flag_10 = 0;
-   92   3              }
-   93   2              }               
-   94   1      }
-   95          
-   96          void Speed_Gain(void)
-   97          {
-   98   1          int i = 0;
-   99   1          static float Speed_Buf[6] = {0,0};
-  100   1          Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
-  101   1          for(i ; i < 5; i++) 
-  102   1          {
-  103   2              Speed_Buf[i] = Speed_Buf[i + 1]; // 所有数据左移，低位仍掉
-  104   2              Sum_Dis += Speed_Buf[i];
-  105   2          }
-  106   1          if(Sum_Dis <= SUM_THRESHOLD)    // 5次之内积分值高于SUM_THRESHOLD则是直线
-  107   1          {
-  108   2              Sum_Dis = 0;
-  109   2              Exp_Speed_gain = 0.8;
-  110   2          }
-  111   1          else
-  112   1          {
-  113   2              Sum_Dis = 0;
-  114   2              Exp_Speed_gain = 1.0;
-  115   2          }
-  116   1      }
-C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 3   
+   80   4                      //x10_ms = 10;
+   81   4                      Exp_Speed = 150;
+   82   4                      Ratio = 0.2+(Speed_R/120)*0.15; 
+   83   4                  }
+   84   3                  else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
+   85   3                  {
+   86   4                      //x10_ms = 10;
+   87   4                      Exp_Speed = 150;
+   88   4                      Ratio = -0.2-(Speed_L/120)*0.15;        
+   89   4                  }
+   90   3                  else
+   91   3                      Edge_Delay = 0; 
+   92   3                  
+   93   3                  Isr_Flag_10 = 0;
+   94   3              }
+   95   2              }               
+   96   1      }
+   97          
+   98          void Speed_Gain(void)
+   99          {
+  100   1          int i = 0;
+  101   1          static float Speed_Buf[6] = {0,0};
+  102   1          Speed_Buf[5] = (Speed_L+Speed_R)/2;     //取车的平均速度
+  103   1          for(i ; i < 5; i++) 
+  104   1          {
+  105   2              Speed_Buf[i] = Speed_Buf[i + 1]; // 所有数据左移，低位仍掉
+  106   2              Sum_Dis += Speed_Buf[i];
+  107   2          }
+  108   1          if(Sum_Dis <= SUM_THRESHOLD)    // 5次之内积分值高于SUM_THRESHOLD则是直线
+  109   1          {
+  110   2              Sum_Dis = 0;
+  111   2              Exp_Speed_gain = 0.8;
+  112   2          }
+  113   1          else
+  114   1          {
+  115   2              Sum_Dis = 0;
+  116   2              Exp_Speed_gain = 1.0;
+C251 COMPILER V5.60.0,  main                                                               15/07/24  12:32:38  PAGE 3   
 
-  117          
-  118          
+  117   2          }
+  118   1      }
   119          
-  120          void Init_all(void)
-  121          {
-  122   1              WTST = 0;                                                
-  123   1              DisableGlobalIRQ();                             
-  124   1              sys_clk = 35000000;                             
-  125   1      
-  126   1              board_init();                                   
+  120          
+  121          
+  122          void Init_all(void)
+  123          {
+  124   1              WTST = 0;                                                
+  125   1              DisableGlobalIRQ();                             
+  126   1              sys_clk = 35000000;                             
   127   1      
-  128   1      ////编码器方向引脚初始化
-  129   1              gpio_mode(P5_3, GPIO);          
-  130   1              gpio_mode(P3_5, GPIO);  
-  131   1              
-  132   1      ////按键引脚初始化
-  133   1              Key_Init();
-  134   1              
-  135   1      ////测距模块初始化
-  136   1              //gpio_mode(P3_2, GPIO);
-  137   1          vl53l0x_init();
-  138   1      ////OLED初始化
-  139   1              ui_init();                                      
-  140   1              
-  141   1      ////MPU6050初始化
-  142   1              MPU6050_DMP_Init();     
-  143   1      //      
-  144   1      ////定时器初始化
-  145   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
-  146   1      //      
-  147   1      ////编码器初始化
-  148   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
-  149   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
-  150   1              
-  151   1      ////电机初始化
-  152   1              Motor_Init();
-  153   1              
-  154   1      ////蜂鸣器初始化
-  155   1               Buzzer_Init();
-  156   1              
-  157   1      ////初始化所有AD引脚
-  158   1              ADC_InitAll(); 
-  159   1              
-  160   1          ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
-  161   1              PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
-  162   1              
-  163   1          // PID_Incremental_Init(PID_Incremental *pid, float Kp, float Ki, float Kd,float Out_Limit, float Int
+  128   1              board_init();                                   
+  129   1      
+  130   1      ////编码器方向引脚初始化
+  131   1              gpio_mode(P5_3, GPIO);          
+  132   1              gpio_mode(P3_5, GPIO);  
+  133   1              
+  134   1      ////按键引脚初始化
+  135   1              Key_Init();
+  136   1              
+  137   1      ////测距模块初始化
+  138   1              //gpio_mode(P3_2, GPIO);
+  139   1          vl53l0x_init();
+  140   1      ////OLED初始化
+  141   1              ui_init();                                      
+  142   1              
+  143   1      ////MPU6050初始化
+  144   1              MPU6050_DMP_Init();     
+  145   1      //      
+  146   1      ////定时器初始化
+  147   1              pit_timer_ms(TIM_4, 10);                //10ms定时器
+  148   1      //      
+  149   1      ////编码器初始化
+  150   1              ctimer_count_init(CTIM0_P34);   //编码器1计数
+  151   1              ctimer_count_init(CTIM3_P04);   //编码器2计数
+  152   1              
+  153   1      ////电机初始化
+  154   1              Motor_Init();
+  155   1              
+  156   1      ////蜂鸣器初始化
+  157   1               Buzzer_Init();
+  158   1              
+  159   1      ////初始化所有AD引脚
+  160   1              ADC_InitAll(); 
+  161   1              
+  162   1          ////pid初始化  PID_Init(结构体, KPa,Kpb, KI, KD, 输出限幅，积分限幅)
+  163   1              PID_Init(&Turn_PID , 0,-2, 0, 0 ,10000, 0);
+  164   1              
+  165   1          // PID_Incremental_Init(PID_Incremental *pid, float Kp, float Ki, float Kd,float Out_Limit, float Int
              -egral_Limit,uint8 use_lowpass_filter)
-  164   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
-  165   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
-  166   1          
-  167   1      //    PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
-  168   1      //    PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
-  169   1              
-  170   1      } 
+  166   1          PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+  167   1          PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+  168   1          
+  169   1      //    PID_Incremental_Init(&Left_Wheel ,58,3.9,0.1,9000,3000,1);//48
+  170   1      //    PID_Incremental_Init(&Right_Wheel,58,3.9,0.1,9000,3000,1);//48
+  171   1              
+  172   1      } 
 
 
 Module Information          Static   Overlayable
@@ -201,10 +203,10 @@ Module Information          Static   Overlayable
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               15/07/24  12:32:38  PAGE 4   
+
   xdata-const size     =    ------     ------
   edata size           =        51     ------
-C251 COMPILER V5.60.0,  main                                                               13/07/24  18:02:23  PAGE 4   
-
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------

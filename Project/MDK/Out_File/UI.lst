@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  UI                                                                 13/07/24  18:02:24  PAGE 1   
+C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE UI
@@ -66,7 +66,7 @@ stmt  level    source
    55   1          if(page == 0)
    56   1          {
    57   2              value[0][0]= ADC_proc[0];
-C251 COMPILER V5.60.0,  UI                                                                 13/07/24  18:02:24  PAGE 2   
+C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 2   
 
    58   2              value[0][1]= ADC_proc[1];
    59   2              value[0][2]= ADC_proc[3];
@@ -134,7 +134,7 @@ stmt  level    source
   121   2                      oled_printf_float(55,i,value[page][j],5,2);
   122   2              }
   123   1      }
-C251 COMPILER V5.60.0,  UI                                                                 13/07/24  18:02:24  PAGE 3   
+C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 3   
 
   124          
   125          //////////////////////////////////////////////////////////////

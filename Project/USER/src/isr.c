@@ -49,7 +49,7 @@ void TM4_Isr() interrupt 20
     vl53l0x_get_distance();             //距离测量
    
 /*********************** 直道弯道变速 **********************************/ 	
-    Turn_PID.Kpa = -0.0005;//理论来讲kpa和kpb同号
+    Turn_PID.Kpa = -0.0004;//理论来讲kpa和kpb同号
     Turn_PID.Kpb = -80;//-170;  
     Turn_PID.Kd = -35;//20;  //1.5
     
@@ -68,17 +68,6 @@ void TM4_Isr() interrupt 20
         if(ADC_proc[0] + ADC_proc[4] >= 85 )
             Circle_Flag1 = 1; 
     }    
-
-//    if(Dis_Process <= 50)           //幅值滤波（TOF读值会莫名跳变）
-//        Dis_Process = 810;
-//	if(Dis_Process < 400)	        //测距值小于50cm，区分坡道，且只执行一次
-//		Circle_Delay1 = 100;        //延时0.5秒
-    
-//	if(Circle_Delay1 > 0)			//检测到坡道
-//	{
-//		Circle_Flag1 = 0;			//清零环岛标志位						
-//		Circle_Delay1--;
-//	}
     Elem_Circle((Speed_L+Speed_R)/2,gz);   
 
 /*********************************避开路障***************************************/            
@@ -87,11 +76,11 @@ void TM4_Isr() interrupt 20
 //              Barrier_Executed = 0;
     if(Barrier_Executed == 0)
     {	
-        if (Dis_Process < 880)		        //	检测到路障
+        if (Dis_Process < 950)		        //	检测到路障
             Distance_Num++;
         else
             Distance_Num = 0;
-        if(Distance_Num >= 2)               //连续判别2次或以上
+        if(Distance_Num >= 3)               //连续判别2次或以上
         {
             Barrier_Flag1 = 1;
             //x10_ms = 5;
@@ -102,7 +91,12 @@ void TM4_Isr() interrupt 20
 
 
 /************************************************ 转向环计算 **********************************************/    
-    
+    if(Circle_Flag1 == 1)
+    {
+        Turn_PID.Kpa = 0.0;//理论来讲kpa和kpb同号
+        Turn_PID.Kpb = -60;//-170;  
+        Turn_PID.Kd = -15;//20;  //1.5 
+    }
 	Limit_Out(&Ratio,-0.9,0.9);   //限幅
 	PID_Calculate(&Turn_PID,Ratio*150,gz/100); 				
 	Limit_Out(&Turn_PID.PID_Out,-8000,8000);
@@ -125,14 +119,14 @@ void TM4_Isr() interrupt 20
 	if(Speed_Delay > 0)         //刚启动时候给定一小段延时
         Speed_Delay --;
     
-    if(Speed_Delay == 0 && abs(Speed_L) < 15 && abs(Speed_R) < 15)
+    if(Speed_Delay == 0 && (abs(Speed_L) < 15 || abs(Speed_R) < 15))
 		Flag_Stop = 1;
     else if(abs(Speed_L) >= 15 || abs(Speed_R) >= 15)
        Flag_Stop = 0; 
     
 /********************************************* 设置左右PWM ************************************************/ 	  
 
-    if(Dis_Process < 120 || Flag_Stop == 1) 
+    if(Dis_Process < 100 || Flag_Stop == 1) 
 	{
 		Act_PwmL = Left_SetSpeed(0);		
 		Act_PwmR = Right_SetSpeed(0);
@@ -187,17 +181,18 @@ void Get_Ratio(void)
 	else 																		
 	{
         if(ADC_proc[0] + ADC_proc[4] < 4) 
-            Flag_Stop = 1;
-        //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
-		else if(Barrier_Flag1 == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
+            Flag_Stop = 1;                      //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
+		else if(Barrier_Executed == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
 		{
            Edge_Delay = 60;	//50ms	
            if(sum_01 >= sum_34 && Flag_Out_R == 0) 
            {  
+                 //x10_ms = 10;
                  Flag_Out_L = 1;
            } 
            else if(sum_01 < sum_34 && Flag_Out_L == 0) 
            {
+                 //x10_ms = 10;
                  Flag_Out_R = 1;
            } 
         }

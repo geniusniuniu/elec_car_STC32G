@@ -47,55 +47,55 @@ void Elem_Up_Down(float Angle)
 
 
 //障碍物识别   
-char Barrier_Executed = 0;
+char Barrier_Executed = 1;
 char Barrier_Flag1 = 0;
-void Elem_Barrier_Timer(void)  
-{
-	static float Barrier_Timer;	
-	#if BARRIER_DIR == 0						//向右避障
-		if(Barrier_Flag1 == 1)					//识别到障碍物
-		{
-            Exp_Speed = 220;
-			Barrier_Timer--;
-			if(Barrier_Timer > 90)
-				Ratio = -0.235;
-			else if(Barrier_Timer > 30 && Barrier_Timer <= 90)
-				Ratio = 0.5;
-			else 
-				Ratio -= 0.06;
-			if(Barrier_Timer == 0)
-			{
-				Barrier_Flag1 = 0;
-				Barrier_Executed = 1;
-                Special_Elem = 0;
-			}
-		}
-		else
-			Barrier_Timer = 130;
-	#elif BARRIER_DIR == 1  
-		//向左避障
-		if(Barrier_Flag1 == 1)					//识别到障碍物
-		{
-            Exp_Speed = 220;
-			Barrier_Timer--;
-			if(Barrier_Timer > 70)
-				Ratio = 0.49;
-			else if(Barrier_Timer > 18 && Barrier_Timer <= 70)
-				Ratio = -0.43;
-			else 
-				Ratio += 0.04;
-			if(Barrier_Timer == 0)
-			{
-				Barrier_Flag1 = 0;
-				Barrier_Executed = 1;
-                Special_Elem = 0;
-			}
-		}
-		else
-			Barrier_Timer = 120;
-		
-	#endif
-}
+//void Elem_Barrier_Timer(void)  
+//{
+//	static float Barrier_Timer;	
+//	#if BARRIER_DIR == 0						//向右避障
+//		if(Barrier_Flag1 == 1)					//识别到障碍物
+//		{
+//            Exp_Speed = 220;
+//			Barrier_Timer--;
+//			if(Barrier_Timer > 90)
+//				Ratio = -0.235;
+//			else if(Barrier_Timer > 30 && Barrier_Timer <= 90)
+//				Ratio = 0.5;
+//			else 
+//				Ratio -= 0.06;
+//			if(Barrier_Timer == 0)
+//			{
+//				Barrier_Flag1 = 0;
+//				Barrier_Executed = 1;
+//                Special_Elem = 0;
+//			}
+//		}
+//		else
+//			Barrier_Timer = 130;
+//	#elif BARRIER_DIR == 1  
+//		//向左避障
+//		if(Barrier_Flag1 == 1)					//识别到障碍物
+//		{
+//            Exp_Speed = 220;
+//			Barrier_Timer--;
+//			if(Barrier_Timer > 70)
+//				Ratio = 0.49;
+//			else if(Barrier_Timer > 18 && Barrier_Timer <= 70)
+//				Ratio = -0.43;
+//			else 
+//				Ratio += 0.04;
+//			if(Barrier_Timer == 0)
+//			{
+//				Barrier_Flag1 = 0;
+//				Barrier_Executed = 1;
+//                Special_Elem = 0;
+//			}
+//		}
+//		else
+//			Barrier_Timer = 120;
+//		
+//	#endif
+//}
 
 
 char Barrier_Flag2 = 0;
@@ -123,54 +123,49 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 		{   
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			if(Sum_Angle_Bar > 20 && Dis_Bar > 8500)  
+			if(Sum_Angle_Bar > 21 && Dis_Bar > 8000)  
 			{
                 Barrier_Flag3 = 1;  //回正标志位			
 			}
 			else  	            //回正
 				Ratio = 0.395; 
 		}
-		if(Barrier_Flag3 == 1)		//回正后标志位清零
-        {
-            Sum_Angle_Bar = 0;
-            Dis_Bar = 0;
-            Barrier_Flag1 = 0;            
-            Barrier_Flag2 = 0;
-            Barrier_Executed = 1;
-            
-            Barrier_Flag3 = 0;
-		}
     #elif BARRIER_DIR == 1               //向左避障
-        if(Barrier_Flag1==1)        
-        {
-            Ratio = 0.32 ;          
-            Dis += Speed;
-        }
-        if(Sum_Angle > 20 && Dis > 4000) 
-        {
-            Barrier_Flag1 = 0;     
-            Barrier_Flag2 = 1;
-        }
-        if(Barrier_Flag2 == 1)      //右拐
-        {   
-            if(Sum_Angle > -2 && Dis < 7000)  
-            {
-                Ratio = -0.35;      
-            }
-            else                  //回正
-                Barrier_Flag3 = 1;  //回正标志位
-        }
+		if(Barrier_Flag1==1)        
+		{
+            Sum_Angle_Bar += Gyro_Z*0.005;
+            Dis_Bar += Speed;
+			Ratio = 0.425;			
 
-        if(Barrier_Flag3 == 1)        //回正后标志位清零
-        {
-            Sum_Angle = 0;
-            Barrier_Flag1 = 0;          
-            Barrier_Flag2 = 0;
-            Barrier_Executed = 1;
-                
-            Barrier_Flag3 = 0;
-        }
-   #endif	
+		}
+		if(Sum_Angle_Bar > 23 && Dis_Bar > 4000) 
+		{
+			Barrier_Flag1 = 0;   
+			Barrier_Flag2 = 1;
+		}
+		if(Barrier_Flag2 == 1)      //右拐
+		{   
+            Sum_Angle_Bar += Gyro_Z*0.005;
+            Dis_Bar += Speed;
+			if(Sum_Angle_Bar < -22 && Dis_Bar > 8000)  
+			{
+                Barrier_Flag3 = 1;  //回正标志位			
+			}
+			else  	            //回正
+				Ratio = -0.395; 
+		}
+   #endif
+        
+    if(Barrier_Flag3 == 1)		//回正后标志位清零
+    {
+        Sum_Angle_Bar = 0;
+        Dis_Bar = 0;
+        Barrier_Flag1 = 0;            
+        Barrier_Flag2 = 0;
+        Barrier_Executed = 1;
+        
+        Barrier_Flag3 = 0;
+    }        
 }
 
 
