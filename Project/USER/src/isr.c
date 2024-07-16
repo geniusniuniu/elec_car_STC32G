@@ -49,10 +49,6 @@ void TM4_Isr() interrupt 20
     vl53l0x_get_distance();             //距离测量
    
 /*********************** 直道弯道变速 **********************************/ 	
-    Turn_PID.Kpa = -0.0004;//理论来讲kpa和kpb同号
-    Turn_PID.Kpb = -80;//-170;  
-    Turn_PID.Kd = -35;//20;  //1.5
-    
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
         Exp_Speed = 280;   
@@ -96,6 +92,12 @@ void TM4_Isr() interrupt 20
         Turn_PID.Kpa = 0.0;//理论来讲kpa和kpb同号
         Turn_PID.Kpb = -60;//-170;  
         Turn_PID.Kd = -15;//20;  //1.5 
+    }
+    else
+    {
+        Turn_PID.Kpa = -0.0004;//理论来讲kpa和kpb同号
+        Turn_PID.Kpb = -80;//-170;  
+        Turn_PID.Kd = -35;//20;  //1.5
     }
 	Limit_Out(&Ratio,-0.9,0.9);   //限幅
 	PID_Calculate(&Turn_PID,Ratio*150,gz/100); 				
@@ -184,7 +186,7 @@ void Get_Ratio(void)
             Flag_Stop = 1;                      //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
 		else if(Barrier_Executed == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
 		{
-           Edge_Delay = 60;	//50ms	
+           Edge_Delay = 10;	//50ms	
            if(sum_01 >= sum_34 && Flag_Out_R == 0) 
            {  
                  //x10_ms = 10;

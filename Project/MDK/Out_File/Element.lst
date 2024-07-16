@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  Element                                                            15/07/24  12:32:38  PAGE 1   
+C251 COMPILER V5.60.0,  Element                                                            16/07/24  17:28:54  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE Element
@@ -66,7 +66,7 @@ stmt  level    source
    55          //      #if BARRIER_DIR == 0                                            //向右避障
    56          //              if(Barrier_Flag1 == 1)                                  //识别到障碍物
    57          //              {
-C251 COMPILER V5.60.0,  Element                                                            15/07/24  12:32:38  PAGE 2   
+C251 COMPILER V5.60.0,  Element                                                            16/07/24  17:28:54  PAGE 2   
 
    58          //            Exp_Speed = 220;
    59          //                      Barrier_Timer--;
@@ -134,7 +134,7 @@ stmt  level    source
                                }
                                if(Barrier_Flag2 == 1)      //左拐
                                {   
-C251 COMPILER V5.60.0,  Element                                                            15/07/24  12:32:38  PAGE 3   
+C251 COMPILER V5.60.0,  Element                                                            16/07/24  17:28:54  PAGE 3   
 
                            Sum_Angle_Bar += Gyro_Z*0.005;
                            Dis_Bar += Speed;
@@ -202,7 +202,7 @@ stmt  level    source
   187   2                              Ratio += 0.05;
   188   2                      Circle_Delay2--;
   189   2                      return ;                                                //退出函数
-C251 COMPILER V5.60.0,  Element                                                            15/07/24  12:32:38  PAGE 4   
+C251 COMPILER V5.60.0,  Element                                                            16/07/24  17:28:54  PAGE 4   
 
   190   2              }
   191   1      
@@ -243,25 +243,26 @@ stmt  level    source
   225   2                      {
   226   3                              if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //预出环 防止误判再次入环
   227   3                              {
-  228   4                      Circle_Delay2 = 120;   //延时1000ms
+  228   4                      Circle_Delay2 = 140;   //延时1000ms
   229   4                                      Sum_Dis1 = 0;
   230   4                                      Sum_Angle_C1 = 0;
-  231   4                                      Circle_Flag2 = 0;
-  232   4                      if(Elem_Over == 0)
-  233   4                      {
-  234   5                          Elem_Over = 1;
-  235   5                          Special_Elem++;
-  236   5                      }
-  237   4                              }
-  238   3                      }
-  239   2              }
-  240   1              else
-  241   1              {
-  242   2                      Sum_Dis1 = 0;
-  243   2                      Sum_Angle_C1 = 0;
-  244   2                      Circle_Flag2 = 0;
-  245   2              }
-  246   1      }
+  231   4                      //Circle_Flag1 = 0;
+  232   4                                      Circle_Flag2 = 0;
+  233   4                      if(Elem_Over == 0)
+  234   4                      {
+  235   5                          Elem_Over = 1;
+  236   5                          Special_Elem++;
+  237   5                      }
+  238   4                              }
+  239   3                      }
+  240   2              }
+  241   1              else
+  242   1              {
+  243   2                      Sum_Dis1 = 0;
+  244   2                      Sum_Angle_C1 = 0;
+  245   2                      Circle_Flag2 = 0;
+  246   2              }
+  247   1      }
 
 
 Module Information          Static   Overlayable
@@ -270,9 +271,9 @@ Module Information          Static   Overlayable
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
-  pdata size           =    ------     ------
-C251 COMPILER V5.60.0,  Element                                                            15/07/24  12:32:38  PAGE 5   
+C251 COMPILER V5.60.0,  Element                                                            16/07/24  17:28:54  PAGE 5   
 
+  pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
   edata size           =        37     ------
