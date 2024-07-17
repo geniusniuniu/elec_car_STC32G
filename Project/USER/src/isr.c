@@ -10,12 +10,13 @@
 
 extern char Down_Flag;
 extern float Dis_Process;
+extern float Adjust_Val;
 
 short gx, gy, gz;
-char Speed_Delay = 40;
+int Speed_Delay = 1200;
 char Isr_Flag_10 = 0;
 char Distance_Num = 0;
-char  Flag_Stop = 0;
+char Flag_Stop = 0;
 char Edge_Delay = 0;
 char count = 0;
 char Read_Nums = 0;
@@ -34,6 +35,7 @@ float Angle_Edge = 0;
 float Sum_Dis = 0;
 float sum_L,sum_R;
 float Exp_Speed_gain = 1.0;
+float Slow;
 volatile float Exp_Speed = 0;
 
 void Get_Ratio(void);
@@ -51,11 +53,12 @@ void TM4_Isr() interrupt 20
 /*********************** 直道弯道变速 **********************************/ 	
 	if(Ratio >= -0.15 && Ratio <= 0.15) //直线
     {
-        Exp_Speed = 280;   
+        Exp_Speed = 280 - Adjust_Val*10; 
+        Slow = Exp_Speed;       
     }
     else
     {
-        Exp_Speed = 240-(Num2Abs(Ratio)/0.1)*8;  
+        Exp_Speed = Slow-40+Adjust_Val*5-(Num2Abs(Ratio)/0.1)*8;  
     } 
 /************************************************ 圆环判别 ***********************************************/ 
     
@@ -119,16 +122,18 @@ void TM4_Isr() interrupt 20
     
 /********************************************* 驶离赛道，撞到障碍，停车 *********************************************/
 	if(Speed_Delay > 0)         //刚启动时候给定一小段延时
+    {
         Speed_Delay --;
-    
-    if(Speed_Delay == 0 && (abs(Speed_L) < 15 || abs(Speed_R) < 15))
+        Flag_Stop = 0;
+    }
+    if((abs(Speed_L) < 15 && abs(Speed_R) < 15) && Speed_Delay == 0)
 		Flag_Stop = 1;
     else if(abs(Speed_L) >= 15 || abs(Speed_R) >= 15)
        Flag_Stop = 0; 
     
 /********************************************* 设置左右PWM ************************************************/ 	  
 
-    if(Dis_Process < 100 || Flag_Stop == 1) 
+    if(Dis_Process < 80 || Flag_Stop == 1) 
 	{
 		Act_PwmL = Left_SetSpeed(0);		
 		Act_PwmR = Right_SetSpeed(0);

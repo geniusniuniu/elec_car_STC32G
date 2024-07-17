@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   15/07/24  10:58:41  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   17/07/24  12:58:26  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_AT24C02
@@ -66,7 +66,7 @@ stmt  level    source
    49          //-------------------------------------------------------------------------------------------------------
              -------------
    50          uint8 at24c02_read_byte(uint8 byte_reg)
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   15/07/24  10:58:41  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   17/07/24  12:58:26  PAGE 2   
 
    51          {
    52   1              delay_ms(6);
@@ -134,7 +134,7 @@ stmt  level    source
   110   1          {
   111   2              *dat_add++ = read_ch(1); //读取数据
   112   2                      byte_reg++;
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   15/07/24  10:58:41  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   17/07/24  12:58:26  PAGE 3   
 
   113   2          }
   114   1              *dat_add++ = read_ch(0); //读取数据

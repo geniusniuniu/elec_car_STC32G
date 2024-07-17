@@ -43,15 +43,15 @@ void main(void)
 	while(1)
 	{	
 		//printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Exp_Speed_gain ,Circle_Flag1,Circle_Flag2,ADC_proc[2],Ratio,Dis_Process);
-        printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Act_PwmL ,Act_PwmR,Exp_Speed_L,Exp_Speed_R,Dis_Bar,Dis_Process); 
+        printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",Act_PwmL ,Act_PwmR,Exp_Speed_L,Exp_Speed_R,Speed_L,Speed_R); 
 /******************************************** 按键读值**********************************************************************/ 	
 		
         ui_show();
 		KeyValue = GetKey_Value(0);
 		if 		(KeyValue == KEY2_PRES) 	{page++; if(page >= 3)  page = 3;oled_all_static_state();}		
 		else if (KeyValue == KEY3_PRES) 	{page--; if(page <= 0)  page = 0;oled_all_static_state();}			
-		else if (KeyValue == KEY0_PRES) 	Adjust_Val += 0.05;
-		else if (KeyValue == KEY1_PRES) 	Adjust_Val -= 0.05;
+		else if (KeyValue == KEY0_PRES) 	Adjust_Val += 1;
+		else if (KeyValue == KEY1_PRES) 	Adjust_Val -= 1;
         
 /******************************************** 类似中断服务处理 **************************************************************/ 
 		if(Isr_Flag_10 == 1)
@@ -124,7 +124,6 @@ void Init_all(void)
 	WTST = 0;						 
 	DisableGlobalIRQ();				
 	sys_clk = 35000000;				
-
 	board_init();					
 
 ////编码器方向引脚初始化
@@ -135,8 +134,8 @@ void Init_all(void)
 	Key_Init();
 	
 ////测距模块初始化
-	//gpio_mode(P3_2, GPIO);
     vl53l0x_init();
+    
 ////OLED初始化
 	ui_init();					
 	

@@ -8,8 +8,6 @@
 #include "zf_gpio.h"
 #include "PID.h"
 #include <STC32Gxx.H>
-#include <math.h>
-
 
 float Speed_L,Speed_R;
 
@@ -19,6 +17,7 @@ void Limit_Out(float *Output,float Limit_Min,float Limit_Max)
     else if (*Output >= Limit_Max) *Output = Limit_Max;
 }
 
+//#define Num2Abs(x)    ((x) < 0 ? -(x) : (x))
 float Num2Abs(float x)
 {
 	if(x < 0)
@@ -26,18 +25,19 @@ float Num2Abs(float x)
 	return x;
 }
 
-void Motor_Init(void)
+void Motor_Init(void)//四路PWM信号控制两个电机
 {
 	pwm_init(PWMA_CH1P_P60, 15000, 0);		//左电机-
+    pwm_init(PWMA_CH2P_P62, 15000, 0);		//左电机-PWM
+    
 	pwm_init(PWMA_CH3P_P64, 15000, 0);		//右电机-
-	pwm_init(PWMA_CH2P_P62, 15000, 0);		//左电机--PWM
 	pwm_init(PWMA_CH4P_P66, 15000, 0);		//右电机-PWM
 }
 
 float Left_SetSpeed(float speed)
 {
 	static int16 Special_NumL = 0;  //异常情况记数
-	if(abs(Speed_L) >= SPECIAL_SPEED)  		//连续30次都超过最大速度，发生异常
+	if(Num2Abs(Speed_L) >= SPECIAL_SPEED)  		//连续10次都超过最大速度，发生异常
 		Special_NumL++;
 	else 
 		Special_NumL = 0;
@@ -51,7 +51,7 @@ float Left_SetSpeed(float speed)
 	{
 		if(speed >= SPEED_MAX)			speed = SPEED_MAX; 
 		else if(speed <= -SPEED_MAX)	speed = -SPEED_MAX;
-		if(speed > 0)
+		if(speed >= 0)
 		{
 			pwm_duty(PWMA_CH2P_P62, (int)speed);
 			pwm_duty(PWMA_CH1P_P60, 0);
@@ -61,12 +61,6 @@ float Left_SetSpeed(float speed)
 			pwm_duty(PWMA_CH2P_P62, 0);
 			pwm_duty(PWMA_CH1P_P60, -(int)speed);
 		} 
-		else 
-		{
-			speed = 0;
-			pwm_duty(PWMA_CH2P_P62, 0);
-			pwm_duty(PWMA_CH1P_P60, 0);
-		}
 		return speed;
 	}
 }
@@ -74,7 +68,7 @@ float Left_SetSpeed(float speed)
 float Right_SetSpeed(float speed)	
 {
 	static int16 Special_NumR = 0;  //异常情况记数
-	if(abs(Speed_R) >= SPECIAL_SPEED)  		//连续30次都超过最大速度，发生异常
+	if(Num2Abs(Speed_R) >= SPECIAL_SPEED)  		//连续10次都超过最大速度，发生异常
 		Special_NumR++;
 	else 
 		Special_NumR = 0;
@@ -88,7 +82,7 @@ float Right_SetSpeed(float speed)
 	{
 		if(speed >= SPEED_MAX)			speed = SPEED_MAX; 
 		else if(speed <= -SPEED_MAX)	speed = -SPEED_MAX;
-		if(speed > 0)
+		if(speed >= 0)
 		{
 			pwm_duty(PWMA_CH3P_P64, (int)speed);
 			pwm_duty(PWMA_CH4P_P66, 0);
@@ -98,12 +92,6 @@ float Right_SetSpeed(float speed)
 			pwm_duty(PWMA_CH3P_P64, 0);
 			pwm_duty(PWMA_CH4P_P66, -(int)speed);
 		} 
-		else 
-		{
-			speed = 0;
-			pwm_duty(PWMA_CH3P_P64, 0);
-			pwm_duty(PWMA_CH4P_P66, 0);
-		}
 		return speed;
 	}
 }

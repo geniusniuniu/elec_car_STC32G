@@ -5,7 +5,7 @@
 #include "PID.h"
 
 #define SPEED_MAX 			8500
-#define SPECIAL_SPEED 		600
+#define SPECIAL_SPEED 		700
 
 
 extern float Speed_L;

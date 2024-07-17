@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 1   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE zf_pwm
@@ -66,7 +66,7 @@ stmt  level    source
    51   1              switch(pwmch)
    52   1              {
    53   2                      case PWMA_CH1P_P10:
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 2   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 2   
 
    54   2                      {
    55   3                              gpio_mode(P1_0,GPO_PP);
@@ -134,7 +134,7 @@ stmt  level    source
   117   3                              gpio_mode(P1_4,GPO_PP);
   118   3                              break;
   119   3                      }
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 3   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 3   
 
   120   2                      case PWMA_CH3N_P15:
   121   2                      {
@@ -202,7 +202,7 @@ stmt  level    source
   183   2                      {
   184   3                              gpio_mode(P3_3,GPO_PP);
   185   3                              break;
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 4   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 4   
 
   186   3                      }
   187   2                      
@@ -270,7 +270,7 @@ stmt  level    source
   249   3                              gpio_mode(P7_6,GPO_PP);
   250   3                              break;
   251   3                      }
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 5   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 5   
 
   252   2      
   253   2                      
@@ -338,7 +338,7 @@ stmt  level    source
   312   1              if(PWMB_CH1_P20 <= pwmch)                               //PWM5-8
   313   1              {
   314   2                      //通道选择，引脚选择
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 6   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 6   
 
   315   2                      PWMB_ENO |= (1 << ((2 * ((pwmch >> 4) - 4))));                                  //使能通道      
   316   2                      PWMB_PS |= ((pwmch & 0x03) << ((2 * ((pwmch >> 4) - 4))));              //输出脚选择
@@ -406,7 +406,7 @@ stmt  level    source
   373   1              uint32 arr = ((*(unsigned char volatile far *) (PWM_ARR_ADDR[pwmch>>6]))<<8) | (*(unsigned char volatile
              - far *) (PWM_ARR_ADDR[pwmch>>6] + 1 ));
   374   1      
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 7   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 7   
 
   375   1      //      P_SW2 |= 0x80;
   376   1      
@@ -474,7 +474,7 @@ stmt  level    source
   435   1      //      P_SW2 &= ~0x80;
   436   1      }
   437          
-C251 COMPILER V5.60.0,  zf_pwm                                                             15/07/24  10:58:39  PAGE 8   
+C251 COMPILER V5.60.0,  zf_pwm                                                             17/07/24  12:58:25  PAGE 8   
 
   438          
 

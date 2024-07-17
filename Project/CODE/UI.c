@@ -14,6 +14,7 @@ extern float Flag_Out_L;
 extern float Flag_Out_R;
 extern volatile float Exp_Speed;
 extern float Dis_Process;
+extern float Adjust_Val;
 char page=0;
 float value[4][7];
 char value_name[4][7][7];
@@ -54,7 +55,7 @@ void refresh_value()//value=填入变量名
 	//page=0
     if(page == 0)
     {
-        value[0][0]= ADC_proc[0];
+        value[0][0]= Adjust_Val;
         value[0][1]= ADC_proc[1];
         value[0][2]= ADC_proc[3];
         value[0][3]= ADC_proc[4];

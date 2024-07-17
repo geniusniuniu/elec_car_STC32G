@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 1   
+C251 COMPILER V5.60.0,  UI                                                                 17/07/24  12:58:29  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE UI
@@ -25,134 +25,135 @@ stmt  level    source
    14          extern float Flag_Out_R;
    15          extern volatile float Exp_Speed;
    16          extern float Dis_Process;
-   17          char page=0;
-   18          float value[4][7];
-   19          char value_name[4][7][7];
-   20          
+   17          extern float Adjust_Val;
+   18          char page=0;
+   19          float value[4][7];
+   20          char value_name[4][7][7];
    21          
-   22          void value_name_init(void)//将name改为想要的参数名，但“ ”中的总长度不要变
-   23          {
-   24   1              //page=0
-   25   1              strcpy(value_name[0][0],"ADC0_1"); //NAME_1表示显示的是第一页
-   26   1              strcpy(value_name[0][1],"ADC1  ");
-   27   1              strcpy(value_name[0][2],"ADC2  ");
-   28   1              strcpy(value_name[0][3],"ADC3  ");
-   29   1      
+   22          
+   23          void value_name_init(void)//将name改为想要的参数名，但“ ”中的总长度不要变
+   24          {
+   25   1              //page=0
+   26   1              strcpy(value_name[0][0],"ADC0_1"); //NAME_1表示显示的是第一页
+   27   1              strcpy(value_name[0][1],"ADC1  ");
+   28   1              strcpy(value_name[0][2],"ADC2  ");
+   29   1              strcpy(value_name[0][3],"ADC3  ");
    30   1      
-   31   1              //page=1        
-   32   1              strcpy(value_name[1][0],"ADC4_2");
-   33   1              strcpy(value_name[1][1],"Ratio ");
-   34   1              strcpy(value_name[1][2],"Dis_Pr");
-   35   1              strcpy(value_name[1][3],"Pitch ");
-   36   1      
-   37   1              
-   38   1              //page=2
-   39   1              strcpy(value_name[2][0],"Tur_Kp");
-   40   1              strcpy(value_name[2][1],"Tur_Ki");
-   41   1              strcpy(value_name[2][2],"Tur_Kd");
-   42   1              strcpy(value_name[2][3],"Gyro_y");
-   43   1              
-   44   1              //page=3
-   45   1              strcpy(value_name[3][0],"Exp_Sp");
-   46   1              strcpy(value_name[3][1],"Dis1  ");
-   47   1              strcpy(value_name[3][2],"Dis2  ");
-   48   1              strcpy(value_name[3][3],"An_Sum");
-   49   1      
-   50   1      }
-   51          
-   52          void refresh_value()//value=填入变量名
-   53          {
-   54   1              //page=0
-   55   1          if(page == 0)
-   56   1          {
-   57   2              value[0][0]= ADC_proc[0];
-C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 2   
+   31   1      
+   32   1              //page=1        
+   33   1              strcpy(value_name[1][0],"ADC4_2");
+   34   1              strcpy(value_name[1][1],"Ratio ");
+   35   1              strcpy(value_name[1][2],"Dis_Pr");
+   36   1              strcpy(value_name[1][3],"Pitch ");
+   37   1      
+   38   1              
+   39   1              //page=2
+   40   1              strcpy(value_name[2][0],"Tur_Kp");
+   41   1              strcpy(value_name[2][1],"Tur_Ki");
+   42   1              strcpy(value_name[2][2],"Tur_Kd");
+   43   1              strcpy(value_name[2][3],"Gyro_y");
+   44   1              
+   45   1              //page=3
+   46   1              strcpy(value_name[3][0],"Exp_Sp");
+   47   1              strcpy(value_name[3][1],"Dis1  ");
+   48   1              strcpy(value_name[3][2],"Dis2  ");
+   49   1              strcpy(value_name[3][3],"An_Sum");
+   50   1      
+   51   1      }
+   52          
+   53          void refresh_value()//value=填入变量名
+   54          {
+   55   1              //page=0
+   56   1          if(page == 0)
+   57   1          {
+C251 COMPILER V5.60.0,  UI                                                                 17/07/24  12:58:29  PAGE 2   
 
-   58   2              value[0][1]= ADC_proc[1];
-   59   2              value[0][2]= ADC_proc[3];
-   60   2              value[0][3]= ADC_proc[4];
-   61   2          }
-   62   1              else if(page == 1)
-   63   1          {
-   64   2              //page=1
-   65   2              value[1][0]= ADC_proc[2];
-   66   2              value[1][1]= Ratio;
-   67   2              value[1][2]= Dis_Process;
-   68   2              value[1][3]= Pitch;
-   69   2          }
-   70   1              else if(page == 2)
-   71   1          {
-   72   2              //page=2
-   73   2              value[2][0]= Left_Wheel.Kp;
-   74   2              value[2][1]= Left_Wheel.Ki;
-   75   2              value[2][2]= Left_Wheel.Kd;
-   76   2              value[2][3]= gy;
-   77   2              }
-   78   1          else if(page == 3)
-   79   1          {
-   80   2              //page=3
-   81   2              value[3][0]= Exp_Speed;
-   82   2              value[3][1]= Flag_Out_L;
-   83   2              value[3][2]= Flag_Out_R;
-   84   2              value[3][3]= 0.0;
-   85   2          }   
-   86   1      }
-   87          //                         oled显示函数
-   88          ///////////////////////////////////////////////////////////////////////
-   89          
-   90          void oled_change_value(int pages,int y,float value_new)
-   91          {
-   92   1          value[pages][y]=value_new;
-   93   1          oled_printf_float(55,y,value[pages][y],4,4);
-   94   1      }
-   95          
-   96          void oled_all_static_state()  //静态显示部分
-   97          {
-   98   1          uint8 i,j;
-   99   1      //    oled_p8x16str(0, 0,"page");
-  100   1      //    oled_p8x16str(40, 0,"=");
-  101   1      //    oled_int16(60,0,Mode_Num);
-  102   1      
-  103   1      //    oled_p8x16str(70, 0,"mode");
-  104   1      //    oled_int16(120, 0,page);
-  105   1              for(j=0;j<=3;j++)
-  106   1              {
-  107   2                      i = j*2;
-  108   2                      oled_p8x16str(0 ,i,value_name[page][j]);
-  109   2                      oled_p8x16str(50,i,"=");
-  110   2              }
-  111   1      }
-  112          
+   58   2              value[0][0]= Adjust_Val;
+   59   2              value[0][1]= ADC_proc[1];
+   60   2              value[0][2]= ADC_proc[3];
+   61   2              value[0][3]= ADC_proc[4];
+   62   2          }
+   63   1              else if(page == 1)
+   64   1          {
+   65   2              //page=1
+   66   2              value[1][0]= ADC_proc[2];
+   67   2              value[1][1]= Ratio;
+   68   2              value[1][2]= Dis_Process;
+   69   2              value[1][3]= Pitch;
+   70   2          }
+   71   1              else if(page == 2)
+   72   1          {
+   73   2              //page=2
+   74   2              value[2][0]= Left_Wheel.Kp;
+   75   2              value[2][1]= Left_Wheel.Ki;
+   76   2              value[2][2]= Left_Wheel.Kd;
+   77   2              value[2][3]= gy;
+   78   2              }
+   79   1          else if(page == 3)
+   80   1          {
+   81   2              //page=3
+   82   2              value[3][0]= Exp_Speed;
+   83   2              value[3][1]= Flag_Out_L;
+   84   2              value[3][2]= Flag_Out_R;
+   85   2              value[3][3]= 0.0;
+   86   2          }   
+   87   1      }
+   88          //                         oled显示函数
+   89          ///////////////////////////////////////////////////////////////////////
+   90          
+   91          void oled_change_value(int pages,int y,float value_new)
+   92          {
+   93   1          value[pages][y]=value_new;
+   94   1          oled_printf_float(55,y,value[pages][y],4,4);
+   95   1      }
+   96          
+   97          void oled_all_static_state()  //静态显示部分
+   98          {
+   99   1          uint8 i,j;
+  100   1      //    oled_p8x16str(0, 0,"page");
+  101   1      //    oled_p8x16str(40, 0,"=");
+  102   1      //    oled_int16(60,0,Mode_Num);
+  103   1      
+  104   1      //    oled_p8x16str(70, 0,"mode");
+  105   1      //    oled_int16(120, 0,page);
+  106   1              for(j=0;j<=3;j++)
+  107   1              {
+  108   2                      i = j*2;
+  109   2                      oled_p8x16str(0 ,i,value_name[page][j]);
+  110   2                      oled_p8x16str(50,i,"=");
+  111   2              }
+  112   1      }
   113          
-  114          void oled_show(void)
-  115          {
-  116   1          uint8 i,j;
-  117   1              refresh_value();
-  118   1              for(j=0;j<=3;j++)
-  119   1              {
-  120   2                      i = j*2;
-  121   2                      oled_printf_float(55,i,value[page][j],5,2);
-  122   2              }
-  123   1      }
-C251 COMPILER V5.60.0,  UI                                                                 15/07/24  12:32:38  PAGE 3   
+  114          
+  115          void oled_show(void)
+  116          {
+  117   1          uint8 i,j;
+  118   1              refresh_value();
+  119   1              for(j=0;j<=3;j++)
+  120   1              {
+  121   2                      i = j*2;
+  122   2                      oled_printf_float(55,i,value[page][j],5,2);
+  123   2              }
+C251 COMPILER V5.60.0,  UI                                                                 17/07/24  12:58:29  PAGE 3   
 
-  124          
-  125          //////////////////////////////////////////////////////////////
-  126          void ui_init(void)
-  127          {
-  128   1              oled_init();
-  129   1              value_name_init();
-  130   1              oled_all_static_state();
-  131   1      }
-  132          
-  133          void ui_show(void)
-  134          {
-  135   1              refresh_value();
-  136   1              oled_show();
-  137   1      }
-  138          
+  124   1      }
+  125          
+  126          //////////////////////////////////////////////////////////////
+  127          void ui_init(void)
+  128          {
+  129   1              oled_init();
+  130   1              value_name_init();
+  131   1              oled_all_static_state();
+  132   1      }
+  133          
+  134          void ui_show(void)
+  135          {
+  136   1              refresh_value();
+  137   1              oled_show();
+  138   1      }
   139          
   140          
+  141          
 
 
 Module Information          Static   Overlayable
