@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  motor                                                              17/07/24  13:01:42  PAGE 1   
+C251 COMPILER V5.60.0,  motor                                                              18/07/24  11:09:05  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE motor
@@ -20,7 +20,7 @@ stmt  level    source
     9          #include "PID.h"
    10          #include <STC32Gxx.H>
    11          
-   12          float Speed_L,Speed_R;
+   12          volatile float Speed_L,Speed_R;
    13          
    14          void Limit_Out(float *Output,float Limit_Min,float Limit_Max)
    15          {
@@ -66,7 +66,7 @@ stmt  level    source
    55   2                      {
    56   3                              pwm_duty(PWMA_CH2P_P62, (int)speed);
    57   3                              pwm_duty(PWMA_CH1P_P60, 0);
-C251 COMPILER V5.60.0,  motor                                                              17/07/24  13:01:42  PAGE 2   
+C251 COMPILER V5.60.0,  motor                                                              18/07/24  11:09:05  PAGE 2   
 
    58   3                      } 
    59   2                      else if(speed < 0)
@@ -134,14 +134,14 @@ stmt  level    source
   121          {
   122   1              Right_SetSpeed(-Speed);
   123   1              Left_SetSpeed(Speed);   
-C251 COMPILER V5.60.0,  motor                                                              17/07/24  13:01:42  PAGE 3   
+C251 COMPILER V5.60.0,  motor                                                              18/07/24  11:09:05  PAGE 3   
 
   124   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       716     ------
+  code size            =       724     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

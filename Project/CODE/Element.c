@@ -169,7 +169,6 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 }
 
 
-
 char Circle_Flag3 = 0;
 void Elem_Circle(float Speed,float Gyro_Z)
 {
@@ -224,7 +223,7 @@ void Elem_Circle(float Speed,float Gyro_Z)
 		{
 			if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //预出环 防止误判再次入环
 			{
-                Circle_Delay2 = 140;   //延时1400ms
+                Circle_Delay2 = 135;   //延时1400ms
 				Sum_Dis1 = 0;
 				Sum_Angle_C1 = 0;
                 //Circle_Flag1 = 0;

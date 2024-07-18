@@ -9,7 +9,7 @@
 #include "PID.h"
 #include <STC32Gxx.H>
 
-float Speed_L,Speed_R;
+volatile float Speed_L,Speed_R;
 
 void Limit_Out(float *Output,float Limit_Min,float Limit_Max)
 {

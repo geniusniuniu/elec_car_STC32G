@@ -23,28 +23,28 @@ char value_name[4][7][7];
 void value_name_init(void)//将name改为想要的参数名，但“ ”中的总长度不要变
 {
 	//page=0
-	strcpy(value_name[0][0],"ADC0_1"); //NAME_1表示显示的是第一页
-	strcpy(value_name[0][1],"ADC1  ");
-	strcpy(value_name[0][2],"ADC2  ");
-	strcpy(value_name[0][3],"ADC3  ");
+	strcpy(value_name[0][0],"Key_Vl"); //NAME_1表示显示的是第一页
+	strcpy(value_name[0][1],"ADC0  ");
+	strcpy(value_name[0][2],"ADC1  ");
+	strcpy(value_name[0][3],"ADC2  ");
 
 
 	//page=1	
-	strcpy(value_name[1][0],"ADC4_2");
-	strcpy(value_name[1][1],"Ratio ");
-	strcpy(value_name[1][2],"Dis_Pr");
-	strcpy(value_name[1][3],"Pitch ");
+	strcpy(value_name[1][0],"ADC3  ");
+	strcpy(value_name[1][1],"ADC4  ");
+	strcpy(value_name[1][2],"Ratio ");
+	strcpy(value_name[1][3],"Dis_Pr");
 
 	
 	//page=2
-	strcpy(value_name[2][0],"Tur_Kp");
-	strcpy(value_name[2][1],"Tur_Ki");
-	strcpy(value_name[2][2],"Tur_Kd");
-	strcpy(value_name[2][3],"Gyro_y");
+	strcpy(value_name[2][0],"Trn_Kp");
+	strcpy(value_name[2][1],"Trn_Ki");
+	strcpy(value_name[2][2],"Trn_Kd");
+	strcpy(value_name[2][3],"Pitch");
 	
 	//page=3
 	strcpy(value_name[3][0],"Exp_Sp");
-	strcpy(value_name[3][1],"Dis1  ");
+	strcpy(value_name[3][1],"Gyro_z");
 	strcpy(value_name[3][2],"Dis2  ");
 	strcpy(value_name[3][3],"An_Sum");
 
@@ -56,17 +56,17 @@ void refresh_value()//value=填入变量名
     if(page == 0)
     {
         value[0][0]= Adjust_Val;
-        value[0][1]= ADC_proc[1];
-        value[0][2]= ADC_proc[3];
-        value[0][3]= ADC_proc[4];
+        value[0][1]= ADC_proc[0];
+        value[0][2]= ADC_proc[1];
+        value[0][3]= ADC_proc[2];
     }
 	else if(page == 1)
     {
         //page=1
-        value[1][0]= ADC_proc[2];
-        value[1][1]= Ratio;
-        value[1][2]= Dis_Process;
-        value[1][3]= Pitch;
+        value[1][0]= ADC_proc[3];
+        value[1][1]= ADC_proc[4];
+        value[1][2]= Ratio;
+        value[1][3]= Dis_Process;
     }
 	else if(page == 2)
     {
@@ -74,13 +74,13 @@ void refresh_value()//value=填入变量名
         value[2][0]= Left_Wheel.Kp;
         value[2][1]= Left_Wheel.Ki;
         value[2][2]= Left_Wheel.Kd;
-        value[2][3]= gy;
+        value[2][3]= Pitch;
 	}
     else if(page == 3)
     {
         //page=3
         value[3][0]= Exp_Speed;
-        value[3][1]= Flag_Out_L;
+        value[3][1]= gz;
         value[3][2]= Flag_Out_R;
         value[3][3]= 0.0;
     }	

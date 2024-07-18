@@ -6,6 +6,7 @@
 #include "MPU6050.h"
 #include "TOF.h"
 #include "Element.h"
+
 #define LED P52
 
 extern char Down_Flag;
@@ -126,9 +127,9 @@ void TM4_Isr() interrupt 20
         Speed_Delay --;
         Flag_Stop = 0;
     }
-    if((abs(Speed_L) < 15 && abs(Speed_R) < 15) && Speed_Delay == 0)
+    if((Num2Abs(Speed_L) < 15 && Num2Abs(Speed_R) < 15) && Speed_Delay == 0)
 		Flag_Stop = 1;
-    else if(abs(Speed_L) >= 15 || abs(Speed_R) >= 15)
+    else if(Num2Abs(Speed_L) >= 15 || Num2Abs(Speed_R) >= 15)
        Flag_Stop = 0; 
     
 /********************************************* …Ë÷√◊Û”“PWM ************************************************/ 	  

@@ -8,8 +8,8 @@
 #define SPECIAL_SPEED 		700
 
 
-extern float Speed_L;
-extern float Speed_R;
+extern volatile float Speed_L;
+extern volatile float Speed_R;
 
 
 float Num2Abs(float x);
