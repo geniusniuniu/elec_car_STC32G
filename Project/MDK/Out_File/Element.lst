@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  Element                                                            18/07/24  11:09:06  PAGE 1   
+C251 COMPILER V5.60.0,  Element                                                            20/07/24  13:27:58  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE Element
@@ -66,7 +66,7 @@ stmt  level    source
    55          //      #if BARRIER_DIR == 0                                            //向右避障
    56          //              if(Barrier_Flag1 == 1)                                  //识别到障碍物
    57          //              {
-C251 COMPILER V5.60.0,  Element                                                            18/07/24  11:09:06  PAGE 2   
+C251 COMPILER V5.60.0,  Element                                                            20/07/24  13:27:58  PAGE 2   
 
    58          //            Exp_Speed = 220;
    59          //                      Barrier_Timer--;
@@ -134,7 +134,7 @@ stmt  level    source
                                }
                                if(Barrier_Flag2 == 1)      //左拐
                                {   
-C251 COMPILER V5.60.0,  Element                                                            18/07/24  11:09:06  PAGE 3   
+C251 COMPILER V5.60.0,  Element                                                            20/07/24  13:27:58  PAGE 3   
 
                            Sum_Angle_Bar += Gyro_Z*0.005;
                            Dis_Bar += Speed;
@@ -202,7 +202,7 @@ stmt  level    source
   187   2                      return ;                                                //退出函数
   188   2              }
   189   1      
-C251 COMPILER V5.60.0,  Element                                                            18/07/24  11:09:06  PAGE 4   
+C251 COMPILER V5.60.0,  Element                                                            20/07/24  13:27:58  PAGE 4   
 
   190   1              if(Circle_Flag1 == 1)                                       //识别到环岛
   191   1              {
@@ -271,7 +271,7 @@ Module Information          Static   Overlayable
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
-C251 COMPILER V5.60.0,  Element                                                            18/07/24  11:09:06  PAGE 5   
+C251 COMPILER V5.60.0,  Element                                                            20/07/24  13:27:58  PAGE 5   
 
   xdata-const size     =    ------     ------
   edata size           =        37     ------

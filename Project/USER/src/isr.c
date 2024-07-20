@@ -39,12 +39,16 @@ float Exp_Speed_gain = 1.0;
 float Slow;
 volatile float Exp_Speed = 0;
 
+int CountDown = 300;
+
 void Get_Ratio(void);
 
 void TM4_Isr() interrupt 20
 {
 	TIM4_CLEAR_FLAG;       //清除中断标志
 	count++;
+    if(CountDown > 0)
+        CountDown--;
     Isr_Flag_10 = 1;
 	Get_Speed();            //获取车速
 	ADC_GetValue();			//获取电感值
@@ -117,9 +121,11 @@ void TM4_Isr() interrupt 20
 		Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.08*(1+Ratio);
 		Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.09;
 	}
-	
-	PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
-	PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
+	if(CountDown <= 0)
+	{
+        PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
+        PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
+    }
     
 /********************************************* 驶离赛道，撞到障碍，停车 *********************************************/
 	if(Speed_Delay > 0)         //刚启动时候给定一小段延时

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  board                                                              18/07/24  11:09:02  PAGE 1   
+C251 COMPILER V5.60.0,  board                                                              20/07/24  13:19:52  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE board
@@ -66,7 +66,7 @@ stmt  level    source
    53          //      {
    54          //              IRCBAND = 0;
    55          //              LIRTRIM = 3;
-C251 COMPILER V5.60.0,  board                                                              18/07/24  11:09:02  PAGE 2   
+C251 COMPILER V5.60.0,  board                                                              20/07/24  13:19:52  PAGE 2   
 
    56          //              IRTRIM = 171;
    57          //              CLKDIV = 0;
@@ -134,7 +134,7 @@ stmt  level    source
   119          //              IRTRIM = 227;
   120          //              CLKDIV = 0;
   121          //      }
-C251 COMPILER V5.60.0,  board                                                              18/07/24  11:09:02  PAGE 3   
+C251 COMPILER V5.60.0,  board                                                              20/07/24  13:19:52  PAGE 3   
 
   122          //}
   123          
@@ -202,7 +202,7 @@ stmt  level    source
   181   1      //      //获取系统频率
   182   1      //#if (0 != FOSC)
   183   1      //      sys_clk = FOSC;
-C251 COMPILER V5.60.0,  board                                                              18/07/24  11:09:02  PAGE 4   
+C251 COMPILER V5.60.0,  board                                                              20/07/24  13:19:52  PAGE 4   
 
   184   1      //      set_clk(sys_clk);
   185   1      //#endif
@@ -270,7 +270,7 @@ stmt  level    source
   247   1              EA = 0;
   248   1      }
   249          
-C251 COMPILER V5.60.0,  board                                                              18/07/24  11:09:02  PAGE 5   
+C251 COMPILER V5.60.0,  board                                                              20/07/24  13:19:52  PAGE 5   
 
   250          
   251          void EnableGlobalIRQ(void)

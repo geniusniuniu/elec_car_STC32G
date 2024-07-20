@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
@@ -50,189 +50,189 @@ stmt  level    source
    39          float Slow;
    40          volatile float Exp_Speed = 0;
    41          
-   42          void Get_Ratio(void);
+   42          int CountDown = 300;
    43          
-   44          void TM4_Isr() interrupt 20
-   45          {
-   46   1              TIM4_CLEAR_FLAG;       //清除中断标志
-   47   1              count++;
-   48   1          Isr_Flag_10 = 1;
-   49   1              Get_Speed();            //获取车速
-   50   1              ADC_GetValue();                 //获取电感值
-   51   1          Get_Ratio();                        //计算偏差值
-   52   1          vl53l0x_get_distance();             //距离测量
-   53   1         
-   54   1      /*********************** 直道弯道变速 **********************************/       
-   55   1              if(Ratio >= -0.15 && Ratio <= 0.15) //直线
-   56   1          {
-   57   2              Exp_Speed = 280 - Adjust_Val*10; 
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 2   
+   44          void Get_Ratio(void);
+   45          
+   46          void TM4_Isr() interrupt 20
+   47          {
+   48   1              TIM4_CLEAR_FLAG;       //清除中断标志
+   49   1              count++;
+   50   1          if(CountDown > 0)
+   51   1              CountDown--;
+   52   1          Isr_Flag_10 = 1;
+   53   1              Get_Speed();            //获取车速
+   54   1              ADC_GetValue();                 //获取电感值
+   55   1          Get_Ratio();                        //计算偏差值
+   56   1          vl53l0x_get_distance();             //距离测量
+   57   1         
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 2   
 
-   58   2              Slow = Exp_Speed;       
-   59   2          }
-   60   1          else
-   61   1          {
-   62   2              Exp_Speed = Slow-40+Adjust_Val*5-(Num2Abs(Ratio)/0.1)*8;  
-   63   2          } 
-   64   1      /************************************************ 圆环判别 **********************************************
+   58   1      /*********************** 直道弯道变速 **********************************/       
+   59   1              if(Ratio >= -0.15 && Ratio <= 0.15) //直线
+   60   1          {
+   61   2              Exp_Speed = 280 - Adjust_Val*10; 
+   62   2              Slow = Exp_Speed;       
+   63   2          }
+   64   1          else
+   65   1          {
+   66   2              Exp_Speed = Slow-40+Adjust_Val*5-(Num2Abs(Ratio)/0.1)*8;  
+   67   2          } 
+   68   1      /************************************************ 圆环判别 **********************************************
              -*/ 
-   65   1          
-   66   1              if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
-   67   1              {
-   68   2              if(ADC_proc[0] + ADC_proc[4] >= 85 )
-   69   2                  Circle_Flag1 = 1; 
-   70   2          }    
-   71   1          Elem_Circle((Speed_L+Speed_R)/2,gz);   
-   72   1      
-   73   1      /*********************************避开路障***************************************/            
-   74   1      
-   75   1      //          if(Special_Elem >= 5)           //经过障碍前的某个元素（环岛，坡道），再开启避障
-   76   1      //              Barrier_Executed = 0;
-   77   1          if(Barrier_Executed == 0)
-   78   1          {   
-   79   2              if (Dis_Process < 950)                  //      检测到路障
-   80   2                  Distance_Num++;
-   81   2              else
-   82   2                  Distance_Num = 0;
-   83   2              if(Distance_Num >= 3)               //连续判别2次或以上
-   84   2              {
-   85   3                  Barrier_Flag1 = 1;
-   86   3                  //x10_ms = 5;
-   87   3                  Distance_Num = 0;
-   88   3              }
-   89   2              Elem_Barrier(gz,(Speed_L+Speed_R)/2);
-   90   2          }
-   91   1      
-   92   1      
-   93   1      /************************************************ 转向环计算 ********************************************
+   69   1          
+   70   1              if(ADC_proc[2] > 66 || ADC_proc[0] > 65 || ADC_proc[4] > 65) 
+   71   1              {
+   72   2              if(ADC_proc[0] + ADC_proc[4] >= 85 )
+   73   2                  Circle_Flag1 = 1; 
+   74   2          }    
+   75   1          Elem_Circle((Speed_L+Speed_R)/2,gz);   
+   76   1      
+   77   1      /*********************************避开路障***************************************/            
+   78   1      
+   79   1      //          if(Special_Elem >= 5)           //经过障碍前的某个元素（环岛，坡道），再开启避障
+   80   1      //              Barrier_Executed = 0;
+   81   1          if(Barrier_Executed == 0)
+   82   1          {   
+   83   2              if (Dis_Process < 950)                  //      检测到路障
+   84   2                  Distance_Num++;
+   85   2              else
+   86   2                  Distance_Num = 0;
+   87   2              if(Distance_Num >= 3)               //连续判别2次或以上
+   88   2              {
+   89   3                  Barrier_Flag1 = 1;
+   90   3                  //x10_ms = 5;
+   91   3                  Distance_Num = 0;
+   92   3              }
+   93   2              Elem_Barrier(gz,(Speed_L+Speed_R)/2);
+   94   2          }
+   95   1      
+   96   1      
+   97   1      /************************************************ 转向环计算 ********************************************
              -**/    
-   94   1          if(Circle_Flag1 == 1)
-   95   1          {
-   96   2              Turn_PID.Kpa = 0.0;//理论来讲kpa和kpb同号
-   97   2              Turn_PID.Kpb = -60;//-170;  
-   98   2              Turn_PID.Kd = -15;//20;  //1.5 
-   99   2          }
-  100   1          else
-  101   1          {
-  102   2              Turn_PID.Kpa = -0.0004;//理论来讲kpa和kpb同号
-  103   2              Turn_PID.Kpb = -80;//-170;  
-  104   2              Turn_PID.Kd = -35;//20;  //1.5
-  105   2          }
-  106   1              Limit_Out(&Ratio,-0.9,0.9);   //限幅
-  107   1              PID_Calculate(&Turn_PID,Ratio*150,gz/100);                              
-  108   1              Limit_Out(&Turn_PID.PID_Out,-8000,8000);
-  109   1          Exp_Speed *= Exp_Speed_gain;
-  110   1              if(Ratio >= 0)  
-  111   1              {
-  112   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;
-  113   2                      Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.08*(1-Ratio);
-  114   2              }
-  115   1              else
-  116   1              {
-  117   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.08*(1+Ratio);
-  118   2                      Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.09;
-  119   2              }
-  120   1              
-  121   1              PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 3   
+   98   1          if(Circle_Flag1 == 1)
+   99   1          {
+  100   2              Turn_PID.Kpa = 0.0;//理论来讲kpa和kpb同号
+  101   2              Turn_PID.Kpb = -60;//-170;  
+  102   2              Turn_PID.Kd = -15;//20;  //1.5 
+  103   2          }
+  104   1          else
+  105   1          {
+  106   2              Turn_PID.Kpa = -0.0004;//理论来讲kpa和kpb同号
+  107   2              Turn_PID.Kpb = -80;//-170;  
+  108   2              Turn_PID.Kd = -35;//20;  //1.5
+  109   2          }
+  110   1              Limit_Out(&Ratio,-0.9,0.9);   //限幅
+  111   1              PID_Calculate(&Turn_PID,Ratio*150,gz/100);                              
+  112   1              Limit_Out(&Turn_PID.PID_Out,-8000,8000);
+  113   1          Exp_Speed *= Exp_Speed_gain;
+  114   1              if(Ratio >= 0)  
+  115   1              {
+  116   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.09;
+  117   2                      Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.08*(1-Ratio);
+  118   2              }
+  119   1              else
+  120   1              {
+  121   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.08*(1+Ratio);
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 3   
 
-  122   1              PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
-  123   1          
-  124   1      /********************************************* 驶离赛道，撞到障碍，停车 *********************************
+  122   2                      Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.09;
+  123   2              }
+  124   1              if(CountDown <= 0)
+  125   1              {
+  126   2              PID_Incremental_Calc(&Left_Wheel,Exp_Speed_L,Speed_L);
+  127   2              PID_Incremental_Calc(&Right_Wheel,Exp_Speed_R,Speed_R);
+  128   2          }
+  129   1          
+  130   1      /********************************************* 驶离赛道，撞到障碍，停车 *********************************
              -************/
-  125   1              if(Speed_Delay > 0)         //刚启动时候给定一小段延时
-  126   1          {
-  127   2              Speed_Delay --;
-  128   2              Flag_Stop = 0;
-  129   2          }
-  130   1          if((Num2Abs(Speed_L) < 15 && Num2Abs(Speed_R) < 15) && Speed_Delay == 0)
-  131   1                      Flag_Stop = 1;
-  132   1          else if(Num2Abs(Speed_L) >= 15 || Num2Abs(Speed_R) >= 15)
-  133   1             Flag_Stop = 0; 
-  134   1          
-  135   1      /********************************************* 设置左右PWM **********************************************
+  131   1              if(Speed_Delay > 0)         //刚启动时候给定一小段延时
+  132   1          {
+  133   2              Speed_Delay --;
+  134   2              Flag_Stop = 0;
+  135   2          }
+  136   1          if((Num2Abs(Speed_L) < 15 && Num2Abs(Speed_R) < 15) && Speed_Delay == 0)
+  137   1                      Flag_Stop = 1;
+  138   1          else if(Num2Abs(Speed_L) >= 15 || Num2Abs(Speed_R) >= 15)
+  139   1             Flag_Stop = 0; 
+  140   1          
+  141   1      /********************************************* 设置左右PWM **********************************************
              -**/           
-  136   1      
-  137   1          if(Dis_Process < 80 || Flag_Stop == 1) 
-  138   1              {
-  139   2                      Act_PwmL = Left_SetSpeed(0);            
-  140   2                      Act_PwmR = Right_SetSpeed(0);
-  141   2              }
-  142   1              else
-  143   1              {
-  144   2              Act_PwmL = Left_SetSpeed(Left_Wheel.out);
-  145   2              Act_PwmR = Right_SetSpeed(Right_Wheel.out);
-  146   2              }
-  147   1      
-  148   1              //蜂鸣器
-  149   1              if(x10_ms > 0)
-  150   1              {
-  151   2                      pwm_duty(PWMB_CH4_P77,2000);
-  152   2                      x10_ms--;
-  153   2              }
-  154   1              else
-  155   1                      pwm_duty(PWMB_CH4_P77,0);
-  156   1              
-  157   1              //闪灯
-  158   1          if(count > 50)
-  159   1          {
-  160   2                      LED = !LED;
-  161   2                      count = 0;
-  162   2          }
-  163   1      
-  164   1      }
-  165          
-  166          //对ADC值进行处理得到差比和
-  167          void Get_Ratio(void)
-  168          {    
-  169   1          static float sum_01;
-  170   1          static float sum_34;
-  171   1          static float sum;
-  172   1          
-  173   1              sum_L = sqrt(ADC_proc[0]*ADC_proc[0]+ADC_proc[1]*ADC_proc[1]);
-  174   1              sum_R = sqrt(ADC_proc[4]*ADC_proc[4]+ADC_proc[3]*ADC_proc[3]);
-  175   1              Diff  = sum_L - sum_R;
-  176   1              Plus  = sum_L + sum_R;
-  177   1                 
-  178   1          sum_01= ADC_proc[0] + ADC_proc[1];
-  179   1          sum_34= ADC_proc[3] + ADC_proc[4];
-  180   1          sum   = sum_01 + sum_34;
-  181   1          
-  182   1              if((sum > EDGE_PROTECT) && Barrier_Flag1 == 0)  
-  183   1              {
-  184   2                      Ratio = Diff/Plus;      //如果小于EDGE_PROTECT//视作丢线，下次偏差值
-  185   2                      Flag_Out_L = 0;         //在上次基础上再次加（减）
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 4   
+  142   1      
+  143   1          if(Dis_Process < 80 || Flag_Stop == 1) 
+  144   1              {
+  145   2                      Act_PwmL = Left_SetSpeed(0);            
+  146   2                      Act_PwmR = Right_SetSpeed(0);
+  147   2              }
+  148   1              else
+  149   1              {
+  150   2              Act_PwmL = Left_SetSpeed(Left_Wheel.out);
+  151   2              Act_PwmR = Right_SetSpeed(Right_Wheel.out);
+  152   2              }
+  153   1      
+  154   1              //蜂鸣器
+  155   1              if(x10_ms > 0)
+  156   1              {
+  157   2                      pwm_duty(PWMB_CH4_P77,2000);
+  158   2                      x10_ms--;
+  159   2              }
+  160   1              else
+  161   1                      pwm_duty(PWMB_CH4_P77,0);
+  162   1              
+  163   1              //闪灯
+  164   1          if(count > 50)
+  165   1          {
+  166   2                      LED = !LED;
+  167   2                      count = 0;
+  168   2          }
+  169   1      
+  170   1      }
+  171          
+  172          //对ADC值进行处理得到差比和
+  173          void Get_Ratio(void)
+  174          {    
+  175   1          static float sum_01;
+  176   1          static float sum_34;
+  177   1          static float sum;
+  178   1          
+  179   1              sum_L = sqrt(ADC_proc[0]*ADC_proc[0]+ADC_proc[1]*ADC_proc[1]);
+  180   1              sum_R = sqrt(ADC_proc[4]*ADC_proc[4]+ADC_proc[3]*ADC_proc[3]);
+  181   1              Diff  = sum_L - sum_R;
+  182   1              Plus  = sum_L + sum_R;
+  183   1                 
+  184   1          sum_01= ADC_proc[0] + ADC_proc[1];
+  185   1          sum_34= ADC_proc[3] + ADC_proc[4];
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 4   
 
-  186   2                      Flag_Out_R = 0;
-  187   2                      Edge_Delay= 0;
-  188   2              }                                                                                                                                                       
-  189   1              else                                                                                                                                            
-  190   1              {
-  191   2              if(ADC_proc[0] + ADC_proc[4] < 4) 
-  192   2                  Flag_Stop = 1;                      //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
-  193   2                      else if(Barrier_Executed == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
-  194   2                      {
-  195   3                 Edge_Delay = 10;     //50ms  
-  196   3                 if(sum_01 >= sum_34 && Flag_Out_R == 0) 
-  197   3                 {  
-  198   4                       //x10_ms = 10;
-  199   4                       Flag_Out_L = 1;
-  200   4                 } 
-  201   3                 else if(sum_01 < sum_34 && Flag_Out_L == 0) 
-  202   3                 {
-  203   4                       //x10_ms = 10;
-  204   4                       Flag_Out_R = 1;
-  205   4                 } 
-  206   3              }
-  207   2              }
-  208   1      }
-  209          
-  210          
-  211          
-  212          
-  213          
-  214          
+  186   1          sum   = sum_01 + sum_34;
+  187   1          
+  188   1              if((sum > EDGE_PROTECT) && Barrier_Flag1 == 0)  
+  189   1              {
+  190   2                      Ratio = Diff/Plus;      //如果小于EDGE_PROTECT//视作丢线，下次偏差值
+  191   2                      Flag_Out_L = 0;         //在上次基础上再次加（减）
+  192   2                      Flag_Out_R = 0;
+  193   2                      Edge_Delay= 0;
+  194   2              }                                                                                                                                                       
+  195   1              else                                                                                                                                            
+  196   1              {
+  197   2              if(ADC_proc[0] + ADC_proc[4] < 4) 
+  198   2                  Flag_Stop = 1;                      //在避障阶段和环岛阶段以及上一次丢线未寻回前不做判断
+  199   2                      else if(Barrier_Executed == 1 && Circle_Flag1 == 0 && Circle_Delay2 == 0 && Edge_Delay == 0)  
+  200   2                      {
+  201   3                 Edge_Delay = 10;     //50ms  
+  202   3                 if(sum_01 >= sum_34 && Flag_Out_R == 0) 
+  203   3                 {  
+  204   4                       //x10_ms = 10;
+  205   4                       Flag_Out_L = 1;
+  206   4                 } 
+  207   3                 else if(sum_01 < sum_34 && Flag_Out_L == 0) 
+  208   3                 {
+  209   4                       //x10_ms = 10;
+  210   4                       Flag_Out_R = 1;
+  211   4                 } 
+  212   3              }
+  213   2              }
+  214   1      }
   215          
   216          
   217          
@@ -247,179 +247,185 @@ stmt  level    source
   226          
   227          
   228          
-  229          //UART1中断
-  230          void UART1_Isr() interrupt 4
-  231          {
-  232   1          uint8 res;
-  233   1              static uint8 dwon_count;
-  234   1          if(UART1_GET_TX_FLAG)
-  235   1          {
-  236   2              UART1_CLEAR_TX_FLAG;
-  237   2              busy[1] = 0;
-  238   2          }
-  239   1          if(UART1_GET_RX_FLAG)
-  240   1          {
-  241   2              UART1_CLEAR_RX_FLAG;
-  242   2              res = SBUF;
-  243   2              //程序自动下载
-  244   2              if(res == 0x7F)
-  245   2              {
-  246   3                  if(dwon_count++ > 20)
-  247   3                      IAP_CONTR = 0x60;
-  248   3              }
-  249   2              else
-  250   2              {
-  251   3                  dwon_count = 0;
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 5   
+  229          
+  230          
+  231          
+  232          
+  233          
+  234          
+  235          //UART1中断
+  236          void UART1_Isr() interrupt 4
+  237          {
+  238   1          uint8 res;
+  239   1              static uint8 dwon_count;
+  240   1          if(UART1_GET_TX_FLAG)
+  241   1          {
+  242   2              UART1_CLEAR_TX_FLAG;
+  243   2              busy[1] = 0;
+  244   2          }
+  245   1          if(UART1_GET_RX_FLAG)
+  246   1          {
+  247   2              UART1_CLEAR_RX_FLAG;
+  248   2              res = SBUF;
+  249   2              //程序自动下载
+  250   2              if(res == 0x7F)
+  251   2              {
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 5   
 
-  252   3              }
-  253   2          }
-  254   1      }
-  255          
-  256          //UART2中断
-  257          void UART2_Isr() interrupt 8
-  258          {
-  259   1          if(UART2_GET_TX_FLAG)
-  260   1              {
-  261   2              UART2_CLEAR_TX_FLAG;
-  262   2                      busy[2] = 0;
-  263   2              }
-  264   1          if(UART2_GET_RX_FLAG)
-  265   1              {
-  266   2              UART2_CLEAR_RX_FLAG;
-  267   2                      //接收数据寄存器为：S2BUF
-  268   2      
+  252   3                  if(dwon_count++ > 20)
+  253   3                      IAP_CONTR = 0x60;
+  254   3              }
+  255   2              else
+  256   2              {
+  257   3                  dwon_count = 0;
+  258   3              }
+  259   2          }
+  260   1      }
+  261          
+  262          //UART2中断
+  263          void UART2_Isr() interrupt 8
+  264          {
+  265   1          if(UART2_GET_TX_FLAG)
+  266   1              {
+  267   2              UART2_CLEAR_TX_FLAG;
+  268   2                      busy[2] = 0;
   269   2              }
-  270   1      }
-  271          
-  272          
-  273          //UART3中断
-  274          void UART3_Isr() interrupt 17
-  275          {
-  276   1          if(UART3_GET_TX_FLAG)
-  277   1              {
-  278   2              UART3_CLEAR_TX_FLAG;
-  279   2                      busy[3] = 0;
-  280   2              }
-  281   1          if(UART3_GET_RX_FLAG)
-  282   1              {
-  283   2              UART3_CLEAR_RX_FLAG;
-  284   2                      //接收数据寄存器为：S3BUF
-  285   2      
+  270   1          if(UART2_GET_RX_FLAG)
+  271   1              {
+  272   2              UART2_CLEAR_RX_FLAG;
+  273   2                      //接收数据寄存器为：S2BUF
+  274   2      
+  275   2              }
+  276   1      }
+  277          
+  278          
+  279          //UART3中断
+  280          void UART3_Isr() interrupt 17
+  281          {
+  282   1          if(UART3_GET_TX_FLAG)
+  283   1              {
+  284   2              UART3_CLEAR_TX_FLAG;
+  285   2                      busy[3] = 0;
   286   2              }
-  287   1      }
-  288          
-  289          
-  290          //UART4中断
-  291          void UART4_Isr() interrupt 18
-  292          {
-  293   1          if(UART4_GET_TX_FLAG)
-  294   1              {
-  295   2              UART4_CLEAR_TX_FLAG;
-  296   2                      busy[4] = 0;
-  297   2              }
-  298   1          if(UART4_GET_RX_FLAG)
-  299   1              {
-  300   2              UART4_CLEAR_RX_FLAG;
-  301   2      
-  302   2                      //接收数据寄存器为：S4BUF;
-  303   2                      if(wireless_type == WIRELESS_SI24R1)
-  304   2              {
-  305   3                  wireless_uart_callback();           //无线转串口回调函数
-  306   3              }
-  307   2              else if(wireless_type == WIRELESS_CH9141)
-  308   2              {
-  309   3                  bluetooth_ch9141_uart_callback();   //蓝牙转串口回调函数
-  310   3              }
-  311   2              else if(wireless_type == WIRELESS_CH573)
-  312   2              {
-  313   3                  wireless_ch573_callback();          //CH573无线模块回调函数
-  314   3              }
-  315   2              }
-  316   1      }
-  317          
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 6   
+  287   1          if(UART3_GET_RX_FLAG)
+  288   1              {
+  289   2              UART3_CLEAR_RX_FLAG;
+  290   2                      //接收数据寄存器为：S3BUF
+  291   2      
+  292   2              }
+  293   1      }
+  294          
+  295          
+  296          //UART4中断
+  297          void UART4_Isr() interrupt 18
+  298          {
+  299   1          if(UART4_GET_TX_FLAG)
+  300   1              {
+  301   2              UART4_CLEAR_TX_FLAG;
+  302   2                      busy[4] = 0;
+  303   2              }
+  304   1          if(UART4_GET_RX_FLAG)
+  305   1              {
+  306   2              UART4_CLEAR_RX_FLAG;
+  307   2      
+  308   2                      //接收数据寄存器为：S4BUF;
+  309   2                      if(wireless_type == WIRELESS_SI24R1)
+  310   2              {
+  311   3                  wireless_uart_callback();           //无线转串口回调函数
+  312   3              }
+  313   2              else if(wireless_type == WIRELESS_CH9141)
+  314   2              {
+  315   3                  bluetooth_ch9141_uart_callback();   //蓝牙转串口回调函数
+  316   3              }
+  317   2              else if(wireless_type == WIRELESS_CH573)
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 6   
 
-  318          #define LED P52
-  319          void INT0_Isr() interrupt 0
-  320          {
-  321   1              LED = 0;        //点亮LED
+  318   2              {
+  319   3                  wireless_ch573_callback();          //CH573无线模块回调函数
+  320   3              }
+  321   2              }
   322   1      }
-  323          void INT1_Isr() interrupt 2
-  324          {
-  325   1      
-  326   1      }
-  327          void INT2_Isr() interrupt 10
-  328          {
-  329   1              INT2_CLEAR_FLAG;  //清除中断标志
-  330   1      }
-  331          void INT3_Isr() interrupt 11
-  332          {
-  333   1              INT3_CLEAR_FLAG;  //清除中断标志
-  334   1      }
-  335          
-  336          void INT4_Isr() interrupt 16
-  337          {
-  338   1              INT4_CLEAR_FLAG;  //清除中断标志
-  339   1      }
-  340          
-  341          void TM0_Isr() interrupt 1
-  342          {
-  343   1      
-  344   1      }
-  345          void TM1_Isr() interrupt 3
-  346          {
-  347   1      
-  348   1      }
-  349          void TM2_Isr() interrupt 12
-  350          {
-  351   1              TIM2_CLEAR_FLAG;  //清除中断标志
-  352   1              
-  353   1      }
-  354          void TM3_Isr() interrupt 19
-  355          {
-  356   1              TIM3_CLEAR_FLAG; //清除中断标志
-  357   1              
-  358   1      }
-  359          
-  360          
-  361          //void  INT0_Isr()  interrupt 0;
-  362          //void  TM0_Isr()   interrupt 1;
-  363          //void  INT1_Isr()  interrupt 2;
-  364          //void  TM1_Isr()   interrupt 3;
-  365          //void  UART1_Isr() interrupt 4;
-  366          //void  ADC_Isr()   interrupt 5;
-  367          //void  LVD_Isr()   interrupt 6;
-  368          //void  PCA_Isr()   interrupt 7;
-  369          //void  UART2_Isr() interrupt 8;
-  370          //void  SPI_Isr()   interrupt 9;
-  371          //void  INT2_Isr()  interrupt 10;
-  372          //void  INT3_Isr()  interrupt 11;
-  373          //void  TM2_Isr()   interrupt 12;
-  374          //void  INT4_Isr()  interrupt 16;
-  375          //void  UART3_Isr() interrupt 17;
-  376          //void  UART4_Isr() interrupt 18;
-  377          //void  TM3_Isr()   interrupt 19;
-  378          //void  TM4_Isr()   interrupt 20;
-  379          //void  CMP_Isr()   interrupt 21;
-  380          //void  I2C_Isr()   interrupt 24;
-  381          //void  USB_Isr()   interrupt 25;
-  382          //void  PWM1_Isr()  interrupt 26;
-  383          //void  PWM2_Isr()  interrupt 27;
-C251 COMPILER V5.60.0,  isr                                                                18/07/24  11:09:05  PAGE 7   
+  323          
+  324          #define LED P52
+  325          void INT0_Isr() interrupt 0
+  326          {
+  327   1              LED = 0;        //点亮LED
+  328   1      }
+  329          void INT1_Isr() interrupt 2
+  330          {
+  331   1      
+  332   1      }
+  333          void INT2_Isr() interrupt 10
+  334          {
+  335   1              INT2_CLEAR_FLAG;  //清除中断标志
+  336   1      }
+  337          void INT3_Isr() interrupt 11
+  338          {
+  339   1              INT3_CLEAR_FLAG;  //清除中断标志
+  340   1      }
+  341          
+  342          void INT4_Isr() interrupt 16
+  343          {
+  344   1              INT4_CLEAR_FLAG;  //清除中断标志
+  345   1      }
+  346          
+  347          void TM0_Isr() interrupt 1
+  348          {
+  349   1      
+  350   1      }
+  351          void TM1_Isr() interrupt 3
+  352          {
+  353   1      
+  354   1      }
+  355          void TM2_Isr() interrupt 12
+  356          {
+  357   1              TIM2_CLEAR_FLAG;  //清除中断标志
+  358   1              
+  359   1      }
+  360          void TM3_Isr() interrupt 19
+  361          {
+  362   1              TIM3_CLEAR_FLAG; //清除中断标志
+  363   1              
+  364   1      }
+  365          
+  366          
+  367          //void  INT0_Isr()  interrupt 0;
+  368          //void  TM0_Isr()   interrupt 1;
+  369          //void  INT1_Isr()  interrupt 2;
+  370          //void  TM1_Isr()   interrupt 3;
+  371          //void  UART1_Isr() interrupt 4;
+  372          //void  ADC_Isr()   interrupt 5;
+  373          //void  LVD_Isr()   interrupt 6;
+  374          //void  PCA_Isr()   interrupt 7;
+  375          //void  UART2_Isr() interrupt 8;
+  376          //void  SPI_Isr()   interrupt 9;
+  377          //void  INT2_Isr()  interrupt 10;
+  378          //void  INT3_Isr()  interrupt 11;
+  379          //void  TM2_Isr()   interrupt 12;
+  380          //void  INT4_Isr()  interrupt 16;
+  381          //void  UART3_Isr() interrupt 17;
+  382          //void  UART4_Isr() interrupt 18;
+  383          //void  TM3_Isr()   interrupt 19;
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  13:27:57  PAGE 7   
 
+  384          //void  TM4_Isr()   interrupt 20;
+  385          //void  CMP_Isr()   interrupt 21;
+  386          //void  I2C_Isr()   interrupt 24;
+  387          //void  USB_Isr()   interrupt 25;
+  388          //void  PWM1_Isr()  interrupt 26;
+  389          //void  PWM2_Isr()  interrupt 27;
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1634     ------
+  code size            =      1660     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-  edata size           =       103     ------
+  edata size           =       105     ------
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
@@ -427,7 +433,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =       116     ------
+  hconst size          =       122     ------
 End of Module Information.
 
 
