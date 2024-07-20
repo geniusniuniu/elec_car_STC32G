@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
@@ -66,7 +66,7 @@ stmt  level    source
    55   1          Get_Ratio();                        //计算偏差值
    56   1          vl53l0x_get_distance();             //距离测量
    57   1         
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 2   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 2   
 
    58   1      /*********************** 直道弯道变速 **********************************/       
    59   1              if(Ratio >= -0.15 && Ratio <= 0.15) //直线
@@ -101,7 +101,7 @@ stmt  level    source
    87   2              if(Distance_Num >= 3)               //连续判别2次或以上
    88   2              {
    89   3                  Barrier_Flag1 = 1;
-   90   3                  //x10_ms = 5;
+   90   3                  x10_ms = 10;
    91   3                  Distance_Num = 0;
    92   3              }
    93   2              Elem_Barrier(gz,(Speed_L+Speed_R)/2);
@@ -134,7 +134,7 @@ stmt  level    source
   119   1              else
   120   1              {
   121   2                      Exp_Speed_L = Exp_Speed + Turn_PID.PID_Out*0.08*(1+Ratio);
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 3   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 3   
 
   122   2                      Exp_Speed_R = Exp_Speed - Turn_PID.PID_Out*0.09;
   123   2              }
@@ -202,7 +202,7 @@ stmt  level    source
   183   1                 
   184   1          sum_01= ADC_proc[0] + ADC_proc[1];
   185   1          sum_34= ADC_proc[3] + ADC_proc[4];
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 4   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 4   
 
   186   1          sum   = sum_01 + sum_34;
   187   1          
@@ -270,7 +270,7 @@ stmt  level    source
   249   2              //程序自动下载
   250   2              if(res == 0x7F)
   251   2              {
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 5   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 5   
 
   252   3                  if(dwon_count++ > 20)
   253   3                      IAP_CONTR = 0x60;
@@ -338,7 +338,7 @@ stmt  level    source
   315   3                  bluetooth_ch9141_uart_callback();   //蓝牙转串口回调函数
   316   3              }
   317   2              else if(wireless_type == WIRELESS_CH573)
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 6   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 6   
 
   318   2              {
   319   3                  wireless_ch573_callback();          //CH573无线模块回调函数
@@ -406,7 +406,7 @@ stmt  level    source
   381          //void  UART3_Isr() interrupt 17;
   382          //void  UART4_Isr() interrupt 18;
   383          //void  TM3_Isr()   interrupt 19;
-C251 COMPILER V5.60.0,  isr                                                                20/07/24  17:11:49  PAGE 7   
+C251 COMPILER V5.60.0,  isr                                                                20/07/24  20:01:27  PAGE 7   
 
   384          //void  TM4_Isr()   interrupt 20;
   385          //void  CMP_Isr()   interrupt 21;
@@ -418,7 +418,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1660     ------
+  code size            =      1668     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

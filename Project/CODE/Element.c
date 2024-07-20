@@ -47,7 +47,7 @@ void Elem_Up_Down(float Angle)
 
 
 //障碍物识别   
-char Barrier_Executed = 1;
+char Barrier_Executed = 0;
 char Barrier_Flag1 = 0;
 //void Elem_Barrier_Timer(void)  
 //{
@@ -100,22 +100,24 @@ char Barrier_Flag1 = 0;
 
 char Barrier_Flag2 = 0;
 char Barrier_Flag3 = 0;
-float Dis_Bar = 0;
-float Sum_Angle_Bar = 0;
 void Elem_Barrier(float Gyro_Z,float Speed)
 {
+    
+    static float Dis_Bar = 0;
+    static float Sum_Angle_Bar = 0;
+    static char Turn_Flag = 0;
 	Gyro_Z = (Gyro_Z*2000)/32768;	
     
 	#if BARRIER_DIR == 0		    //向右避障
-		if(Barrier_Flag1==1)        
+		if(Barrier_Flag1==1 && Turn_Flag == 0)        
 		{
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			Ratio = -0.385;			
-
+			Ratio = -0.395;			
 		}
-		if(Sum_Angle_Bar < -23 && Dis_Bar > 4000) 
+		if(Sum_Angle_Bar < -24 && Dis_Bar > 4000) 
 		{
+            Turn_Flag = 1;
 			Barrier_Flag1 = 0;   
 			Barrier_Flag2 = 1;
 		}
@@ -123,7 +125,7 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 		{   
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			if(Sum_Angle_Bar > 21 && Dis_Bar > 8000)  
+			if(Sum_Angle_Bar > 22 && Dis_Bar > 8000)  
 			{
                 Barrier_Flag3 = 1;  //回正标志位			
 			}
@@ -131,15 +133,15 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 				Ratio = 0.395; 
 		}
     #elif BARRIER_DIR == 1               //向左避障
-		if(Barrier_Flag1==1)        
+		if(Barrier_Flag1==1 && Turn_Flag == 0)        
 		{
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			Ratio = 0.425;			
-
+			Ratio = 0.425;
 		}
-		if(Sum_Angle_Bar > 23 && Dis_Bar > 4000) 
+		if(Sum_Angle_Bar > 24 && Dis_Bar > 4000) 
 		{
+            Turn_Flag = 1;
 			Barrier_Flag1 = 0;   
 			Barrier_Flag2 = 1;
 		}
@@ -147,12 +149,12 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 		{   
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			if(Sum_Angle_Bar < -22 && Dis_Bar > 8000)  
+			if(Sum_Angle_Bar < -20 && Dis_Bar > 7600)  
 			{
                 Barrier_Flag3 = 1;  //回正标志位			
 			}
 			else  	            //回正
-				Ratio = -0.395; 
+				Ratio = -0.34; 
 		}
    #endif
         
@@ -228,7 +230,7 @@ void Elem_Circle(float Speed,float Gyro_Z)
 		{
 			if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //预出环 防止误判再次入环
 			{
-                Circle_Delay2 = 85;   //延时850ms
+                Circle_Delay2 = 80;   //延时800ms
 				Sum_Dis1 = 0;
 				Sum_Angle_C1 = 0;
                 Circle_Flag1 = 0;

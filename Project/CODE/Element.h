@@ -21,8 +21,7 @@ extern char Barrier_Executed;
 extern char Barrier_Flag1;
 extern char Barrier_Flag2;
 extern char Barrier_Flag3;
-extern float Dis_Bar;
-extern float Sum_Angle_Bar;
+
 
 extern char Special_Elem;
 

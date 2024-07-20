@@ -87,7 +87,7 @@ void TM4_Isr() interrupt 20
         if(Distance_Num >= 3)               //连续判别2次或以上
         {
             Barrier_Flag1 = 1;
-            //x10_ms = 5;
+            x10_ms = 10;
             Distance_Num = 0;
         }
         Elem_Barrier(gz,(Speed_L+Speed_R)/2);
