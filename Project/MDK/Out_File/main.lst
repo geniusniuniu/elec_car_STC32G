@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               20/07/24  13:27:57  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               20/07/24  16:31:31  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -66,7 +66,7 @@ stmt  level    source
    52   2                      else if (KeyValue == KEY3_PRES)         {page--; if(page <= 0)  page = 0;oled_all_static_state();}                      
    53   2                      else if (KeyValue == KEY0_PRES)         Adjust_Val += 1;
    54   2                      else if (KeyValue == KEY1_PRES)         Adjust_Val -= 1;
-C251 COMPILER V5.60.0,  main                                                               20/07/24  13:27:57  PAGE 2   
+C251 COMPILER V5.60.0,  main                                                               20/07/24  16:31:31  PAGE 2   
 
    55   2              
    56   2      /******************************************** 类似中断服务处理 **********************************
@@ -98,13 +98,13 @@ stmt  level    source
              -�
    79   3                  {
    80   4                      //x10_ms = 10;
-   81   4                      Exp_Speed = 150;
+   81   4                      Exp_Speed = 130;
    82   4                      Ratio = 0.2+(Speed_R/120)*0.15; 
    83   4                  }
    84   3                  else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
    85   3                  {
    86   4                      //x10_ms = 10;
-   87   4                      Exp_Speed = 150;
+   87   4                      Exp_Speed = 130;
    88   4                      Ratio = -0.2-(Speed_L/120)*0.15;        
    89   4                  }
    90   3                  else
@@ -134,7 +134,7 @@ stmt  level    source
   114   1          {
   115   2              Sum_Dis = 0;
   116   2              Exp_Speed_gain = 1.0;
-C251 COMPILER V5.60.0,  main                                                               20/07/24  13:27:57  PAGE 3   
+C251 COMPILER V5.60.0,  main                                                               20/07/24  16:31:31  PAGE 3   
 
   117   2          }
   118   1      }
@@ -203,7 +203,7 @@ Module Information          Static   Overlayable
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
-C251 COMPILER V5.60.0,  main                                                               20/07/24  13:27:57  PAGE 4   
+C251 COMPILER V5.60.0,  main                                                               20/07/24  16:31:31  PAGE 4   
 
   edata size           =        51     ------
   bit size             =    ------     ------

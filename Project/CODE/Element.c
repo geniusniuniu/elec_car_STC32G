@@ -179,16 +179,21 @@ void Elem_Circle(float Speed,float Gyro_Z)
 	{
 		Circle_Flag1 = 0;
 		Circle_Flag2 = 0;
-		if(Circle_Flag3 == LEFT_CIRCLE)		//用来记录出环时的方向
-			Ratio -= 0.05;
-		else if(Circle_Flag3 == RIGHT_CIRCLE)
-			Ratio += 0.05;
-		Circle_Delay2--;
+        if(Circle_Delay2 < 70)
+		{
+            if(Circle_Flag3 == LEFT_CIRCLE)		//用来记录出环时的方向
+                Ratio -= 0.085;
+            else if(Circle_Flag3 == RIGHT_CIRCLE)
+                Ratio += 0.075;
+		
+        }
+        Circle_Delay2--;
 		return ;        					//退出函数
 	}
 
 	if(Circle_Flag1 == 1)					    //识别到环岛
 	{
+        Exp_Speed = 240;
        Gyro_Z = (Gyro_Z*2000)/32768;       
 		if(Sum_Dis1 > DIS_ROUND_IN)			    //路程积分，积满进环
 		{
@@ -223,10 +228,10 @@ void Elem_Circle(float Speed,float Gyro_Z)
 		{
 			if(ADC_proc[0] > 61 || ADC_proc[4] > 61 || ADC_proc[2] > 64)   //预出环 防止误判再次入环
 			{
-                Circle_Delay2 = 135;   //延时1400ms
+                Circle_Delay2 = 85;   //延时850ms
 				Sum_Dis1 = 0;
 				Sum_Angle_C1 = 0;
-                //Circle_Flag1 = 0;
+                Circle_Flag1 = 0;
 				Circle_Flag2 = 0;
                 if(Elem_Over == 0)
                 {

@@ -14,7 +14,7 @@
 									// 0 表示赛道周围多干扰，只有经过障碍前
 									// 最后一个特殊元素在开启避障
 									
-#define BARRIER_DIR 		1  		//0表示向右避障，1表示向左避障
+#define BARRIER_DIR 		0  		//0表示向右避障，1表示向左避障
 									
 									
 extern char Barrier_Executed;

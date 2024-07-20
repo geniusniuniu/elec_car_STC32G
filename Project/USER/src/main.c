@@ -78,13 +78,13 @@ void main(void)
             if(Flag_Out_L == 1 && (--Edge_Delay) > 0 )   //-- Edge_Delay 保证清零时不会再进判断
             {
                 //x10_ms = 10;
-                Exp_Speed = 150;
+                Exp_Speed = 130;
                 Ratio = 0.2+(Speed_R/120)*0.15;	
             }
             else if(Flag_Out_R == 1 && (--Edge_Delay) > 0)
             {
                 //x10_ms = 10;
-                Exp_Speed = 150;
+                Exp_Speed = 130;
                 Ratio = -0.2-(Speed_L/120)*0.15;	
             }
             else
