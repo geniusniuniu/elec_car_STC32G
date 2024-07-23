@@ -108,6 +108,8 @@ void TM4_Isr() interrupt 20
         Turn_PID.Kd = -35;//20;  //1.5
     }
 	Limit_Out(&Ratio,-0.9,0.9);   //оч╥Ы
+    if(Ratio > 0.15)
+        gz *= 1.26;
 	PID_Calculate(&Turn_PID,Ratio*150,gz/100); 				
 	Limit_Out(&Turn_PID.PID_Out,-8000,8000);
     Exp_Speed *= Exp_Speed_gain;

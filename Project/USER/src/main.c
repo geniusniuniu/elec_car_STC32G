@@ -85,7 +85,7 @@ void main(void)
             {
                 //x10_ms = 10;
                 Exp_Speed = 130;
-                Ratio = -0.2-(Speed_L/120)*0.15;	
+                Ratio = -0.24-(Speed_L/110)*0.15;	
             }
             else
                 Edge_Delay = 0; 

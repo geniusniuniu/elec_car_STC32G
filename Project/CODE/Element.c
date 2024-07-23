@@ -113,7 +113,7 @@ void Elem_Barrier(float Gyro_Z,float Speed)
 		{
             Sum_Angle_Bar += Gyro_Z*0.005;
             Dis_Bar += Speed;
-			Ratio = -0.395;			
+			Ratio = -0.40;			
 		}
 		if(Sum_Angle_Bar < -24 && Dis_Bar > 4000) 
 		{
@@ -130,7 +130,7 @@ void Elem_Barrier(float Gyro_Z,float Speed)
                 Barrier_Flag3 = 1;  //回正标志位			
 			}
 			else  	            //回正
-				Ratio = 0.395; 
+				Ratio = 0.39; 
 		}
     #elif BARRIER_DIR == 1               //向左避障
 		if(Barrier_Flag1==1 && Turn_Flag == 0)        
@@ -181,10 +181,10 @@ void Elem_Circle(float Speed,float Gyro_Z)
 	{
 		Circle_Flag1 = 0;
 		Circle_Flag2 = 0;
-        if(Circle_Delay2 < 70)
+        if(Circle_Delay2 < 75)
 		{
             if(Circle_Flag3 == LEFT_CIRCLE)		//用来记录出环时的方向
-                Ratio -= 0.085;
+                Ratio -= 0.16;
             else if(Circle_Flag3 == RIGHT_CIRCLE)
                 Ratio += 0.075;
 		
@@ -216,7 +216,7 @@ void Elem_Circle(float Speed,float Gyro_Z)
 			
 			if(Sum_Angle_C1 < 24 && Circle_Flag2 == LEFT_CIRCLE )	//角度未积满，固定偏差值
 			{
-                Ratio = 0.34;  
+                Ratio = 0.40;  
             }
 			else if(Sum_Angle_C1 > -24 && Circle_Flag2 == RIGHT_CIRCLE)
 			{
